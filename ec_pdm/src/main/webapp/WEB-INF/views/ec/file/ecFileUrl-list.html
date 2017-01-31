@@ -1,0 +1,49 @@
+<table class="table table-striped table-bordered table-hover nomargin-bottom">
+	<thead>
+	</thead>
+
+	<tbody>
+		
+			<tr>
+				<td class="center">
+				@for(item in page.list){
+					@if(item.suffix == ".txt" || item.suffix == ".java" || item.suffix == ".pdf") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/txt.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".mp3" || item.suffix == ".wma" || item.suffix == ".wav" || item.suffix == ".mod") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/music.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".html" || item.suffix == ".htm" || item.suffix == ".jsp") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/html.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".rar" || item.suffix == ".jar" || item.suffix == ".zip") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/zip.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".doc" || item.suffix == ".wps" || item.suffix == ".docx") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/word.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".xls" || item.suffix == ".xlsx") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/excel.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".ppt") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/ppt.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".exe" || item.suffix == ".bat") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/exe.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".bmp" || item.suffix == ".png" || item.suffix == ".gif" || item.suffix == ".jpeg" || item.suffix == ".jpg") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/${item.relativeUrl}" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else if (item.suffix == ".rmvb" || item.suffix == ".mkv" || item.suffix == ".mp4" || item.suffix == ".avi" || item.suffix == ".wmv" || item.suffix == ".3gp") {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/movie.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@} else {
+								<div class="fileDetail" onclick="downLoad(${item.id})"><a href="javascript:void(0);"><img src="${ctxPath}/static/weipan/images/config.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span></a></div>
+							@}
+						@}
+							<form action="${ctxPath}/ecFile/downloadFile" id="downLoadForm" target="" method="post">
+								<input type="hidden" id="downLoadFileId" name="downLoadFileId" value=""/>
+							</form>
+							<script>
+								function downLoad(downLoadFileId) {
+									$("#downLoadFileId").val(downLoadFileId);
+									$("#downLoadForm").submit();
+								}
+							</script>
+				</td>
+			</tr>
+		
+	</tbody>
+</table>
+<div class="space-8"></div>
+<#paginate page="${page}" />

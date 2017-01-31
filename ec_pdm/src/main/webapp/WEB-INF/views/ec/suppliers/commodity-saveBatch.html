@@ -1,0 +1,25 @@
+<div class="layer">
+	<form name="FormPost" id="commodity-save" class="FormGrid"  method="post"
+		action="${ctxPath}/ecSuppliersCommodity/saveBatch" >
+		<table class="EditTable" width="100%">
+			@var ecCatalogue = getAllEcCatalogue();
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">商品编号</td>
+					<td class="DataTD width-100">
+						@for(map in scMap) {
+							${map.value.skuName}&nbsp;
+						@}
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">最新报价</td>
+					<td class="DataTD">
+						<input type="text" id="purchasePrice" name="purchasePrice" datatype="*"  nullmsg="请输最新报价！" value="">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="commodity-save" />

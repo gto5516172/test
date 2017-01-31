@@ -1,0 +1,51 @@
+<div class="layer">
+	<form name="FormPost" id="ecFileClassification-save" class="FormGrid"  method="post"
+		action="${ctxPath}/ecFileClassification/save" >
+		
+		<input type="hidden" value="${ecFileClassification.id!}" name="id"/>
+		<input type="hidden" value="${pEcFileClassification.parentIds!}" name="parentIds" />
+		<input type="hidden" value="${ecFileClassification.parentIds!}" name="oldParentIds" />
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr style="display: none;">
+					<td class="ui-state-error" id="FormError"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档分类名称</td>
+					<td class="DataTD width-100"><input type="text"
+						name="name" datatype="*"  nullmsg="请输入文档分类名称！"
+						value="${area.name!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">上级文档分类</td>
+					<td class="DataTD">
+					<#treeselect url="ecFileClassification/tree" modelNameValue="${pEcFileClassification.name!}" 
+							modelIdValue="${pEcFileClassification.id!0}" selectIds="${pEcFileClassification.id!}"
+							curId="${ecFileClassification.id!}" />
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档分类图标</td>
+					<td class="DataTD">
+					<#iconselect value="${ecFileClassification.icon!}"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档分类描述</td>
+					<td class="DataTD">
+						<textarea name="remarks" class="autosize-transition form-control "
+						style="resize: none;">${ecFileClassification.remarks!}</textarea>	
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="ecFileClassification-save" />
+
+<script type="text/javascript">
+
+//描述框自动扩张高度
+$('textarea[class*=autosize]').autosize({append: "\n"});
+
+</script>

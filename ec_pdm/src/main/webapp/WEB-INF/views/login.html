@@ -1,0 +1,179 @@
+<!DOCTYPE HTML>
+<html>
+<head>
+<title>跨境电商管理平台</title>
+<!-- Custom Theme files -->
+<link href="${ctxPath!}/static/css/login.css" rel="stylesheet" type="text/css" media="all"/>
+<!-- Custom Theme files -->
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<!--Google Fonts-->
+<link href='http://fonts.useso.com/css?family=Roboto:500,900italic,900,400italic,100,700italic,300,700,500italic,100italic,300italic,400' rel='stylesheet' type='text/css'>
+<link href='http://fonts.useso.com/css?family=Droid+Serif:400,700,400italic,700italic' rel='stylesheet' type='text/css'>
+<!--Google Fonts-->
+<meta name="renderer" content="webkit">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+<meta charset="utf-8" />
+<title>跨境电商管理平台-登录</title>
+
+<meta name="description" content="login" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+<!-- bootstrap & fontawesome -->
+<link rel="stylesheet" href="${ctxPath!}/static/bootstrap/bootstrap.min.css" />
+<link rel="stylesheet" href="${ctxPath!}/static/css/font-awesome.min.css" />
+
+<!-- ace styles -->
+<link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace.min.css" />
+
+<!--[if lte IE 9]>
+	<link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace-part2.min.css" />
+<![endif]-->
+<link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace-rtl.min.css" />
+
+<!--[if lte IE 9]>
+  <link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace-ie.min.css" />
+<![endif]-->
+
+<!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+
+<!--[if lt IE 9]>
+<script src="${ctxPath!}/static/bootstrap/html5shiv.min.js"></script>
+<script src="${ctxPath!}/static/bootstrap/respond.min.js"></script>
+<![endif]-->
+</head>
+<body>
+<div class="login">
+ 	<h2>EC-Product Data Management</h2>
+	<h3>电商数据管理</h3>
+	<div class="login-top">
+		<h1>登&nbsp;陆</h1>
+
+		<form id="login-form" action="${ctxPath}/login" method="post" class="myform">
+			<fieldset>
+				<label class="block clearfix">
+					<span class="block input-icon input-icon-right">
+						<input type="text" class="form-control" name="username" placeholder="用户名" autocomplete="off"
+						datatype="*"  nullmsg="请输入用户名！" data-error="用户名或密码错误"/>
+						<i class="ace-icon fa fa-user"></i>
+					</span>
+				</label>
+
+				<label class="block clearfix">
+					<span class="block input-icon input-icon-right">
+						<input type="password" class="form-control" name="password" placeholder="密码" autocomplete="off"
+						datatype="*"  nullmsg="请输入密码！"/>
+						<i class="ace-icon fa fa-lock"></i>
+					</span>
+				</label>
+				
+				<label class="block clearfix">
+					<span class="block input-icon input-icon-right">
+						<input type="text" class="form-control width-65 pull-left" name="code" placeholder="验证码" autocomplete="off"
+						datatype="*"  nullmsg="请输入验证码！" data-error="验证码错误"/>
+						<img src="${ctxPath!}/captcha?width=100&height=32" onclick="javascript:refresh(this);" id="code"
+						class="pull-right" title="点击换一张" style="cursor: pointer;border: 1px solid rgb(181, 181, 181);"/>
+					</span>
+				</label>
+
+				<div class="space"></div>
+
+				<div class="forgot">
+					<span type="button" id="login-btn">
+						<i class="ace-icon fa fa-key"></i>
+						<span>登&nbsp;录</span>
+					</span>
+				</div>
+
+				<div class="space-4"></div>
+			</fieldset>
+		</form>
+	</div>
+	<div class="login-bottom">
+		<!-- <h3>New User &nbsp;<a href="#">Register</a>&nbsp Here</h3> -->
+	</div>
+</div>	
+<div class="copyright">
+	<p>Copyright &copy; 2015.跨境电商管理平台 All rights reserved.</p>
+</div>
+
+
+		<!-- basic scripts -->
+
+		<!--[if !IE]> -->
+		<script src="${ctxPath!}/static/jquery/jquery-2.1.1.min.js"></script>
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+		<script src="${ctxPath!}/static/jquery/jquery-1.11.1.min.js"></script>
+		<![endif]-->
+
+		<!--[if !IE]> -->
+		<script type="text/javascript">
+			window.jQuery || document.write("<script src='${ctxPath!}/static/jquery/jquery.min.js'>"+"<"+"/script>");
+		</script>
+		<!-- <![endif]-->
+
+		<!--[if IE]>
+		<script type="text/javascript">
+		 window.jQuery || document.write("<script src='${ctxPath!}/static/jquery/jquery1x.min.js'>"+"<"+"/script>");
+		</script>
+		<![endif]-->
+		
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='${ctxPath!}/static/jquery/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+
+		<script type="text/javascript" src="${ctxPath!}/static/layer/layer.min.js"></script>
+		<script type="text/javascript" src="${ctxPath}/static/validate/Validform_v5.3.2_min.js"></script>
+
+		<script type="text/javascript">
+			function refresh(obj) {
+		        obj.src = "${ctxPath!}/captcha?width=100&height=32&"+Math.random();
+		    };
+
+			jQuery(function($) {
+				$("#login-form").Validform({
+					btnSubmit:"#login-btn",
+					ajaxPost:true,
+					beforeSubmit:function(curform){
+						$("#login-btn").attr("disabled","disabled").find("span").text("登录中…");
+					},
+					callback:function(data){
+						if(undefined != data.error){
+							$("#login-btn").removeAttr("disabled").find("span").text("登 录");
+							var obj = $("#login-form input[data-error='"+data.error+"']");
+							layer.tips(data.error,obj, {
+								guide:0,
+								time: 4,
+								style : ['background-color:#F26C4F; color:#fff','#F26C4F' ]
+							});
+						}else{
+							window.location.href = "${ctxPath!}";
+						}
+					},
+					tiptype : function(msg, o, cssctl) {
+						if (!o.obj.is("form")) {
+							if (o.type != 2) {
+								layer.tips(msg, o.obj, {
+									guide:3,
+									time: 4,
+									style : ['background-color:#F26C4F; color:#fff','#F26C4F' ]
+								});
+							}
+						}
+					},
+					tipSweep : true
+				});
+				
+				$("#login-form").keydown(function(e){
+					 var e = e || event,
+					 keycode = e.which || e.keyCode;
+					 if (keycode==13) {
+					  $("#login-btn").trigger("click");
+					 }
+				});
+				
+			});
+		</script>
+</body>
+</html>

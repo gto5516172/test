@@ -1,0 +1,20 @@
+<#search>
+<form method="post" class="form-search" id="search-form1"
+	target="list-page1" action="${ctxPath}/ecFileLog/list">
+	<input type="hidden" name="ecFileId" value="${ecFileId}"/>
+	<div class="layer">
+		<div class="padding-trb-10 col-sm-12">
+					<span
+						class="btn btn-info btn-sm col-sm-6" id="search-btn1">条 件 查
+						询</span>
+			</div>
+		<div id="home" class="tab-pane active clearfix">
+			<div class="col-sm-12" id="list-page1">
+			</div>
+		</div>
+	</div>
+</form>
+</#search>
+<script>
+	$("#search-form1").getPageList({'submitBtnId':'search-btn1'})
+</script>

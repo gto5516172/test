@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcTaskTypeMapper">
+
+<sql id="ecTaskTypeColumns">
+	id,create_by,create_date,update_by,update_date,remarks,del_flag,status,name
+</sql>
+
+<sql id="ecTaskTypeAliasColumns">
+	a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.del_flag,a.status,a.name
+</sql>
+
+<!-- 分页显示筛选查询 -->
+	<select id="findTaskTypeList" resultType="com.gyf.ec.model.EcTaskType">
+		select <include refid="ecTaskTypeAliasColumns"/>
+		from ec_task_type a
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(name)">
+				and a.name like concat('%', #{name}, '%')
+			</if>
+			and a.del_flag = 0
+		</where> 
+		ORDER BY a.update_date desc
+	</select>
+	
+	<select id="findTaskType" resultType="com.gyf.ec.model.EcTaskType">
+		select <include refid="ecTaskTypeAliasColumns"/> 
+		from ec_task_type a
+		<where>
+			a.id = #{id} and a.del_flag = 0
+		</where>
+	</select>
+</mapper>

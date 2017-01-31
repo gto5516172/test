@@ -1,0 +1,169 @@
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		var sh = [["tr1","tr2","tr3","tr4","tr5"],
+		            ["tr1","tr2","tr3","tr6","tr7","tr8","tr9"],
+		            ["tr1","tr2","tr10"],
+		            ["tr1","tr2","tr3","tr11"],
+		            ["tr1","tr2","tr3","tr6","tr13"],
+		            ["tr1","tr14"]];
+		var p= sh[${shop.platformId}-1];
+		var trs =$("tr[id^='tr']");				
+		trs.css('display','none');
+		trs.find("input[type='text']").removeAttr('datatype');
+		for(var i=0;i<p.length;i++){
+			var tr = '#'+p[i];
+			$(tr).removeAttr('style');
+			$(tr).find("input[type='text']").attr('datatype','*');
+		}
+		});
+	
+</script>
+<div class="layer">
+	<form name="FormPost" id="platform-save" class="FormGrid"  method="post"
+		action="${ctxPath}/shop/save" >
+		<input type="hidden" value="${shop.id!}" name="id"/>
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr style="display: none;">
+					<td class="ui-state-error" id="FormError"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">平台</td>
+					<td class="DataTD width-100">
+					@var platform = platform.getPlatformById(shop.platformId);
+					<input type="hidden" name="platformId" />
+					<input type="text"	name="platform" nullmsg="请输入平台名称！"
+						value="${platform.name!}" readonly="readonly"></td>
+				</tr>
+				<tr class="FormData" id="tr1" >
+					<td class="CaptionTD">店铺名称</td>
+					<td class="DataTD width-100">
+					<input type="hidden" value="${shop.status}" name="status"/>
+					<input type="hidden" value="${shop.verifyStatus}" name="verifyStatus"/>
+					<input type="text"	name="name"  nullmsg="请输入店铺名称！"
+						value="${shop.name!}"></td>
+				</tr>
+				<tr class="FormData" id="tr2">
+					<td class="CaptionTD">卖家账号</td>
+					<td class="DataTD width-100"><input type="text"
+						name="sellerAccount"  nullmsg="请输入卖家账号！"
+						value="${shop.sellerAccount!}"></td>
+				</tr>
+				<tr class="FormData" id="tr3">
+					<td class="CaptionTD">卖家店铺</td>
+					<td class="DataTD width-100"><input type="text"
+						name="sellerShop" nullmsg="请输入卖家店铺！"
+						value="${shop.sellerShop!}"></td>
+				</tr>
+				<tr class="FormData" id="tr4">
+					<td class="CaptionTD">刊登账号paypal</td>
+					<td class="DataTD width-100"><input type="text"
+						name="payPal"  nullmsg="请输入刊登账号paypal！"
+						value="${shop.payPal!}"></td>
+				</tr>
+				<tr class="FormData" id="tr5">
+					<td class="CaptionTD">更新时间</td>
+					<td class="DataTD width-100"><input type="text"
+						name="timeTask" nullmsg="请输入更新时间！"
+						value="${shop.timeTask!}"></td>
+				</tr>	
+				<tr class="FormData" id="tr6">
+					<td class="CaptionTD">站点</td>
+					<td class="DataTD width-100">	
+					@aType = dict.getDictListByType("sys_area_type","国家");	
+					@var areas = area.getAreaList(aType.value);
+					<select name="siteId" id="siteAddress" style="width:100%;" onchange="changeSite1(this.value)">
+					@for(a in areas){
+						<option value="${a.id}" 
+						@if(a.id==shop.siteId){
+									selected
+								@}
+						 >${a.name}</option>
+					@}
+					</select>
+					<script type="text/javascript">
+						function changeSite1(id){
+							var index  = parseInt(${shop.platformId})-1;
+							var areas= ${areas};
+							for(var i=0;i<areas.length;i++){
+								if(areas[i].id==id&&1==index){
+									var marketpalceId = $('#tr_marketpalceId');
+									var intreface = $('#tr_intreface');
+									marketpalceId.removeAttr('style');
+									intreface.removeAttr('style');
+									marketpalceId.find("input[type='text']").val(areas[i].marketplaceId);
+									intreface.find("input[type='text']").val(areas[i].interfaceAddress);
+								}								
+							}
+						}
+						$(document).ready(function(){
+							var siteAddress = $('#siteAddress').find("option:selected");
+							changeSite1(siteAddress.attr('value'));
+							
+						});
+						
+					</script>
+				</td></tr>
+				<tr class="FormData" id="tr_marketpalceId">
+					<td class="CaptionTD">Marketpalce ID</td>
+					<td class="DataTD width-100"><input type="text" name="marketpalceId" value=""/>
+				</td></tr>
+				<tr class="FormData" id="tr_intreface">
+					<td class="CaptionTD">接口地址</td>
+					<td class="DataTD width-100"><input type="text" name="intreface" value=""/>
+				</td></tr>
+				<tr class="FormData" id="tr7">
+					<td class="CaptionTD">AMS Access Key ID</td>
+					<td class="DataTD width-100"><input type="text" name="akId" value="${shop.akId}"  nullmsg="请输入AMS Access Key ID！"/>
+				</td></tr>
+				<tr class="FormData" id="tr8">
+					<td class="CaptionTD">Secrect Key</td>
+					<td class="DataTD width-100"><input type="text" name="secrectKey" value="${shop.secrectKey}" nullmsg="请输入Secrect Key！"/>
+				</td></tr>
+				<tr class="FormData" id="tr9">
+					<td class="CaptionTD">Seller ID</td>
+					<td class="DataTD width-100"><input type="text" name="sellerId" value="${shop.sellerId}" nullmsg="请输入Seller ID！"/>
+				</td></tr>
+				<tr class="FormData" id="tr10">
+					<td class="CaptionTD">商户ID</td>
+					<td class="DataTD width-100"><input type="text" name="shopId" value="${shop.shopId}" nullmsg="请输入商户ID！"/>
+				</td></tr>
+				<tr class="FormData" id="tr11">
+					<td class="CaptionTD">账号类型</td>
+					<td class="">
+						@var adicts = dict.getDictListByType('account_type');
+						@for(dic in adicts){
+					${dic.label!}<input id="account_Type" type="radio"  name="accountType" value="${dic.value!}" 
+					@if(dic.value==shop.accountType){
+							checked="checked"
+						@}
+					>
+					@}
+					</td>
+				</tr>
+			<!-- 	<tr class="FormData" id="tr12">
+				<td class="CaptionTD">(主/子)账号</td>
+					<td class="DataTD width-100">
+					<input type="text" name="account" value="${shop.account}"  nullmsg="请输入账号！"/>
+				</td></tr> -->
+				<tr class="FormData" id="tr13">
+				<td class="CaptionTD">授权令牌</td>
+					<td class="DataTD width-100"><input type="text" name="accessOrder" value="${shop.accessOrder}"  nullmsg="请输入授权令牌！"/>
+				</td></tr>
+				<tr class="FormData" id="tr14">
+				<td class="CaptionTD">备注</td>
+					<td class="DataTD width-100"><textarea rows="5" cols="68" name="note" >${shop.note}</textarea>
+				</td></tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="platform-save" />
+
+<script type="text/javascript">
+
+//描述框自动扩张高度
+$('textarea[class*=autosize]').autosize({append: "\n"});
+
+</script>

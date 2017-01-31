@@ -1,0 +1,65 @@
+@var add = auth.hasPermission("ecFile:add");
+<div class="widget-box widget-color-green2">
+	<div class="widget-header clearfix">
+		<div class="widget-toolbar">
+			<a href="#" data-action="fullscreen" class="orange2"> <i
+				class="ace-icon fa fa-expand"></i>
+			</a>
+		</div>
+		<div class="widget-toolbar no-border width-40" style="padding-top: 2px;">
+			<form method="post" class="form-search" id="search-form" target="list-page"
+				action="${ctxPath}/ecFile/list">
+				<div class="input-group" style="line-height: 0px;">
+					<span class="input-group-btn">
+						<span class=" btn  btn-success btn-sm"
+							id="">
+						@if(add) {
+							<a class="white" href="javascript:void(0);" 
+							data-mode="page" data-title="新增文件"
+							data-url="${ctxPath}/ecFile/add/showlayer"
+							data-data="{id:''}"
+							data-height="80%" data-width="50%">
+							<i class="white ace-icon fa fa-plus bigger-120"></i> 新增文件
+						</a>
+						@}
+						</span> 
+					</span>
+					&nbsp;
+					<span class="input-group-btn">
+						<span class=" btn  btn-success btn-sm"
+							id="search-all-btn">
+							 显示全部 
+						</span> 
+					</span>
+					<input type="text" class="form-control search-query"
+						name="documentTheme" placeholder="文件主题" id="search-input">
+						<span class="input-group-btn">
+						<span class="btn  btn-success btn-sm"
+							id="search-btn">
+							搜索 <i class="ace-icon fa fa-search icon-on-right bigger-110"></i>
+						</span>
+					</span>
+				</div>
+				<input type="hidden" name="id" />
+			</form>
+		</div>
+	</div>
+
+	<div class="widget-body">
+		<div class="widget-main padding-8">
+			<div class="row">
+				<div class="col-sm-3">
+					<div>
+						<ul id="treeMenu" class="ztree"></ul>
+					</div>
+				</div>
+				<div class="col-sm-9" id="list-page">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<#systree editUrl="ecFileClassification/edit/showlayer" delUrl="ecFileClassification/delete" 
+	addUrl="ecFileClassification/add/showlayer" treeData="${treeList}" 
+	rootNodeName="文档分类列表" />
+	

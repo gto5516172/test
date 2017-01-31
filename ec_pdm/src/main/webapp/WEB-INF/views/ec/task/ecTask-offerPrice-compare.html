@@ -1,0 +1,108 @@
+<div class="layer">
+	<table
+		class="table table-striped table-bordered table-hover nomargin-bottom"
+		style="width: 100%">
+		
+		<tbody>
+			<tr>
+				<td>
+					供应商名称
+				</td>
+					@for(item in eops){
+				<td>${item.offerNo}</td>
+				@}
+			</tr>
+			<tr>
+				<td>商品单价</td>
+				@for(item in eops){
+				<td>${item.signelPrice}</td>
+				@}
+			</tr>
+			<tr>
+				<td>报价数量</td>
+				@for(item in eops){
+				<td>${item.offerCount}</td>
+				@}
+			</tr>
+			<tr>
+				<td>总共金额</td>
+				@for(item in eops){
+				@if(item.signelPrice!=null&&""!=item.signelPrice&&""!=item.offerCount&&item.offerCount!=null){
+				<td>${parseInt(item.signelPrice)*parseInt(item.offerCount)}</td>
+				@}else{
+					<td></td>
+				@}}
+			</tr>
+			<tr>
+				<td>价格有效期</td>
+				@for(item in eops){
+				<td>${item.validityPeriod}</td>
+				@}
+			</tr>
+			<tr>
+				<td>交货期</td>
+				@for(item in eops){
+				<td>${item.deliveryDay}</td>
+				@}
+			</tr>
+			<tr>
+				<td>报价备注</td>
+				@for(item in eops){
+				<td>${item.note}</td>
+				@}
+			</tr>
+			<tr>
+				<td>报价日期</td>
+				@for(item in eops){
+				<td>${item.offerDate}</td>
+				@}
+			</tr>
+			<tr>
+				<td>供应商省份城市</td>
+				@for(item in eops){
+				<td>${item.areaname}</td>
+				@}
+			</tr>
+			<tr>
+				<td>经营地址</td>
+				@for(item in eops){
+				<td>${item.businessAddress}</td>
+				@}
+			</tr>
+			<tr>
+				<td></td>
+				@for(item in eops){
+				<td>
+				@if(item.isCompare==0){
+				<button class="btn btn-info" onclick="choose('${item.id}')" id="btn_${item.id}">选择</button>
+				@}
+				</td>
+				@}
+			</tr>
+		</tbody>
+	</table>
+</div>
+<script type="text/javascript">
+	function choose(id){
+		var loadi = layer.load('加载中…');
+		$.ajax({
+			url : "${ctxPath}/ecTaskOfferPrice/compare",
+			type : 'post',
+			dataType : 'json',
+			data : {
+				id:id
+			},
+			success : function(data) {
+				layer.close(loadi);
+				 var status= data.status;
+				 layer.msg(data.message, 3, 1);
+				 $("#btn_"+id).css("display","none");
+			},
+			error : function(datas) {
+				layer.close(loadi);
+				layer.msg('<span class="red bigger-120">操作失败</span>', 2, 8);
+			}
+		});
+	}
+	
+</script>

@@ -1,0 +1,40 @@
+<div class="layer">
+	<form name="FormPost" id="commodity-save" class="FormGrid"  method="post"
+		action="${ctxPath}/ecSuppliersCommodity/save" >
+		<input type="hidden" id="id" name="id" value="${ecSuppliersCommodity.id}"/>
+		<table class="EditTable" width="100%">
+			@var ecCatalogue = getAllEcCatalogue();
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">商品编号</td>
+					<td class="DataTD width-100">${ecSuppliersCommodity.sku}</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品目录</td>
+					<td class="DataTD width-100">${ecCatalogue[ecSuppliersCommodity.ecCatalogueId].name}</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">原厂编号</td>
+					<td class="DataTD width-100">${ecSuppliersCommodity.factoryNo}</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品名称</td>
+					<td class="DataTD width-100">${ecSuppliersCommodity.skuName}</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">系统成本价</td>
+					<td class="DataTD">
+						${ecSuppliersCommodity.costPrice}
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">最新报价</td>
+					<td class="DataTD">
+						<input type="text" id="purchasePrice" name="purchasePrice" datatype="*"  nullmsg="请输最新报价！" value="${ecSuppliersCommodity.purchasePrice}">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="commodity-save" />

@@ -1,0 +1,107 @@
+﻿<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-users bigger-120"></i>采购价格趋势 </a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<#search>
+			<form action="${ctxPath}/gameAcc/list" method="post" id="search-form"
+				target="list-page" class="center clearfix">
+				<div class="row padding-tb-12">
+					<div class="col-sm-4">
+						<input style="display: none;" name="saleSku" id="form-field-tags" value="" placeholder="回车确认" type="text">
+						<script type="text/javascript">
+							var tag_input = $('#form-field-tags');
+							if(! ( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())) ) 
+							{
+								tag_input.tag(
+								  {
+									placeholder:tag_input.attr('placeholder'),
+									source: ace.variable_US_STATES,
+									 /**
+					                //从Web后台读取数据的写法
+					                source: function(query, process) {
+					                  $.ajax({url: 'remote_source.php?q='+encodeURIComponent(query)})
+					                  .done(function(result_items){
+					                    process(result_items);
+					                  });
+					                }
+					                */
+								  }
+								);
+							}
+							else {
+								tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="15">'+tag_input.val()+'</textarea>').remove();
+							}
+						</script>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="dtp_input1" class="col-md-2 control-label">开始：</label>
+							<div class="input-group date form_datetime col-md-5"
+								data-link-field="dtp_input1">
+								<input type="text" class="width-80" id="start" datatype="*"
+									name="start"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="dtp_input1" class="col-md-2 control-label">结束：</label>
+							<div class="input-group date form_datetime col-md-5"
+								data-link-field="dtp_input1">
+								<input type="text" class="width-80" id="end" datatype="*"
+									name="end"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="padding-trb-10 col-sm-12">
+					<span class="btn btn-info btn-sm col-sm-6" id="search-btn"
+						onclick="findEcStatistics()">查询</span>
+				</div>
+			</form>
+			</#search>
+			<div class="space-6"></div>
+			<div id="list-page">
+				<div id="container" style="min-width: 700px; height: 400px"></div>
+				﻿
+				<div id="sliders"
+					style="min-width: 310px; max-width: 800px; margin: 0 auto;">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+#profile .center>label {
+	width: 100px;
+	text-align: right;
+}
+</style>
+<script>
+	function findEcStatistics() { 
+		// Set up the chart 
+		var start = $("#start").val();
+		var end = $("#end").val();
+		var saleSku = $("#form-field-tags").val();
+		if(saleSku !='' && start != '' && end != '') {
+			$.ajax({
+				 type:'post',      
+		         url:'${ctxPath!}/ecStatistics/findEcStatistics3',  
+		         data:{start:start, end:end, skus:saleSku},  
+		         dataType:'json',  
+		         success:function(data){ 
+		        	 $('#container').highcharts({ title: { text: '采购价格趋势', x: -20 }, subtitle: { text: '', x: -20 }, xAxis: { categories: data.textAry }, yAxis: { title: { text: '价格' }, plotLines: [{ value: 0, width: 1, color: '#808080' }] }, tooltip: { valueSuffix: '' }, legend: { layout: 'vertical', align: 'right', verticalAlign: 'middle', borderWidth: 0 }, series: data.objAry });
+		         }
+			});
+		} else {
+			layer.alert("请选择类型和时间",1);
+		}
+	}
+</script>

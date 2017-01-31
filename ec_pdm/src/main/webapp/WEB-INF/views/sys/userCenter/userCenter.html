@@ -1,0 +1,237 @@
+
+<style>
+#edit-info .center>label{width: 100px;text-align: right;}
+.webuploader-pick {
+    background:none!important;
+}
+</style>
+<div id="user-profile-2" class="user-profile">
+	<div class="tabbable">
+		<ul class="nav nav-tabs padding-18">
+			<li class="active"><a data-toggle="tab" href="#home"> <i
+					class="green ace-icon fa fa-file-o bigger-120"></i> 我的资料
+			</a>
+			</li>
+			<!-- <li class=""><a data-toggle="tab" href="#edit-info"> <i
+					class="green ace-icon fa fa-pencil bigger-120"></i> 修改资料
+			</a>
+			</li> -->
+		</ul>
+
+		<div class="tab-content no-border padding-24">
+			<div id="home" class="tab-pane active">
+				<div class="row">
+					<div class="col-xs-12 col-sm-3 center">
+						<span class="profile-picture"> <img
+							class="editable img-responsive" alt="Alex's Avatar" id="avatar2"
+								@if(sysUser.headPath!=null&&""!=sysUser.headPath){
+							src="${ctxPath}/${sysUser.headPath}"
+							@}else{
+							src="${ctxPath}/static/img/big-male-pic.jpg"
+							@}
+							 width="150">
+						</span>
+
+						<div class="space space-4"></div>
+
+						<a href="#" class="btn btn-sm btn-block btn-success"
+							title="编辑"
+							data-mode="page" data-title="${item.name!}编辑"
+							data-url="${ctxPath}/sysuser/myEdit/showlayer"
+							data-data="{id:'${sysUser.id}'}" data-width="50%"
+						> <i
+							class="ace-icon fa fa-plus-circle bigger-120"></i> <span
+							class="bigger-110">修改资料</span>
+						</a> 
+						<!-- <a href="javascript:;" class="btn btn-sm btn-block btn-primary"
+							data-title="聊天" data-mode="detail"
+							data-url="${ctxPath}/userCenter/conversation"
+							data-width="100%" data-height="100%"
+						> 
+						<i class="ace-icon fa fa-envelope-o bigger-110"></i> 
+							<span class="bigger-110">发送消息</span>
+						</a> -->
+					</div>
+					<!-- /.col -->
+
+					<div class="col-xs-12 col-sm-9">
+						<h4 class="blue">
+							<span class="middle">${sysUser.name!}</span>
+						</h4>
+
+						<div class="profile-user-info">
+							<div class="profile-info-row">
+								<div class="profile-info-name">登录名</div>
+
+								<div class="profile-info-value">
+									<span>${sysUser.username!}</span>
+								</div>
+							</div>
+
+							<div class="profile-info-row">
+								<div class="profile-info-name">所属机构</div>
+
+								<div class="profile-info-value">
+									<i class="fa fa-map-marker light-orange bigger-110"></i>
+									<span>${sysUser.orgStr!}</span>
+								</div>
+							</div>
+							
+							<div class="profile-info-row">
+								<div class="profile-info-name">电话</div>
+
+								<div class="profile-info-value">
+									<span>${sysUser.phone!}</span>
+								</div>
+							</div>
+
+							<div class="profile-info-row">
+								<div class="profile-info-name">手机</div>
+
+								<div class="profile-info-value">
+									<span>${sysUser.mobile!}</span>
+								</div>
+							</div>
+							
+							<div class="profile-info-row">
+								<div class="profile-info-name">邮箱</div>
+
+								<div class="profile-info-value">
+									<span>${sysUser.email!}</span>
+								</div>
+							</div>
+							
+							<div class="profile-info-row">
+								<div class="profile-info-name">工号</div>
+
+								<div class="profile-info-value">
+									<span>${sysUser.no!}</span>
+								</div>
+							</div>
+
+							<div class="profile-info-row">
+								<div class="profile-info-name">最后登录IP</div>
+
+								<div class="profile-info-value">
+									<span>${sysUser.loginIp!}</span>
+									<label class="red">${sysUser.ipEx!}</label>
+								</div>
+							</div>
+
+							<div class="profile-info-row">
+								<div class="profile-info-name">最后登录时间</div>
+
+								<div class="profile-info-value">
+									<span>${sysUser.loginDate!,dateFormat="yyyy-MM-dd HH:mm:ss"}</span>
+								</div>
+							</div>
+						</div>
+
+					</div>
+				
+				</div>
+		
+			</div>
+			<!-- /#home -->
+			
+			<!-- <div id="edit-info" class="tab-pane" >
+				
+				<form action="${ctxPath!}/userCenter/updateInfo" method="post" id="sysuser-update-form" class="padding-10">
+					<table class="EditTable">
+						<tbody>
+						<tr class="FormData">
+								<td class="CaptionTD">头像</td>
+								<td class="DataTD width-100" id="headTd">
+									@layout("/common/upload.html"){};
+									<div id="filePicker">
+										<img alt="110x110" 
+										@if(sysUser.headPath!=null&&""!=sysUser.headPath){
+										src="${ctxPath!}/${sysUser.headPath}"
+										@}else{
+										 src="${ctxPath!}/static/img/big-male-pic.jpg" 
+										 @}
+										 height="110" width="110"  id="showImg">
+									</div>
+									<div id="inputImg" inputName="headPath"></div>
+								</td>
+							</tr>
+							<tr class="FormData">
+								<td class="CaptionTD">登录名：</td>
+								<td class="DataTD width-100">
+								<input type="text" class="width-60"  value="${sysUser.username!}" 
+								disabled="disabled" />
+								<span class="red">*登录名不可修改</span>
+								</td>
+							</tr>
+							<tr class="FormData">
+								<td class="CaptionTD">密码：</td>
+								<td class="DataTD">
+								<input type="password" class="width-60" name="password"/>
+								<span class="red">*不填写则不修改密码</span>
+								</td>
+							</tr>
+							<tr class="FormData">
+								<td class="CaptionTD">确认密码：</td>
+								<td class="DataTD">
+								<input type="password" class="width-60" name="repassword" 
+									 dataType="*0-16" recheck="password" errormsg="您两次输入的密码不一致！" />
+							<span class="red">*不填写则不修改密码</span>
+								</td>
+							</tr>
+							<tr class="FormData">
+								<td class="CaptionTD">真实姓名：</td>
+								<td class="DataTD width-100">
+								<input type="text" class="width-60" name="name"
+								value="${sysUser.name!}" datatype="*"  nullmsg="请输入姓名！"/>
+								</td>
+							</tr>
+							<tr class="FormData">
+								<td class="CaptionTD">邮箱：</td>
+								<td class="DataTD width-100">
+								<input type="text" class="width-60" value="${sysUser.email!}" name="email" />
+								</td>
+							</tr>
+							<tr class="FormData">
+								<td class="CaptionTD">电话：</td>
+								<td class="DataTD width-100">
+								<input type="text" class="width-60" value="${sysUser.phone!}" name="phone"/>
+								</td>
+							</tr>
+							<tr class="FormData">
+								<td class="CaptionTD">手机：</td>
+								<td class="DataTD width-100">
+								<input type="text" class="width-60" value="${sysUser.mobile!}" name="mobile"/>
+								</td>
+							</tr>
+							<tr class="FormData">
+					<td class="CaptionTD">性别</td>
+					<td class="DataTD width-100">
+						<input type="radio" name="sex" value="男" style="width:3%"
+						@if(sysUser.sex=="男"){
+						checked
+						@}
+						> 男
+						<input type="radio" name="sex" value="女" style="width:3%"
+						@if(sysUser.sex=="女"){
+						checked
+						@}
+						> 女
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">QQ</td>
+					<td class="DataTD width-100">
+					<input type="text" name="qq"  class="width-60" value="${sysUser.qq!}"/>
+					</td>
+				</tr>
+						</tbody>
+					</table>
+					<h3 class="red center">为了确保账号安全，修改成功后，自动跳转到登录界面，重新登录</h3>
+					<div class="margin-t15">
+						<span class="btn btn-info btn-block bigger-120" id="sysuser-update-btn">确 认 修 改</span>
+					</div>
+				</form>
+			</div>-->
+		</div> 
+	</div>
+</div>

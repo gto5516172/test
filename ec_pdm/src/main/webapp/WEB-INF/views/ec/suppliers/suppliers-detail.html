@@ -1,0 +1,228 @@
+<div class="layer">
+<div class="profile-user-info profile-user-info-striped" >
+	<div class="profile-info-row">
+		<div class="profile-info-name">供应商名称</div>
+		<div class="profile-info-value">
+			${ecSuppliers.suppliersName!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">供应商状态</div>
+		<div class="profile-info-value">
+			${dict.getDictByTypeAndValue("suppliers_status",ecSuppliers.status + "").label}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">供应商简称</div>
+		<div class="profile-info-value">
+			${ecSuppliers.abbreviation!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">等级分类</div>
+		<div class="profile-info-value">
+			${dict.getDictByTypeAndValue("suppliers_level",ecSuppliers.suppliersLevel + "").label}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">供应商类型</div>
+		<div class="profile-info-value">
+			${dict.getDictByTypeAndValue("suppliers_type",ecSuppliers.suppliersType + "").label}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">供应商地址</div>
+		<div class="profile-info-value">
+				${ecSuppliers.suppliersAddr!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">官 方 网 址</div>
+		<div class="profile-info-value">
+			${ecSuppliers.suppliersWeb!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">纳税识别号</div>
+		<div class="profile-info-value">
+			${ecSuppliers.taxIdentificationNumber!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">一般纳税认定时间</div>
+		<div class="profile-info-value">
+			${ecSuppliers.taxTime!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">联系人1</div>
+		<div class="profile-info-value">
+			${ecSuppliers.personName1!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">联系电话1</div>
+		<div class="profile-info-value">
+			${ecSuppliers.personPhone1!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">联系人2</div>
+		<div class="profile-info-value">
+			${ecSuppliers.personName2!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">联系电话2</div>
+		<div class="profile-info-value">
+			${ecSuppliers.personPhone2!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">传真号</div>
+		<div class="profile-info-value">
+			${ecSuppliers.faxNumber!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">email</div>
+		<div class="profile-info-value">
+			${ecSuppliers.email!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">QQ号</div>
+		<div class="profile-info-value">
+			${ecSuppliers.qq!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">阿里旺旺</div>
+		<div class="profile-info-value">
+			${ecSuppliers.aliWangwang!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">地址</div>
+		<div class="profile-info-value">
+			${area.name!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">结算方式</div>
+		<div class="profile-info-value">
+			${dict.getDictByTypeAndValue("settlement_method",ecSuppliers.settlementMethod + "").label}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">结算周期</div>
+		<div class="profile-info-value">
+			${dict.getDictByTypeAndValue("settlement_period",ecSuppliers.settlementPeriod + "").label}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">支付方式</div>
+		<div class="profile-info-value">
+			${dict.getDictByTypeAndValue("payment_method",ecSuppliers.paymentMethod + "").label}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">汇款公司名</div>
+		<div class="profile-info-value">
+			${ecSuppliers.remittanceCompanyName!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">收款人</div>
+		<div class="profile-info-value">
+			${ecSuppliers.payeeName!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">汇款银行名</div>
+		<div class="profile-info-value">
+			${ecSuppliers.remittanceBankName!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">汇款银行账号</div>
+		<div class="profile-info-value">
+			${ecSuppliers.remittanceBankAccount!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">汇款银行地址</div>
+		<div class="profile-info-value">
+			${ecSuppliers.remittanceBankAddr!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">结算备注</div>
+		<div class="profile-info-value">
+			${ecSuppliers.clearingNotes!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">平均到货周期(天数)</div>
+		<div class="profile-info-value">
+			${ecSuppliers.averageDeliveryCycle!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">Swift Code</div>
+		<div class="profile-info-value">
+			${ecSuppliers.swiftCode!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">货期(天数)</div>
+		<div class="profile-info-value">
+			${ecSuppliers.delivery!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">经营产品</div>
+		<div class="profile-info-value">
+			${ecSuppliers.operatingProducts!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">产品类别</div>
+		<div class="profile-info-value">
+			${ecSuppliers.productCategory!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">备注</div>
+		<div class="profile-info-value">
+			${ecSuppliers.remarks!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">创建者</div>
+		<div class="profile-info-value">
+			${ecSuppliers.createBy!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">创建时间</div>
+		<div class="profile-info-value">
+			${ecSuppliers.createDate!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">更新者</div>
+		<div class="profile-info-value">
+			${ecSuppliers.updateBy!}
+		</div>
+	</div>
+	<div class="profile-info-row">
+		<div class="profile-info-name">更新时间</div>
+		<div class="profile-info-value">
+			${ecSuppliers.updateDate!}
+		</div>
+	</div>
+</div>
+</div>
+<script>
+</script>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bety.web.mapper.ShopMapper">
+	<!-- 店铺列表 -->
+	<select id="findPageInfo" resultType="com.bety.web.model.Shop">
+		SELECT su.id,su.name,su.seller_account,su.seller_shop,
+		su.create_by,su.update_by,su.update_date,platform_id,su.status,su.site_id,su.verify_status,su.authorization_time 	 
+		FROM ec_shop su 
+		<where>
+		1=1 
+			<if test="@Ognl@isNotBlank(name)">
+				and su.name like concat('%', #{name} ,'%') 
+			</if>
+			<if test="@Ognl@isNotBlank(createBy)">
+				and su.create_by like concat('%', #{createBy} ,'%')
+			</if>
+			<if test="@Ognl@isNotBlank(status)">
+				and su.status=${status} 
+			</if>
+			<if test="@Ognl@isNotBlank(sellerAccount)">
+				and su.seller_account like concat('%', #{sellerAccount} ,'%') 
+			</if>
+			<if test="@Ognl@isNotBlank(sellerShop)">
+				and su.seller_shop like concat('%', #{sellerShop} ,'%') 
+			</if>
+				<if test="@Ognl@isNotBlank(platformId)">
+				and su.platform_id=#{platformId} 
+			</if>
+		</where> 
+		GROUP BY su.id ORDER BY su.update_date desc
+	</select>
+<select id="findCountBySitId" resultType="java.lang.Integer">
+	select count(1) FROM ec_shop su  where site_id=#{param1}
+</select>
+</mapper>

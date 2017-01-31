@@ -1,0 +1,217 @@
+@var add = auth.hasPermission("shop:add");
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-list-alt bigger-120"></i>  店铺列表
+		</a></li>
+		<!-- <li class=""><a data-toggle="tab" href="#profile">
+		<i class="green ace-icon fa fa-plus bigger-120"></i> 店铺添加
+		</a></li> -->
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<form action="${ctxPath}/shop/list" method="post" id="search-form" target="list-page" class="clearfix">
+				<div class="pull-left width-25">
+					<label>销售平台：</label>
+					@var allPlatform = platform.getAllPlatform();
+					<#select id="platformId2" name="platformId" width="50%">
+					<option value="">全部</option>
+					@for(platform in allPlatform){
+							<option value="${platform.id!}">
+							${platform.name!}
+							</option>
+						@}
+					</#select>
+				</div>
+					
+				<div class="pull-left width-25">
+					<label>状态：</label>
+					<select name="status" >
+					<option value="">全部</option>
+					@var dicts = dict.getDictListByType('shop_on_off');
+						@for(dic in dicts){
+							<option value="${dic.value!}">
+							${dic.label!}
+							</option>
+						@}
+					</select>
+				</div>
+					<div class="pull-left width-30">
+					<select name="type" onchange="changeSearch(this)">
+						<option value="0">店铺名称</optin>
+						<option value="1">卖家账号</option>
+						<option value="2">卖家店铺</option>
+					</select>
+					<script type="text/javascript">
+						function changeSearch(obj){
+							var search = obj.value;
+							var typeValue = $('#typeValue');
+							if("0"==search){
+								typeValue.attr('name','name');
+							}else if("1"==search){
+								typeValue.attr('name','sellerAccount');
+							}else if("2"==search){
+								typeValue.attr('name','sellerShop');
+							}
+						}
+					</script>
+					<input type="text" name="name" id="typeValue"/>
+				</div>
+				<span data-original-title="Bottm Info" class="btn btn-info btn-sm tooltip-info" 
+				id="search-btn" data-rel="tooltip" data-placement="bottom" title="查询">查询</span>
+					@if(add){
+					<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+							data-mode="page" data-title="添加店铺"
+							data-url="${ctxPath}/shop/add/layer"
+							data-width="50%">添加
+						</a>
+					@}
+			</form>
+			<hr/>
+			<div id="list-page"></div>
+			<script type="text/javascript">
+				$("#search-form").getPageList({'submitBtnId':'search-btn'})
+			</script>
+		</div>
+
+		<!-- <div id="profile" class="tab-pane">
+			<form action="${ctxPath!}/shop/save" method="post" id="save-form">
+				<div class="center padding-10">
+						<label>平台类型：</label>
+					<#select id="platformId1" name="platformId" datatype="*" width="50%"  onchange="changeInput(this)">
+						@for(platform in allPlatform){
+							<option value="${platform.id!}">
+							${platform.name!}
+							</option>
+						@}
+					</#select>
+					<script type="text/javascript">
+					var index = 0;
+					function changeInput(obj){
+						var sh = [["_1","_2","_3","_4","_5"],
+						            ["_1","_2","_3","_6","_7","_8","_9"],
+						            ["_1","_2","_10"],
+						            ["_1","_2","_3","_11"],
+						            ["_1","_2","_3","_6","_13"],
+						            ["_1","_14"]];
+						index = parseInt(obj.value)-1;
+						var p= sh[index];
+						var divs =$("div[id^='_']");
+						divs.css('display','none');
+						divs.find("input[type='text']").val('');
+						divs.find("input[type='text']").removeAttr('datatype');
+						for(var i=0;i<p.length;i++){
+							var div = '#'+p[i];
+							$(div).removeAttr("style");
+							$(div).find("input[type='text']").attr('datatype','*'); 
+							
+						}
+						if(1==index){
+							var siteAddress = $('#siteAddress1').find("option:selected");
+							changeSite(siteAddress.attr('value'));
+						}else{
+							index=0;
+						}
+						}
+					</script>
+				</div>
+				<div class="center padding-10" id="_1">
+					<label>店铺名称：</label>
+					<input type="hidden" value="0" name="status"/>
+					<input type="hidden" value="0" name="verifyStatus"/>
+					<input type="text" class="width-50" name="name" datatype="*"  nullmsg="请输入店铺名称！"/>
+				</div>
+				<div class="center padding-10" id="_2">
+					<label>卖家账号：</label>
+					<input type="text" class="width-50" name="sellerAccount" datatype="*"  nullmsg="请输入卖家账号！"/>
+				</div>
+				<div class="center padding-10" id="_3">
+					<label>卖家店铺：</label>
+					<input type="text" class="width-50" name="sellerShop" datatype="*"  nullmsg="请输入卖家店铺！"/>
+				</div>
+				<div class="center padding-10" id="_4">
+					<label>刊登账号paypal：</label>
+					<input type="text" class="width-50" name="payPal" datatype="*"  nullmsg="请输入刊登账号paypal！"/>
+				</div>	
+				<div class="center padding-10" id="_5">
+					<label>更新时间：</label>
+					<input type="text" class="width-50" name="timeTask" datatype="*"  nullmsg="请输入更新时间！"/>
+				</div>
+				<div class="center padding-10" id="_6" style="display: none;">
+					<label>站点：</label>
+					@aType = dict.getDictListByType("sys_area_type","国家");	
+					@var areas = area.getAreaList(aType.value);
+					<select name="siteId" id="siteAddress1" style="width:50%;" onchange="changeSite(this.value)">
+					@for(a in areas){
+						<option value="${a.id}">${a.name}</option>
+					@}
+					</select>
+					<script type="text/javascript">
+						function changeSite(id){
+							var areas= ${areas};
+							for(var i=0;i<areas.length;i++){
+								if(areas[i].id==id&&1==index){
+									var marketpalceId = $('#_marketpalceId');
+									var intreface = $('#_intreface');
+									marketpalceId.removeAttr('style');
+									intreface.removeAttr('style');
+									marketpalceId.find("input[type='text']").val(areas[i].marketplaceId);
+									intreface.find("input[type='text']").val(areas[i].interfaceAddress);
+								}								
+							}
+						}
+					</script>
+				</div>
+				<div class="center padding-10" id="_marketpalceId" style="display: none;">
+					<label>Marketpalce ID：</label>
+					<input type="text" class="width-50" name="marketpalceId" readonly="readonly" />
+				</div>
+				<div class="center padding-10" id="_intreface" style="display: none;" >
+					<label>接口地址：</label>
+					<input type="text" class="width-50" name="intreface" readonly="readonly"/>
+				</div>
+				<div class="center padding-10" id="_7" style="display: none;">
+					<label>AMS Access Key ID：</label>
+					<input type="text" class="width-50" name="akId"   nullmsg="请输入AMS Access Key ID！"/>
+				</div>
+				<div class="center padding-10" id="_8" style="display: none;">
+					<label>Secrect Key：</label>
+					<input type="text" class="width-50" name="secrectKey"  nullmsg="请输入Secrect Key！"/>
+				</div>
+				<div class="center padding-10" id="_9" style="display: none;">
+					<label>Seller ID：</label>
+					<input type="text" class="width-50" name="sellerId"  nullmsg="请输入Seller ID！"/>
+				</div>
+				<div class="center padding-10" id="_10" style="display: none;">
+					<label>商户ID：</label>
+					<input type="text" class="width-50" name="shopId"  nullmsg="请输入商户ID！"/>
+				</div>
+				
+				<div class="center padding-10" id="_11" style="display: none;">
+					<label>账号类型：</label>
+					@var adicts = dict.getDictListByType('account_type');
+						@for(dic in adicts){
+						${dic.label!}<input type="radio" class="width-5"  name="accountType" value="${dic.value!}" checked="checked" />
+						@}
+				</div>
+				<!-- <div class="center padding-10" id="_12" style="display: none;">
+					<label>（主/子）账号：</label>
+					<input type="text" class="width-50" name="account"   nullmsg="请输入账号！"/>
+				</div> -->
+				<!--<div class="center padding-10" id="_13" style="display: none;">
+					<label>授权令牌：</label>
+					<input type="text" class="width-50" name="accessOrder"  nullmsg="请输入授权令牌！"/>
+				</div>
+				<div class="center padding-10" id="_14" style="display: none;">
+					<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;备注: </label>
+					<textarea rows="10" cols="10" name="note" class="width-50"></textarea>
+				</div>
+				<div class="margin-t15">
+					<span class="btn btn-info btn-block bigger-120" id="save-btn">保 存</span>
+				</div>
+			</form>
+		</div> -->
+	</div>
+</div>
+<#save isHide="yes" subBtnId="save-btn" formId="save-form" />

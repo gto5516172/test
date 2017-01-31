@@ -1,0 +1,28 @@
+<div class="layer">
+	<div class="profile-user-info profile-user-info-striped">
+		<div class="profile-info-row">
+			<div class="profile-info-name">物料编码</div>
+			<div class="profile-info-value">${ecBom.itemCodes!}</div>
+		</div>
+		<div class="profile-info-row">
+			<div class="profile-info-name">物料名称</div>
+			<div class="profile-info-value">${ecBom.itemName!}</div>
+		</div>
+		<div class="profile-info-row">
+			<div class="profile-info-name">需求数量</div>
+			<div class="profile-info-value">${ecBom.requirements!}</div>
+		</div>
+		<div class="profile-info-row">
+			<div class="profile-info-name">成本价</div>
+			<div class="profile-info-value">${ecBom.cost}</div>
+		</div>
+		<div class="profile-info-row">
+			<div class="profile-info-name">单位</div>
+			<div class="profile-info-value">${ecBom.company}</div>
+		</div>		
+		<div class="profile-info-row">
+			<div class="profile-info-name">物料图片</div>
+			<div class="profile-info-value"><img src="${ctxPath}/${ecBom.showImg!}" style="width:100px;height:100px;"/></div>
+		</div>	
+	</div>		
+</div>

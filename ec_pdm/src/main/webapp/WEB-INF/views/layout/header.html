@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="renderer" content="webkit">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+		<title>EC-Product Data Management</title>
+
+		<meta name="description" content="index" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+
+		<!-- bootstrap & fontawesome -->
+		<link rel="stylesheet" href="${ctxPath!}/static/bootstrap/bootstrap.min.css" />
+		<link rel="stylesheet" href="${ctxPath!}/static/css/font-awesome.min.css" />
+		
+		<link rel="stylesheet" href="${ctxPath!}/static/chosen/chosen.min.css" />
+		<!-- ace styles -->
+		<link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace.min.css" id="main-ace-style" />
+		<link rel="stylesheet" href="${ctxPath!}/static/ace/css/font-awesome.min.css" />
+		
+		<!--[if lte IE 9]>
+			<link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace-part2.min.css" />
+		<![endif]-->
+		<link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace-skins.min.css" />
+		<link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace-rtl.min.css" />
+		<link rel="stylesheet" href="${ctxPath!}/static/bootstrap/bootstrapDatepickr-1.0.0.min.css" />
+  		<script type="text/javascript" language="javascript" src="static/My97DatePicker/WdatePicker.js"></script>
+
+		<style type="text/css">
+			.fileDetail{ width:140px; height:150px; text-align:center; font-size:14px; font-family:Arial, Helvetica, sans-serif; float:left; overflow: hidden;margin-right: 30px;}
+			.fileDetail  img{ width:100px; height:100px; margin-top:10px; }
+			#showContent .fileDetail a{ display:block; width:138px; height:138px;border:1px solid #f1f4f7;}
+			#showContent .fileDetail a:hover{ border:1px solid #ccc;border-radius:8px;}
+			#showContent  #workFrame{ display: block;}
+			#showContent .fileDetail span{ width: 120px;  display: inline-block;overflow: hidden; height:18px; line-height: 18px;}
+		</style>
+
+		<!--[if lte IE 9]>
+		 	<link rel="stylesheet" href="${ctxPath!}/static/ace/css/ace-ie.min.css" />
+		<![endif]-->
+		
+		${layoutContent!}
+
+		<!-- ace settings handler -->
+		<script src="${ctxPath!}/static/ace/js/ace-extra.min.js"></script>
+		<script type="text/javascript" src="${ctxPath!}/static/js/debug.js"></script>
+		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
+		
+		<!--[if lte IE 8]>
+			<script src="${ctxPath!}/static/bootstrap/html5shiv.min.js"></script>
+			<script src="${ctxPath!}/static/bootstrap/respond.min.js"></script>
+			<script>var ie8 = "ie8";</script>
+		<![endif]-->
+	</head>
+
+	<body class="no-skin" id="body-content">

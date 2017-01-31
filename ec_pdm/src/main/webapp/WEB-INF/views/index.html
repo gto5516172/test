@@ -1,0 +1,53 @@
+<!-- 头部 -->
+@layout("/layout/header.html"){
+	<link rel="stylesheet" href="${ctxPath!}/static/ztree/metro.css" />
+	<link rel="stylesheet" href="${ctxPath}/static/validate/css/validform.css" />
+	<link rel="stylesheet" href="${ctxPath!}/static/css/custom.css" />
+	<link href="${ctxPath!}/static/fileinput/css/fileinput.css" media="all" rel="stylesheet" type="text/css" />
+	<script src="${ctxPath!}/static/jquery/jquery-2.1.1.min.js"></script>
+		<script src="${ctxPath!}/static/jquery/jquery.cookie.js"></script>
+		<script src="${ctxPath!}/static/jquery/jquery-ui.custom.min.js"></script>
+		<script src="${ctxPath!}/static/jquery/jquery.ui.touch-punch.min.js"></script>
+		<script src="${ctxPath!}/static/jquery/jquery.easypiechart.min.js"></script>
+		<script src="${ctxPath!}/static/jquery/jquery.sparkline.min.js"></script>
+		<script src="${ctxPath!}/static/jquery/jquery.flot.min.js"></script>
+		<script src="${ctxPath!}/static/jquery/jquery.flot.pie.min.js"></script>
+		<script src="${ctxPath!}/static/jquery/jquery.flot.resize.min.js"></script>
+@}
+
+<!-- 顶部条 -->
+@layout("/layout/navbar.html"){}
+
+<!-- 主体 -->
+@layout("/layout/main.html",{menuList:menuList!}){
+
+	<div id="fill-main-content" style="height:100%">
+	</div>
+@}
+
+<!-- 底部 -->
+@layout("/layout/footer.html"){
+	<script src="${ctxPath!}/static/js/history.js"></script>
+	<script type="text/javascript" src="${ctxPath!}/static/layer/layer.min.js"></script>
+	<script type="text/javascript" src="${ctxPath!}/static/js/spin.min.js"></script>
+	<script type="text/javascript" src="${ctxPath!}/static/ztree/jquery.ztree.all-3.5.min.js"></script>
+	<script type="text/javascript" src="${ctxPath!}/static/js/jquery.autosize.min.js"></script>
+	<script type="text/javascript" src="${ctxPath!}/static/chosen/chosen.jquery.min.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/validate/Validform_v5.3.2_min.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/js/jquery.form.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/js/bootstrap-contextmenu.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/js/jquery.nicescroll.min.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/js/public.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/fileinput/js/fileinput.js"></script>
+	<script type="text/javascript" src="${ctxPath}/static/fileinput/js/fileinput_locale_zh.js"></script>
+	
+@}		
+
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#ace-settings-compact").trigger("click");
+	$("#skin-colorpicker").val("#438EB9");  
+	$("#skin-colorpicker").trigger("change","#438EB9");
+})
+</script>

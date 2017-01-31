@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcSuppliersComPriceLogMapper">
+
+	<sql id="ecSuppliersComPriceLogColumns">
+		id,create_by,create_date,update_by,update_date,remarks,del_flag,suppcom_id,old_purchase_price
+	</sql>
+	
+	<sql id="ecSuppliersComPriceLogAliasColumns">
+		a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.del_flag,a.suppcom_id,a.old_purchase_price
+	</sql>
+	
+	
+	<select id="findEcSuppliersComPriceLog" resultType="com.gyf.ec.model.EcSuppliersComPriceLog">
+	select <include refid="ecSuppliersComPriceLogAliasColumns"/> from ec_suppliers_com_price_log a 
+	<where>
+		1=1
+		<if test="@Ognl@isNotBlank(skuId)">
+			and a.sku_id = #{skuId}
+		</if>
+		<if test="@Ognl@isNotBlank(suppcomId)">
+			and a.suppcom_id = #{suppcomId}
+		</if>
+	</where>
+	order by a.id asc;
+</select>
+</mapper>

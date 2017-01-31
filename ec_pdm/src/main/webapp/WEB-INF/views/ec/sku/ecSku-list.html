@@ -1,0 +1,231 @@
+@var edit =  auth.hasPermission("ecSku:edit");
+@var delete =  auth.hasPermission("ecSku:delete");
+<table id="mycheckTab" class="table table-striped table-bordered table-hover nomargin-bottom">
+	<thead>
+		<tr>
+			<th align="center">
+				<b><input type="checkBox" id="0" name="0" onClick="chooseAll(this)" /></b>
+			</th>
+			<th class="center">图片</th>
+			<th class="center">商品编码(SKU)</th>
+			<th class="center">商品名称</th>
+			<th class="center">分类</th>
+			<th class="center">品牌</th>
+			<th class="center">型号</th>
+			<th class="center">规格</th>
+			<th class="center">建议零售价</th>
+			<th class="center">重量</th>
+			<th class="center">商品属性</th>
+			<th class="center">单位</th>
+			<th class="center">状态</th>
+			<th class="center">创建日期</th>
+			<th class="center">更新日期</th>
+			<th class="center">操作</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@var ecCatalogue = getAllEcCatalogue();
+		@for(item in page.list){
+			<tr>
+				<td align="center">
+					@var j = 0;
+					@if(skuMap.~size > 0) {
+						@for(map in skuMap) {
+							@if(map.key == item.id) {
+								@j=1;
+								<input type="checkBox" id="${item.id}" name="${item.id}" onClick="choose(${item.id}, this)" checked="true"/>
+							@}
+						@}
+						@if(j == 0) {
+							<input type="checkBox" id="${item.id}" name="${item.id}" onClick="choose(${item.id}, this)"/>
+							@j = 0;
+						@}
+					@} else {
+						<input type="checkBox" id="${item.id}" name="${item.id}" onClick="choose(${item.id}, this)"/>
+					@}
+				</td>
+				<td class="center">
+				@if(item.showImg!=null&&item.showImg!=""){
+					<img src="${ctxPath}/${item.showImg!}" style="width:50px;height:50px;"/>
+					@}
+				</td>
+				<td class="center">
+					<a href="#/ajax/ecSku/layer2?id=${item.id}"  onclick="addTab(this,'查看SKU')" title="详细">
+						${item.sku!}
+					</a>
+				</td>
+				<td class="center">
+					${item.name!}
+				</td>
+				<td class="center">
+					${ecCatalogue[item.ecCatalogueId].name!}
+				</td>
+				<td class="center">
+					${item.brand!}
+				</td>
+				<td class="center">
+					${item.model!}
+				</td>
+				<td class="center">
+					${item.specifications!}
+				</td>
+				<td id="ptd${item.id}" class="center" ondblclick="ptdClick('${item.id}','${item.suggestedRetailPrice}')">
+					${item.suggestedRetailPrice!}
+				</td>
+				
+				<td class="center">
+					${item.fclWeight!}
+				</td>
+				<td class="center">
+					${dict.getDictByTypeAndValue("sku_attr",item.attr + "").label}
+				</td>
+				<td class="center">
+					${item.company!}
+				</td>
+				<td class="center">
+					${dict.getDictByTypeAndValue("sku_status",item.status + "").label}
+				</td>
+				<td class="center">
+					${item.createDate!,dateFormat="yyyy-MM-dd HH:mm:ss"}
+				</td>
+				<td class="center">
+					${item.updateDate!,dateFormat="yyyy-MM-dd HH:mm:ss" }
+				</td>
+				<td class="center">
+					<div class="hidden-sm hidden-xs action-buttons">
+					@if(edit) {
+						<a class="green" href="#/ajax/ecSku/layer?id=${item.id}" onclick="addTab(this,'修改SKU')" title="修改">
+							<i class="ace-icon fa fa-pencil bigger-130"></i>
+						</a>
+					@}
+					@if(delete) {
+						<a class="red" href="javascript:void(0);" 
+							data-mode="del" data-title="删除操作"
+							data-msg="<span class='red bigger-120'>你确定删< ${item.sku! }> ></span>"
+							data-url="${ctxPath}/ecSku/delete" data-data="{id:'${item.id}'}" title="删除"
+						>
+							<i class="ace-icon fa fa-trash-o bigger-130"></i>
+						</a>
+					@}
+					</div>
+				</td>
+			</tr>
+		@}
+	</tbody>
+</table>
+<div class="space-8"></div>
+<#paginate page="${page}" />
+<script>
+$(document).ready(function(){
+ 	load();
+}) 
+
+function ptdClick(id, price) {
+	var ht = "<input id='ptxt"+id+"' type='text' value='"+price+"'/>";
+	$("#ptd"+id).html(ht);
+	var ptxt = $("#ptxt"+id);
+	ptxt.keydown({"id":id, "ht":ht},function(e){
+		if(e.keyCode==13){
+			var reg = new RegExp("^(([0-9]+\.[0-9]*[1-9][0-9]*)|([0-9]*[1-9][0-9]*\.[0-9]+)|([0-9]*[1-9][0-9]*))$");
+			var id = e.data.id;
+			var htm = e.data.ht;
+			var val = $(this).val();
+			if(reg.test(val)) {
+				$.ajax( {
+					url : "${ctxPath!}/ecSku/updateSuggestedRetailPrice",
+					type : "post",
+					data : {"id": id,
+							"suggestedRetailPrice": val},
+					success : function(result) {
+						if(result.num == "1") {
+							$("#ptd"+id).html(val);
+						} else {
+							$("#ptd"+id).html(ht);
+						}
+					}
+				});
+			} else {
+				alert("请输入数字！");
+			}
+		}
+	}); 
+}
+
+function load() {
+	var flag = "true";
+	$("#mycheckTab").find(":checkbox:gt(0)").each(function(){
+		if(!$(this).attr("checked")) {
+			flag = "false";
+		}
+	})
+	if(flag == "true") {
+		$("#0").attr("checked", true);
+	}
+}
+function choose(id, obj) {
+	var flag = "true";
+	if($(obj).attr('checked') == undefined) {
+		flag = "true"
+		$(obj).parent().html('<input type="checkBox" id="'+id+'" name="'+id+'" onClick="choose('+id+', this)" checked="true"/>');
+	} else {
+		flag = "false";
+		$(obj).parent().html('<input type="checkBox" id="'+id+'" name="'+id+'" onClick="choose('+id+', this)"/>');
+	}
+	 if($("#0").attr("checked") == undefined) {
+		var cflag = "true";
+		$("#mycheckTab").find(":checkbox:gt(0)").each(function(){
+			if($(this).attr("checked") == undefined) {
+				cflag = "false";
+			}
+		});
+		if(cflag == "true") {
+			$("#0").parent().html('<input type="checkBox" id="0" name="0" onClick="chooseAll(this)" checked="true"/>');
+		}
+	}
+	if($("#0").attr("checked") == "checked" && flag == "false") {
+		$("#0").parent().html('<input type="checkBox" id="0" name="0" onClick="chooseAll(this)" />');
+	}
+	$.ajax( {
+		url : "${ctxPath!}/ecSku/ajaxChooseSku",
+		type : "post",
+		data : {"id": id,
+				"flag": flag},
+		success : function(result) {
+			
+		}
+	}); 
+}
+
+function chooseAll(obj) {
+	var ids = "";
+	var flag = "true";
+	if($(obj).attr('checked') == undefined) {
+		flag = "true";
+		$(obj).parent().html('<input type="checkBox" id="0" name="0" onClick="chooseAll(this)" checked="true"/>');
+		$("#mycheckTab").find(":checkbox:gt(0)").each(function(){
+				var id = $(this).attr("id");
+				$(this).parent().html('<input type="checkBox" id="'+id+'" name="'+id+'" onClick="choose('+id+', this)" checked="true"/>');
+				ids = ids + id + ","
+			});
+	} else {
+		flag = "false";
+		$(obj).parent().html('<input type="checkBox" id="0" name="0" onClick="chooseAll(this)"/>');
+		$("#mycheckTab").find(":checkbox:gt(0)").each(function(){
+			var id = $(this).attr("id");
+			$(this).parent().html('<input type="checkBox" id="'+id+'" name="'+id+'" onClick="choose('+id+', this)" />');
+			ids = ids + id + ","
+		});
+	}
+	ids = ids.substring(0, ids.length - 1);
+	$.ajax( {
+		url : "${ctxPath!}/ecSku/ajaxChooseAllSku",
+		type : "post",
+		data : {"id": ids,
+				"flag": flag},
+		success : function(result) {
+			
+		}
+	});
+}
+</script>

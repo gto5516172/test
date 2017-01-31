@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bety.web.mapper.ProductFaqMapper">
+	
+	<!-- 商品faq列表 -->
+	<select id="findPageInfo" resultType="com.bety.web.model.ProductFaq">
+		SELECT su.id,su.name,su.descr,su.create_by,update_by,update_date,status,type_id,goods_no  ,su.create_date
+		FROM ec_faq_product su 
+		<where>
+			1=1 
+			<if test="@Ognl@isNotBlank(name)">
+				and su.name like concat('%', #{name} ,'%') 
+			</if>
+			<if test="@Ognl@isNotBlank(createBy)">
+				and su.create_by like concat('%', #{createBy} ,'%')
+			</if>
+				<if test="@Ognl@isNotBlank(goodsNo)">
+				and su.goods_no like concat('%', #{goodsNo} ,'%')
+			</if>
+				<if test="@Ognl@isNotBlank(typeId)">
+				and su.type_id=#{typeId}
+			</if>
+		</where> 
+		GROUP BY su.id ORDER BY su.update_date desc
+	</select>
+<select id="findFaqProductCountByType" resultType="java.lang.Integer">
+	select count(1) from ec_faq_product where type_id=#{param1}
+</select>
+<select id="findFaqProductCountBySpu" resultType="java.lang.Integer">
+	select count(1) from ec_faq_product where goods_type=#{param1} and goods_no=#{param2}
+</select>
+</mapper>

@@ -1,0 +1,116 @@
+@var add = auth.hasPermission("ecSku:add");
+<style>
+<!--
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    height:150px;
+}
+-->
+</style>
+@var area = area.getAreaList(); //地址区域
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-graduation-cap bigger-120"></i> sku列表 </a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<#search>
+			<form action="${ctxPath}/ecSku/list" method="post"
+				id="search-form" target="list-page" class="center clearfix">
+				<div class="col-xs-12">
+				<div class="pull-left width-25">
+						<label class="inline">商品目录：</label>
+							<#pullDownTree order="one" treeData="${ecCataloue}" name="findCataloueId" 
+								class="width-60" />
+					</div>
+					<div class="pull-left width-25">
+							<label class="inline">状态：</label>
+							<#select id="status" name="status" width="60%">
+								<option value="">全部</option>
+								<option value="0">正常</option>
+								<option value="1">停用</option>
+							</#select>
+					</div>
+					<div class="pull-left width-25">
+						<label class="inline">销售员：</label><input type="text"
+							class="width-60" name="salesStaff" placeholder="输入销售员..." />
+					</div>
+				</div>
+			<div class="col-xs-12" style="margin-top:15px">
+				<div class="pull-left width-25" >
+						<label class="inline">产品编号：</label>
+						<input type="text"
+							class="width-60" name="sku" placeholder="输入产品编号..." />
+					</div>
+				<div class="pull-left width-25">
+						<label class="inline">品牌：</label><input type="text"
+							class="width-60" name="findTxt" placeholder="输入品牌..." />
+					</div>
+					<div class="pull-left width-25">
+						<label class="inline">型号：</label> <input type="text"
+							class="width-60" name="model" placeholder="输入型号..." />
+					</div>
+				</div>
+				<div class="col-xs-12" style="margin-top:15px">
+				<div class="pull-left width-25">
+						<label class="inline">商品名称：</label> <input type="text"
+							class="width-60" name="name" placeholder="输入商品名称..." />
+					</div>
+						<div class="pull-left width-25">
+						<label class="inline">规格：</label><input type="text"
+							class="width-60" name="specifications" placeholder="输入规格..." />
+					</div>
+					<div class="pull-left width-25">
+						<label class="inline">首选供应商：</label> <input type="text"
+							class="width-60" name="suppliersName" placeholder="输入首选供应商..." />
+					</div>	
+				</div>
+				<div class="col-xs-12" style="margin-top:15px">
+				
+					<div class="pull-left width-25">
+					<span class="btn btn-info btn-sm tooltip-info" id="search-btn">查询</span>
+					@if(add){
+					 <span
+								class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+							data-mode="page" data-title="批量修改"
+							data-url="${ctxPath}/ecSku/editBatch/layer3"
+							data-data="{id:''}"
+							data-width="50%" title="批量修改">批量修改 </span> 
+						<a class="btn btn-info btn-sm tooltip-info" href="#/ajax/ecSku/toSkuSave" onclick="addTab(this,'添加SKU')">添加</a>
+						<span class="btn btn-purple btn-xs" id="importFile">
+								<i class="ace-icon fa fa-cloud-download bigger-130"></i>
+								<span>导入数据</span>
+								<input type="file" class="phide"  name="myfile" 
+								data-url="${ctxPath}/ecSku/import" data-accept="application/vnd.ms-excel" 
+								data-progressid="#excel-progress"
+								onchange="Angel.uploadFile.excel(this);"/>
+							</span>
+							<span class="btn btn-purple btn-xs" 
+								onclick="Angel.downloadFile('','${ctxPath}/ecSku/downloadModel')">
+								<i class="ace-icon fa fa-cloud-upload bigger-130"></i>
+							导出模板</span>
+					@}
+				</div>
+				</div>
+				
+			</form>
+			</#search>
+			<div class="space-6"></div>
+			<div id="list-page"></div>
+		</div>
+		
+
+	</div>
+</div>
+
+		
+		
+	<script type="text/javascript">
+	$("#search-form").getPageList({'submitBtnId':'search-btn'});
+	</script>

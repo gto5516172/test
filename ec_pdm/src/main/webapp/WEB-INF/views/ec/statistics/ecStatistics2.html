@@ -1,0 +1,102 @@
+﻿<div class="tabbable">
+<ul class="nav nav-tabs" id="myTab">
+	<li class="active"><a data-toggle="tab" href="#home"> <i
+			class="green ace-icon fa fa-users bigger-120"></i>任务统计(饼状) </a></li>
+</ul>
+
+<div class="tab-content">
+	<div id="home" class="tab-pane active clearfix">
+		<#search>
+		<form action="${ctxPath}/gameAcc/list" method="post" id="search-form"
+			target="list-page" class="center clearfix">
+			<div class="row padding-tb-12">
+				<div class="col-sm-4">
+					<label class="inline">类型：</label> <select id="selectType"
+						name="selectType">
+						<option value="">请选择</option>
+						<option value="1">按人员查看任务量</option>
+						<option value="2">按任务类型查看任务量</option>
+					</select>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="dtp_input1" class="col-md-2 control-label">开始：</label>
+						<div class="input-group date form_datetime col-md-5"
+							data-link-field="dtp_input1">
+							<input type="text" class="width-80" id="start" datatype="*"
+								name="start"
+								onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+						</div>
+					</div>
+				</div>
+				<div class="col-sm-4">
+					<div class="form-group">
+						<label for="dtp_input1" class="col-md-2 control-label">结束：</label>
+						<div class="input-group date form_datetime col-md-5"
+							data-link-field="dtp_input1">
+							<input type="text" class="width-80" id="end" datatype="*"
+								name="end"
+								onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="padding-trb-10 col-sm-12">
+				<span class="btn btn-info btn-sm col-sm-6" id="search-btn"
+					onclick="findEcStatistics2()">查询</span>
+			</div>
+		</form>
+		</#search>
+		<div class="space-6"></div>
+		<div id="list-page">
+			<div id="container" style="min-width: 700px; height: 400px"></div>
+			﻿
+			<div id="sliders"
+				style="min-width: 310px; max-width: 800px; margin: 0 auto;">
+				<!-- <table>
+						<tr>
+							<td>Alpha Angle</td>
+							<td><input id="R0" type="range" min="0" max="45" value="15" />
+								<span id="R0-value" class="value"></span>
+							</td>
+						</tr>
+						<tr>
+							<td>Beta Angle</td>
+							<td><input id="R1" type="range" min="0" max="45" value="15" />
+								<span id="R1-value" class="value"></span>
+							</td>
+						</tr>
+					</table> -->
+			</div>
+		</div>
+	</div>
+</div>
+</div>
+<style>
+#profile .center>label {
+	width: 100px;
+	text-align: right;
+}
+</style>
+<script>
+
+function findEcStatistics2() { 
+	// Set up the chart 
+	var start = $("#start").val();
+	var end = $("#end").val();
+	var selectType = $("#selectType").val();
+	if(selectType !='' && start != '' && end != '') {
+		$.ajax({
+			 type:'post',      
+	         url:'${ctxPath!}/ecStatistics/findEcStatistics2',  
+	         data:{start:start, end:end, selectType:selectType},  
+	         dataType:'json',  
+	         success:function(data){ 
+	        	 $('#container').highcharts({ chart: { type: 'pie', options3d: { enabled: true, alpha: 45, beta: 0 } }, title: { text: data.text }, tooltip: { pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>' }, plotOptions: { pie: { allowPointSelect: true, cursor: 'pointer', depth: 35, dataLabels: { enabled: true, format: '{point.name}' } } }, series: [{ type: 'pie', name: 'Browser share', data: data.objAry }] });
+	         }
+		});
+	} else {
+		layer.alert("请选择类型和时间",1);
+	}
+}
+</script>

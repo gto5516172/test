@@ -1,0 +1,404 @@
+<style>
+<!--
+.myinput{
+	 margin:0 auto 15px;
+	 width:53%;
+	 overflow: auto;
+}
+.myinputhidden{
+	 margin:0 auto 15px;
+	 width:53%;
+	 height:250px;
+	 display:none;
+	 overflow: auto;
+}
+.mytextarea{
+	 margin:0 auto 15px;
+	 width:90%;
+	 height:100px;
+	 overflow: auto;
+}
+.myplatform{
+	margin: 0px auto 50px;
+	width: 51%;
+}
+.mylable{
+	float:left;	
+	width:10%;
+}
+.mycontent{
+	float:left;
+	width:90%;
+}
+.tags{
+	display: inline-block;
+	padding: 4px 6px;
+	color: #777;
+	vertical-align: middle;
+	background-color: #FFF;
+	border: 1px solid #d5d5d5;
+	width: 100%
+}
+
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    display:none;
+}
+.well1{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+}
+.carousel-control.left {
+   background-image:none!important;
+    background-repeat: repeat-x;
+}
+.carousel-control.right{
+   background-image:none!important;
+    background-repeat: repeat-x;
+}
+
+
+-->
+</style>
+<div class="layer">
+	<form name="FormPost" id="ecSku-save-form" class="FormGrid" method="post"
+			action="${ctxPath}/ecSku/save">
+			<input type="hidden" value="${ecSku.id!}" name="id"/>
+		<table class="EditTable" width="100%">
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">商品编码SKU：</td>
+					<td class="">
+						${ecSku.sku!}
+					</td>
+					<td class="CaptionTD">产品属性：</td>
+					<td class="" colspan="3">
+						${dict.getDictByTypeAndValue("sku_attr",ecSku.attr + "").label}
+					</td>
+					<td class="" colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品名称：</td>
+					<td class="DataTD" colspan="3">
+						${ecSku.name!}
+					</td>
+					<td class="CaptionTD">商品状态：</td>
+					<td class="" colspan="3">
+						${dict.getDictByTypeAndValue("sku_status",ecSku.status + "").label}
+					</td>
+					<td colspan="2"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">原产地：</td>
+					<td class="">
+						${ecSku.placeOfOrigin!}
+					</td>
+					<td class="CaptionTD">海关编码：</td>
+					<td class="">
+						${ecSku.customs!}
+					</td>
+					<td colspan="6"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">销售SKU：</td>
+					<td class="DataTD" colspan="3">
+						${ecSku.saleSku!}
+					</td>
+					<td class="CaptionTD">关联SPU：</td>
+					<td colspan="">
+						${ecSku.spuNo!}
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品细类目录：</td>
+					<td class="" colspan="3">
+						${ecCatalogue.name!}
+					</td>
+					<td colspan="6"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品尺寸：</td>
+					<td class="" colspan="2">
+					<table class="EditTable" width="100%">
+						<tbody>
+							<tr>
+								<td class="" align="center">
+									${ecSku.commodityLong!}
+								</td>
+								<td align="center">*</td>
+								<td class="" align="center">
+									${ecSku.commodityWidth!}
+								</td>
+								<td align="center">*</td>
+								<td class="" align="center">
+									${ecSku.commodityHeight!}
+								</td>
+								<td class="" align="center">
+									${dict.getDictByTypeAndValue("commodity_company",ecSku.commodityCompany + "").label}
+								</td>
+								<td class="" align="center">
+									${ecSku.commodityVolume!}
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					</td>
+					<td class="CaptionTD">包装尺寸：</td>
+					<td class="" colspan="2">
+						<table class="EditTable" width="100%">
+						<tbody>
+							<tr>
+								<td class="" align="center">
+									${ecSku.packingLong}
+								</td>
+								<td align="center">*</td>
+								<td class="" align="center">
+									${ecSku.packingWidth}
+								</td>
+								<td align="center">*</td>
+								<td class="" align="center">
+									${ecSku.packingHeight}
+								</td>
+								<td class="" align="center">
+									${dict.getDictByTypeAndValue("commodity_company",ecSku.packingCompany + "").label}
+								</td>
+								<td class="" align="center">
+									${ecSku.packingVolume}
+								</td>
+							</tr>
+						</tbody>
+						</table>
+					</td>
+					<td class="" colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">供应商：</td>
+					<td class="" colspan="6">
+						<table class="EditTable" width="100%" id="suppliersT">
+						<tbody>
+							@var num = 0;var sid = "";
+							@for(item2 in esc) {
+							<tr>
+								<td class="" id="myTd">
+									${item2.suppliersName}
+								</td>
+								<td class="CaptionTD">原厂编号：</td>
+								<td class="">
+									${item2.factoryNo!}
+								</td>
+								@var purchasePricePermison = user.isDataPersion(auth.getLoginUser().id,"0");
+								@if(purchasePricePermison){
+								<td class="CaptionTD">采购价格：</td>
+								<td class="">
+									${item2.purchasePrice!}
+								</td>
+								@}else{
+								<td class="CaptionTD"></td>
+								<td class=""></td>
+								@}
+								<td class="CaptionTD">最小采购量：</td>
+								<td class="">
+									${item2.minNum!}
+								</td>
+								<td class="CaptionTD"><div class="radio">
+											<label>
+											@if(ecSku.suppliersId == item2.suppliersId) {
+												首选
+											@}
+											</label>
+											</div>
+								</td>
+								<td class="CaptionTD">
+								</td>
+							</tr>
+							@ num = num + 1;
+							@}
+							</tbody>
+						</table>
+					</td>
+					<td colspan="3"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">每箱装箱数量：</td>
+					<td class="">
+						${ecSku.fclNum!}
+					</td>
+					<td class="CaptionTD">整箱重量：</td>
+					<td class="">
+						${ecSku.fclWeight!}
+					</td>
+					<td class="" align="left">kg</td>
+					<td class="CaptionTD">整箱体积：</td>
+					<td class="">
+						${ecSku.fclVolumne!}
+					</td>
+					<td class="" align="left">m³</td>
+					<td colspan="2"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">包材类型：</td>
+					<td class="4">
+						${dict.getDictByTypeAndValue("package_type",ecSku.packageType + "").label}
+					</td>
+					<td colspan="5"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">折扣范围：</td>
+					<td class="">
+						<table class="EditTable" width="">
+						<colgroup width="33%"></colgroup>
+						<colgroup width="33%"></colgroup>
+						<colgroup width="33%"></colgroup>
+						<tbody>
+							<tr>
+								<td class="" align="left">
+									${ecSku.discountRangeStart!}
+								</td>
+								<td align="center">~</td>
+								<td class="" align="left">
+									${ecSku.discountRangeEnd!}
+								</td>
+							</tr>
+						</tbody>
+						</table>
+					</td>
+					<td class="FormData" align="right">商品标签配置：</td>
+					<td class="DataTD" colspan="3">${ecSku.productLabelConfiguration!}</td>
+					<td class="" colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">销售员：</td>
+					<td class="">
+						${ecSku.salesStaff!}
+					</td>
+					<td class="CaptionTD">销售时间【Release Date】：</td>
+					<td class="">
+							<div class="col-md-12">
+								<div class="input-group">
+									${ecSku.releaseDate!}
+								</div>
+							</div>
+					</td>
+					<td class="CaptionTD">单位：</td>	
+					<td class="">
+						${ecSku.company!}
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品毛重【Shipping Weight】：</td>
+					<td class="">
+						${ecSku.shippingWeight!}
+					</td>
+					<td class="">
+						${dict.getDictByTypeAndValue("weight_company",ecSku.shippingWeightCompany + "").label}
+					</td>
+					<td class="CaptionTD">商品净重【Item Weight】：</td>
+					<td class="">
+						${ecSku.itemWeight!}
+					</td>
+					<td class="">
+						${dict.getDictByTypeAndValue("weight_company",ecSku.itemWeightCompany + "").label}
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">型号：</td>
+					<td class="">
+						${ecSku.model!}
+					</td>
+					<td class="CaptionTD">规格：</td>
+					<td class="">
+						${ecSku.specifications!}
+					</td>
+					<td class="CaptionTD">建议零售价：</td>
+					<td class="">
+						${ecSku.suggestedRetailPrice!}
+					</td>
+					<td class="CaptionTD">成本价：</td>
+					<td colspan="">
+						${ecSku.costPrice!}
+					</td>
+					<td colspan="2"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">图片：</td>
+					<td colspan="9">
+						<img src="${ctxPath}/${ecSku.showImg!}" style="width:100px;height:100px;"/>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</form>
+		
+		<div class="widget-box widget-color-green2 " id="bomList">
+	<div class="widget-header clearfix">
+		<h5 class="widget-title">配件BOM表：</h5>
+		<div class="widget-toolbar">
+			<a href="#" data-action="fullscreen" class="orange2"> <i
+				class="ace-icon fa fa-expand"></i> </a>
+		</div>
+	</div>
+		<div class="widget-body">
+		<div class="widget-main padding-8">
+			<div class="row">
+		<div class="widget-toolbar  width-100" style="padding-top: 2px;border:0px solid red;float:left">
+			<form method="post" class="form-search" id="search-form2"
+				target="list-page2" action="${ctxPath}/ecBom/list">
+				<div class="input-group" style="line-height: 0px;display:none">
+					<input type="text" class="form-control search-query width-20"
+								name="findBomTxt" placeholder="物料名称" id="search-input2">
+					<span class="input-group-btn">
+						<a class="green" href="javascript:void(0);" 
+							data-mode="page" data-title="添加BOM" 
+							data-url="${ctxPath}/ecBom/add/showlayer" 
+							data-data="{skuId:'${ecSku.id}'}" 
+							data-width="50%"
+						><span class="btn  btn-error btn-sm" id="add_btn"> 
+							添加
+							<i class="ace-icon fa fa-save icon-on-right bigger-110"></i> 
+						  </span>
+						</a> 
+					</span>
+					<span
+						class="input-group-btn"><span
+						class="btn  btn-success btn-sm" id="search-btn2"> 搜索 <i
+							class="ace-icon fa fa-search icon-on-right bigger-110"></i> </span></span>
+				</div>
+				<input type="hidden" name="skuId" value="${ecSku.id!}"/>
+			</form>
+			<div class="" id="list-page2" style="width:100%;border:0px solid blue">
+			</div>
+		</div>
+		</div>
+		</div>
+		</div>
+		</div>
+	</div>
+	<script type="text/javascript">
+		$("#search-form2").getPageList({'submitBtnId':'search-btn2'});
+		var attr = "${ecSku.attr}";
+		$(function(){
+			if(attr == 1){
+				$("#bomList").show();		
+			} else {
+				$("#bomList").hide();
+			}
+		});
+	</script>

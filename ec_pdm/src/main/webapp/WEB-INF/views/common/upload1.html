@@ -1,0 +1,167 @@
+<style>
+<!--
+.mybut{
+	 margin:0 auto 15px 7px;
+	 width:98%;
+	 overflow: auto;
+}
+-->
+</style>
+<div class="layer">
+		@layout("/layout/img_upload1.html"){};
+			<script type="text/javascript">
+	 	var BASE_URL = '${ctxPath}';
+	 	var imgs=new Array();
+	 	var index=0;
+		 //$('#fileList').after("<span class='myspan1'>最多上传{max}张</span>");
+	 	jQuery(function() {
+	     var $ = jQuery,
+	         $list = $('#fileList'),
+	         // 优化retina, 在retina下这个值是2
+	         ratio = window.devicePixelRatio || 1,
+	
+	         // 缩略图大�
+	         thumbnailWidth = 100 * ratio,
+	         thumbnailHeight = 100 * ratio,
+	
+	         // Web Uploader实例
+	         uploader;
+	
+	     // 初始化Web Uploader
+	     uploader = WebUploader.create({
+	
+	         // 自动上传�
+	         auto: true,
+	
+	         // swf文件路径
+	         swf: BASE_URL + '/js/Uploader.swf',
+	         fileNumLimit: ('${max}'==null||'${max}'=='0'||'${max}'=='')?undefined:'${max}', 
+	         // 文件接收服务端�
+	           server: BASE_URL+'/static/ueditor/jsp/controller.jsp?action=uploadimage',
+	         // 选择文件的按钮。可选�
+	         // 内部根据当前运行是创建，可能是input元素，也可能是flash.
+	         pick: '#filePicker',
+	
+	         // 只允许选择文件，可选�
+	         accept: {
+	             title: 'Images',
+	             extensions: 'gif,jpg,jpeg,bmp,png',
+	             mimeTypes: 'image/*'
+	         }
+	     });
+	
+		
+	     // 当有文件添加进来的时�
+	     uploader.on( 'fileQueued', function( file ) {
+	    	
+	         var $li = $(
+	                 '<div id="' + file.id + '" class="file-item thumbnail">' +
+	                     '<img>' +
+	                     '<div class="info">' + file.name + '</div>' +
+	                 '</div>'
+	                 ),
+	             $img = $li.find('img');
+	      // 例如sku那里只能单张图片的就能取到这个�
+		 	 var uploadFlag = $("#uploadFlag").val();
+	      	 if(uploadFlag == undefined) {
+	      		$list.append( $li );
+	      	 } else {
+	      		$list.html( $li );
+	      	 }
+	         
+			
+	         // 创建缩略�
+	         uploader.makeThumb( file, function( error, src ) {
+	             if ( error ) {
+	                 $img.replaceWith('<span>不能预览</span>');
+	                 return;
+	             }
+	             //thumbnail+=src+",";
+	             $img.attr( 'src', src );
+	         }, thumbnailWidth, thumbnailHeight );
+	     });
+		
+	     // 文件上传过程中创建进度条实时显示�
+	     uploader.on( 'uploadProgress', function( file, percentage ) {
+	         var $li = $( '#'+file.id ),
+	             $percent = $li.find('.progress span');
+	
+	         // 避免重复创建
+	         if ( !$percent.length ) {
+	             $percent = $('<p class="progress"><span></span></p>')
+	                     .appendTo( $li )
+	                     .find('span');
+	         }
+	
+	         $percent.css( 'width', percentage * 100 + '%' );
+	     });
+	
+	     // 文件上传成功，给item添加成功class, 用样式标记上传成功�
+	     uploader.on( 'uploadSuccess', function( file,response) {
+	         $( '#'+file.id ).addClass('upload-state-done');
+	         var jsonObj ={url:response.url,original:response.original};
+	         imgs[index]=jsonObj;
+	         index++;
+	     });
+	
+	     // 文件上传失败，现实上传出错�
+	     uploader.on( 'uploadError', function( file ) {
+	         var $li = $( '#'+file.id ),
+	             $error = $li.find('div.error');
+	
+	         // 避免重复创建
+	         if ( !$error.length ) {
+	             $error = $('<div class="error"></div>').appendTo( $li );
+	         }
+	
+	         $error.text('上传失败');
+	     });
+	
+	     // 上传完了，成功或者失败，先删除进度条�
+	     uploader.on( 'uploadComplete', function( file ) {
+	         $( '#'+file.id ).find('.progress').remove();
+	     });
+	 });
+	 
+	 	$("#ensure").click(function() {
+	 		// 例如sku那里只能单张图片的就能取到这个�
+	 		var uploadFlag = $("#uploadFlag").val();
+	 		if(uploadFlag == undefined) {
+		 		var li='';
+		 		var jsname = $('#${imgId}').attr("jsname");
+		 		var imgstr ='';
+		 		for(var i=0;i<imgs.length;i++){
+		 			var img = imgs[i];
+		         	li+="<li id='${imgId}_"+i+"'><a class='cboxElement' href='"+BASE_URL+img.url+"' data-rel='colorbox'><img alt='110x110' width='110' height='110' src='"+BASE_URL+img.url+"'><div class='text'><div class='inner'>"+img.original+"</div><input type='hidden' name='${inputId}' value='"+JSON.stringify(img)+"'></div></a><div class='tools tools-bottom'><a href='#'><i class='icon-link' onclick="+jsname+"('${imgId}_"+i+"')><img src='${ctxPath}/static/img/del3.png'></i></a></div></li>";
+		 		}
+		 		
+		 		$('#${imgId}').append(li);
+		 		$("#ensure").parents('.xubox_main').find('.xubox_close').click();
+	 		} else {
+	 			var li='';
+		 		var jsname = $('#${imgId}').attr("jsname");
+		 		var imgstr ='';
+		 		for(var i=0;i<imgs.length;i++){
+		 			var img = imgs[i];
+		         	li = "<li id='${imgId}_"+i+"'><a class='cboxElement' href='"+BASE_URL+img.url+"' data-rel='colorbox'><img alt='110x110' width='110' height='110' src='"+BASE_URL+img.url+"'><div class='text'><div class='inner'>"+img.original+"</div><input type='hidden' name='${inputId}' value='"+JSON.stringify(img)+"'></div></a><div class='tools tools-bottom'><a href='#'><i class='icon-link' onclick="+jsname+"('${imgId}_"+i+"')><img src='${ctxPath}/static/img/del3.png'></i></a></div></li>";
+		 		}
+		 		$('#${imgId}').html(li);
+		 		$("#ensure").parents('.xubox_main').find('.xubox_close').click();
+	 		}
+	 	}); 
+	 	
+	 	function GetRandomNum()
+	 	{   
+	 	var Max = 100000;
+	 	var Min = 0;
+	 	var Range = Max - Min;   
+	 	var Rand = Math.random();   
+	 	return(Min + Math.round(Rand * Range));   
+	 	}   
+	</script>
+	<div id="uploader-demo" class="wu-example">
+	    <div id="fileList" class="uploader-list"></div>
+	    <div id="filePicker">选择图片</div>
+	</div>
+</div>
+<div class="mybut"><span class="btn btn-info btn-block bigger-120" id="ensure" >确定</span></div>

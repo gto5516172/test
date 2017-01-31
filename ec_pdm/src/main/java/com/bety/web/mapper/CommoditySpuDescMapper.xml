@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bety.web.mapper.CommoditySpuDescMapper">
+	<!--SPU列表 -->                                          
+	<select id="findPageInfo" resultType="com.bety.web.model.CommoditySpuDesc">
+		SELECT su.id,su.descr,su.create_by,update_by,update_date,image  
+		FROM ec_commodity_spu_desc su 
+		<where>
+			<if test="@Ognl@isNotBlank(spuId)">
+				su.spu_id = #{spuId} 
+			</if>
+		</where> 
+		GROUP BY su.id ORDER BY su.update_date desc
+	</select>
+
+</mapper>

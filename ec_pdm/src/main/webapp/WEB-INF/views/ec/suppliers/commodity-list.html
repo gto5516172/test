@@ -1,0 +1,175 @@
+<table id="mycheckTab" class="table table-striped table-bordered table-hover nomargin-bottom" style="width:100%">
+	<thead>
+		<tr>
+			<th align="center">
+				<b><input type="checkBox" id="0" name="0" onClick="chooseAll(this)" /></b>
+			</th>
+			<th class="center">商品编号</th>
+			<th class="center">商品目录</th>
+			<th class="center">品牌</th>
+			<th class="center">原厂编号</th>
+			<th class="center">商品名称</th>
+			<th class="center">报价时间</th>
+			<th class="center">最新报价</th>
+			<th class="center">系统成本价</th>
+			<th class="center">商品状态</th>
+			<th class="center">操作</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@var ecCatalogue = getAllEcCatalogue();
+		@for(item in commodityPage.list){
+			<tr>
+				<td align="center">
+					@var j = 0;
+					@if(scMap.~size > 0) {
+						@for(map in scMap) {
+							@if(map.key == item.id) {
+								@j=1;
+								<input type="checkBox" id="${item.id}" name="${item.id}" onClick="choose(${item.id}, this)" checked="true"/>
+							@}
+						@}
+						@if(j == 0) {
+							<input type="checkBox" id="${item.id}" name="${item.id}" onClick="choose(${item.id}, this)"/>
+							@j = 0;
+						@}
+					@} else {
+						<input type="checkBox" id="${item.id}" name="${item.id}" onClick="choose(${item.id}, this)"/>
+					@}
+				</td>
+				<td class="center">
+					${item.sku}
+					<!-- <a href="javascript:;" 
+						data-title="<${item.suppliersName!}>详情" data-mode="detail"
+						data-url="${ctxPath}/ecsuppliers/detail/showlayer"
+						data-data="{id:'${item.id}'}"
+					>${item.suppliersName}</a> -->
+				</td>
+				<td class="center">
+					${ecCatalogue[item.ecCatalogueId].name}
+				</td>
+				<td class="center">
+					${item.brand}
+				</td>
+				<td class="center">
+					${item.factoryNo}
+				</td>
+				<td class="center">
+					${item.skuName}
+				</td>
+				<td class="center">
+					@if(item.updateDate != null) {
+						${item.updateDate,dateFormat="yyyy-MM-dd HH:mm:ss"}						
+					@} else {
+						${item.createDate,dateFormat="yyyy-MM-dd HH:mm:ss"}
+					@}
+				</td>
+				<td class="center">
+					${item.purchasePrice}
+				</td>
+				<td class="center">
+					${item.costPrice}
+				</td>
+				<td class="center">
+					${dict.getDictByTypeAndValue("sku_status",item.skuStatus + "").label}
+				</td>
+				<td class="center">
+					<a class="green" href="javascript:void(0);" 
+							data-mode="page" data-title="<${item.skuName! }>更新报价"
+							data-url="${ctxPath}/ecSuppliersCommodity/edit/showlayer"
+							data-data="{id:'${item.id}'}"
+							data-width="50%" title="更新报价"
+						>
+							更新报价
+						</a>
+				</td>
+			</tr>
+		@}
+	</tbody>
+</table>
+<div class="space-8"></div>
+<#paginate page="${commodityPage}" formId="search-form2"/>
+
+<script>
+$(document).ready(function(){
+ 	load();
+}) 
+
+function load() {
+	var flag = "true";
+	$("#mycheckTab").find(":checkbox:gt(0)").each(function(){
+		if(!$(this).attr("checked")) {
+			flag = "false";
+		}
+	})
+	if(flag == "true") {
+		$("#0").attr("checked", true);
+	}
+}
+function choose(id, obj) {
+	var flag = "true";
+	if($(obj).attr('checked') == undefined) {
+		flag = "true"
+		$(obj).parent().html('<input type="checkBox" id="'+id+'" name="'+id+'" onClick="choose('+id+', this)" checked="true"/>');
+	} else {
+		flag = "false";
+		$(obj).parent().html('<input type="checkBox" id="'+id+'" name="'+id+'" onClick="choose('+id+', this)"/>');
+	}
+	 if($("#0").attr("checked") == undefined) {
+		var cflag = "true";
+		$("#mycheckTab").find(":checkbox:gt(0)").each(function(){
+			if($(this).attr("checked") == undefined) {
+				cflag = "false";
+			}
+		});
+		if(cflag == "true") {
+			$("#0").parent().html('<input type="checkBox" id="0" name="0" onClick="chooseAll(this)" checked="true"/>');
+		}
+	}
+	if($("#0").attr("checked") == "checked" && flag == "false") {
+		$("#0").parent().html('<input type="checkBox" id="0" name="0" onClick="chooseAll(this)" />');
+	}
+	$.ajax( {
+		url : "${ctxPath!}/ecSuppliersCommodity/ajaxChooseUser",
+		type : "post",
+		data : {"id": id,
+				"flag": flag},
+		success : function(result) {
+			
+		}
+	}); 
+}
+
+function chooseAll(obj) {
+	var ids = "";
+	var flag = "true";
+	if($(obj).attr('checked') == undefined) {
+		flag = "true";
+		$(obj).parent().html('<input type="checkBox" id="0" name="0" onClick="chooseAll(this)" checked="true"/>');
+		$("#mycheckTab").find(":checkbox:gt(0)").each(function(){
+				var id = $(this).attr("id");
+				$(this).parent().html('<input type="checkBox" id="'+id+'" name="'+id+'" onClick="choose('+id+', this)" checked="true"/>');
+				ids = ids + id + ","
+			});
+	} else {
+		flag = "false";
+		$(obj).parent().html('<input type="checkBox" id="0" name="0" onClick="chooseAll(this)"/>');
+		$("#mycheckTab").find(":checkbox:gt(0)").each(function(){
+			var id = $(this).attr("id");
+			$(this).parent().html('<input type="checkBox" id="'+id+'" name="'+id+'" onClick="choose('+id+', this)" />');
+			ids = ids + id + ","
+		});
+	}
+	ids = ids.substring(0, ids.length - 1);
+	$.ajax( {
+		url : "${ctxPath!}/ecSuppliersCommodity/ajaxChooseAllUser",
+		type : "post",
+		data : {"id": ids,
+				"flag": flag},
+		success : function(result) {
+			
+		}
+	});
+}
+</script>

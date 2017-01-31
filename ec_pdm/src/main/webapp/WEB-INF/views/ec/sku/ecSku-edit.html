@@ -1,0 +1,719 @@
+<style>
+<!--
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    height:150px;
+}
+-->
+</style>
+<div class="layer">
+	<form name="FormPost" id="ecSku-save-form" class="FormGrid" method="post"
+			action="${ctxPath}/ecSku/save">
+			<input type="hidden" value="${ecSku.id!}" name="id"/>
+			<input type="hidden" value="" id="fileList" name="fileList"/>
+		<table class="EditTable" width="100%">
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<colgroup width="10%"></colgroup>
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">商品编码SKU：</td>
+					<td class="">
+						<input type="text"
+						name="sku" id="sku" datatype="*"  nullmsg="请输入商品编码SKU！"
+						value="${ecSku.sku!}" ajaxurl="${ctxPath!}/ecSku/validateNameByAjax?id=${ecSku.id}">
+					</td>
+					<td class="CaptionTD">产品属性：</td>
+					<td class="" colspan="3">
+						@var attr = dict.getDictListByType("sku_attr");
+						<#select id="attr" name="attr" width="30%">
+							@for(item in attr){
+								<option value="${item.value!}" ${decode(parseInt(item.value),ecSku.attr!,"selected","")}>
+									${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+					<td class="" colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品名称：</td>
+					<td class="DataTD" colspan="3">
+						<input type="text"
+						name="name" datatype="*"  nullmsg="请输入商品名称！"
+						value="${ecSku.name!}">
+					</td>
+					<td class="CaptionTD">商品状态：</td>
+					<td class="" colspan="3">
+						@var skuStatus = dict.getDictListByType("sku_status");
+						<#select id="status" name="status" width="30%">
+							@for(item in skuStatus){
+								<option value="${item.value!}" ${decode(parseInt(item.value),ecSku.status!,"selected","")}>
+									${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+					<td colspan="2"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">原产地：</td>
+					<td class="">
+						<input type="text"
+						name="placeOfOrigin" 
+						value="${ecSku.placeOfOrigin!}">
+					</td>
+					<td class="CaptionTD">海关编码：</td>
+					<td class="">
+						<input type="text"
+						name="customs" 
+						value="${ecSku.customs!}">
+					</td>
+					<td colspan="6"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">销售SKU：</td>
+					<td class="DataTD" colspan="3" id="mytestTd">
+						<input style="display: none;" name="saleSku" id="form-field-tags" value="" placeholder="回车确认" type="text">
+						<script type="text/javascript">
+							var tag_input = $('#form-field-tags');
+							if(! ( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())) ) 
+							{
+								tag_input.tag(
+								  {
+									placeholder:tag_input.attr('placeholder'),
+									source: ace.variable_US_STATES,
+									 /**
+					                //从Web后台读取数据的写法
+					                source: function(query, process) {
+					                  $.ajax({url: 'remote_source.php?q='+encodeURIComponent(query)})
+					                  .done(function(result_items){
+					                    process(result_items);
+					                  });
+					                }
+					                */
+					                
+								  }
+								);
+							}
+							else {
+								tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="15">'+tag_input.val()+'</textarea>').remove();
+							}
+							
+							//编程的方式添加一个项
+					           var $tag_obj = $('#form-field-tags').data('tag');
+					           var keywors = "${ecSku.saleSku}".split(",");
+							   for(var i=0;i<keywors.length;i++){
+								   if(keywors[i]!='')
+					           	  $tag_obj.add(keywors[i]);
+							   }
+						</script>
+					</td>
+					<td class="CaptionTD">关联SPU</td>
+					<td colspan="">
+						<#select id="spuNo" name="spuNo" width="100%">	
+										<option value="0">选择SPU</option>
+										@for(item in spuList){
+											<option value="${item.spuNo!}" ${decode(item.spuNo,ecSku.spuNo!,"selected","")}>
+											${item.spuNo!}
+											</option>
+										@}
+									</#select>
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品细类目录：</td>
+					<td class="" colspan="3">
+						<#treeselect url="ecCatalogue/tree" modelNameValue="${ecCatalogue.name!}" 
+							modelIdValue="${ecCatalogue.id!0}" selectIds="${ecCatalogue.id!}"
+							modelId="ecCatalogueId" nameId="ecCatalogue" id="ecCatalogue_id"
+							isCheck="请选择商品分类" />
+					</td>
+					<td colspan="6"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品尺寸：</td>
+					<td class="" colspan="2">
+					<table class="EditTable" width="100%">
+						<tbody>
+							<tr>
+								<td class="" align="center">
+									<input type="text" id="commodityLong" name="commodityLong" style="width:50px" value="${ecSku.commodityLong}" onblur="commodity()">
+								</td>
+								<td align="center">*</td>
+								<td class="" align="center">
+									<input type="text" id="commodityWidth" name="commodityWidth" style="width:50px" value="${ecSku.commodityWidth}" onblur="commodity()">
+								</td>
+								<td align="center">*</td>
+								<td class="" align="center">
+									<input type="text" id="commodityHeight" name="commodityHeight" style="width:50px" value="${ecSku.commodityHeight}" onblur="commodity()"> 
+								</td>
+								<td class="" align="center">
+									@var commodityCompany2 = dict.getDictListByType("commodity_company");
+									<#select id="commodityCompany" name="commodityCompany" width="100%">
+										@for(item in commodityCompany2){
+											<option value="${item.value!}" ${decode(parseInt(item.value),ecSku.commodityCompany!,"selected","")}>
+												${item.label!}
+											</option>
+										@}
+									</#select>
+								</td>
+								<td class="" align="center">
+									<input type="text" id="commodityVolume" name="commodityVolume" value="${ecSku.commodityVolume}" readonly="true" style="width:50px">
+								</td>
+							</tr>
+						</tbody>
+					</table>
+					</td>
+					<td class="CaptionTD">包装尺寸：</td>
+					<td class="" colspan="2">
+						<table class="EditTable" width="100%">
+						<tbody>
+							<tr>
+								<td class="" align="center">
+									<input type="text" id="packingLong" name="packingLong" value="${ecSku.packingLong}" style="width:50px" onblur="packing()">
+								</td>
+								<td align="center">*</td>
+								<td class="" align="center">
+									<input type="text" id="packingWidth" name="packingWidth" value="${ecSku.packingWidth}" style="width:50px" onblur="packing()">
+								</td>
+								<td align="center">*</td>
+								<td class="" align="center">
+									<input type="text" id="packingHeight" name="packingHeight" value="${ecSku.packingHeight}" style="width:50px" onblur="packing()"> 
+								</td>
+								<td class="" align="center">
+									@var commodityCompany = dict.getDictListByType("commodity_company");
+									<#select id="packingCompany" name="packingCompany" width="100%">
+										@for(item in commodityCompany){
+											<option value="${item.value!}" ${decode(parseInt(item.value),ecSku.packingCompany!,"selected","")}>
+												${item.label!}
+											</option>
+										@}
+									</#select>
+								</td>
+								<td class="" align="center">
+									<input type="text" id="packingVolume" name="packingVolume" value="${ecSku.packingVolume}" readonly="true" style="width:50px">
+								</td>
+							</tr>
+						</tbody>
+						</table>
+					</td>
+					<td class="" colspan="4"></td>
+				</tr>
+			@var num = 0;var sid = "";
+			@var ecSuppliersPermison = user.isDataPersion(auth.getLoginUser().id,"2");
+			@if(ecSuppliersPermison){
+				<tr class="FormData">
+					<td class="CaptionTD">供应商：</td>
+					<td class="" colspan="6">
+						<table class="EditTable" width="100%" id="suppliersT">
+						<tbody>
+							@if(esc != []) {
+							@for(item2 in esc) {
+							<tr>
+								<td class="" id="myTd">
+									@sid = "ecSuppliersSelect" + num;
+									<#select id="${sid}" name="suppliersIds" width="100%" onchange="checkSelect(this)">
+										<option value="0">选择供应商</option>
+										@for(item in ecSuppliersList){
+											<option value="${item.id!}" ${decode(item.id, item2.suppliersId!,"selected","")}>
+											${item.suppliersName!}
+											</option>
+										@}
+									</#select>
+									
+								</td>
+								<td class="CaptionTD">原厂编号：</td>
+								<td class="">
+									<input type="text" 
+										name="factoryNo" value="${item2.factoryNo!}" nullmsg="原厂编号！">
+								</td>
+								@var purchasePricePermison = user.isDataPersion(auth.getLoginUser().id,"0");
+								@if(purchasePricePermison){
+								<td class="CaptionTD">采购价格：</td>
+								<td class="">
+									<input type="text"
+										name="purchasePrice" value="${item2.purchasePrice!}"  nullmsg="采购价格！">
+								</td>
+								@}else{
+									<td class="CaptionTD"></td>
+								<td class="">
+								</td>
+								@}
+								<td class="CaptionTD">最小采购量：</td>
+								<td class="">
+									<input type="text"
+										name="minNum" value="${item2.minNum!}"  nullmsg="最小采购量！">
+								</td>
+								<td class="CaptionTD"><div class="radio">
+											<label>
+											<input class="ace" type="radio" name="suppliersId" value="${ecSku.suppliersId}" id="suppliersIdecSuppliersSelect" 
+											@if(ecSku.suppliersId == item2.suppliersId) {
+												checked
+											@}
+											>
+												<span class="lbl">设为首选</span>
+											</label>
+											</div>
+								</td>
+								<td class="CaptionTD">
+									@if(num == 0) {
+										<input type="button" value="添加" onclick="addSuppliers()"/>
+									@} else {
+										<button class="btn btn-xs" onclick="delSuppliers(this)">删除</button>
+									@}
+									
+								</td>
+							</tr>
+							@ num = num + 1;
+							@}
+							@}
+							@if(esc == []) {
+								<tr>
+								<td class="" id="myTd">
+									<#select id="ecSuppliersSelect0" name="suppliersIds" width="100%" onchange="checkSelect(this)">
+										<option value="0">选择供应商</option>
+										@for(item in ecSuppliersList){
+											<option value="${item.id!}">
+											${item.suppliersName!}
+											</option>
+										@}
+									</#select>
+									
+								</td>
+								<td class="CaptionTD">原厂编号：</td>
+								<td class="">
+									<input type="text" 
+										name="factoryNo">
+								</td>
+								<td class="CaptionTD">采购价格：</td>
+								<td class="">
+									<input type="text"
+										name="purchasePrice">
+								</td>
+								<td class="CaptionTD">最小采购量：</td>
+								<td class="">
+									<input type="text"
+										name="minNum">
+								</td>
+								<td class="CaptionTD"><div class="radio">
+											<label>
+											<input class="ace" type="radio" name="suppliersId" value="0" id="suppliersIdecSuppliersSelect" checked>
+												<span class="lbl">设为首选</span>
+											</label>
+											</div>
+								</td>
+								<td class="CaptionTD">
+									<input type="button" value="添加" onclick="addSuppliers()"/>
+								</td>
+							</tr>
+							@}
+							</tbody>
+						</table>
+					</td>
+					<td colspan="3"></td>
+				</tr>
+				@}
+				<tr class="FormData">
+					<td class="CaptionTD">每箱装箱数量：</td>
+					<td class="">
+						<input type="text"
+						name="fclNum" value="${ecSku.fclNum!}">
+					</td>
+					<td class="CaptionTD">整箱重量：</td>
+					<td class="">
+						<input type="text"
+						name="fclWeight" value="${ecSku.fclWeight!}">
+					</td>
+					<td class="" align="left">kg</td>
+					<td class="CaptionTD">整箱体积：</td>
+					<td class="">
+						<input type="text"
+						name="fclVolumne" value="${ecSku.fclVolumne!}">
+					</td>
+					<td class="" align="left">m³</td>
+					<td colspan="2"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">包材类型：</td>
+					<td class="4">
+						@var packageType = dict.getDictListByType("package_type");
+						<#select id="packageType" name="packageType" width="80%">
+							@for(item in packageType){
+								<option value="${item.value!}" ${decode(parseInt(item.value),ecSku.packageType!,"selected","")}>
+									${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+					<td colspan="5"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">折扣范围：</td>
+					<td class="">
+						<table class="EditTable" width="">
+						<colgroup width="33%"></colgroup>
+						<colgroup width="33%"></colgroup>
+						<colgroup width="33%"></colgroup>
+						<tbody>
+							<tr>
+								<td class="" align="left">
+									<input type="text" name="discountRangeStart" value="${ecSku.discountRangeStart!}" style="width:50px">
+								</td>
+								<td align="center">~</td>
+								<td class="" align="left">
+									<input type="text" name="discountRangeEnd" value="${ecSku.discountRangeEnd!}" style="width:50px">
+								</td>
+							</tr>
+						</tbody>
+						</table>
+					</td>
+					<td class="FormData" align="right">商品标签配置：</td>
+					<td class="DataTD" colspan="3"><input type="text" name="productLabelConfiguration" value="${ecSku.productLabelConfiguration!}"></td>
+					<td class="" colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">销售员：</td>
+					<td class="">
+						<input type="text"
+						name="salesStaff" value="${ecSku.salesStaff!}">
+					</td>
+					<td class="CaptionTD">销售时间：</td>
+					<td class="">
+							<div class="col-md-12">
+								<div class="input-group">
+									<span class="input-group-addon" id="basic-addon1"><i class="fa fa-calendar"></i></span>
+									<input type="text" id="calendar" placeholder="" value="${ecSku.releaseDate!}" name="releaseDate" class="form-control" readonly="true">
+								</div>
+							</div>
+						<script>
+							$(document).ready(function() {
+								$("#calendar").bootstrapDatepickr({date_format: "Y-m-d"});
+							});
+						</script>
+					</td>
+					<td class="CaptionTD">单位：</td>	
+					<td class="">
+						@var types = dict.getDictListByType("spu_units");
+						<#select name="company" id="select_id" width="50%">
+						@for(type in types){
+							<option value="${type.value!}" 
+							@if(ecSku.company==type.value){
+							selected
+							@}
+							>
+							${type.label!}
+							</option>
+							@}
+						</#select>
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品毛重：</td>
+					<td class="">
+						<input type="text"
+						name="shippingWeight" value="${ecSku.shippingWeight!}">
+					</td>
+					<td class="">
+						@var weightCompany = dict.getDictListByType("weight_company");
+						<#select id="shippingWeightCompany" name="shippingWeightCompany" width="80%">
+							@for(item in weightCompany){
+								<option value="${item.value!}" ${decode(parseInt(item.value),ecSku.shippingWeightCompany!,"selected","")}>
+									${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+					<td class="CaptionTD">商品净重：</td>
+					<td class="">
+						<input type="text"
+						name="itemWeight" value="${ecSku.itemWeight!}">
+					</td>
+					<td class="">
+						@var weightCompany2 = dict.getDictListByType("weight_company");
+						<#select id="itemWeightCompany" name="itemWeightCompany" width="80%">
+							@for(item in weightCompany2){
+								<option value="${item.value!}" ${decode(parseInt(item.value),ecSku.itemWeightCompany!,"selected","")}>
+									${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">型号：</td>
+					<td class="">
+						<input type="text"
+							name="model" value="${ecSku.model}">
+					</td>
+					<td class="CaptionTD">规格：</td>
+					<td class="">
+						<input type="text"
+							name="specifications" value="${ecSku.specifications}">
+					</td>
+					<td class="CaptionTD">建议零售价：</td>
+					<td class="">
+						<input type="text"
+							name="suggestedRetailPrice" value="${ecSku.suggestedRetailPrice}">
+					</td>
+					@var costPriceePermison = user.isDataPersion(auth.getLoginUser().id,"1");
+					@if(costPriceePermison){
+					<td class="CaptionTD">成本价：</td>
+					<td colspan="">
+						<input type="text"
+							name="costPrice" value="${ecSku.costPrice}">
+					</td>
+					@}else{
+					<td class="CaptionTD"></td>
+					<td colspan="">
+					</td>
+					@}
+					<td colspan="2"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">图片：</td>
+					<td colspan="9">
+						@if(ecSku.showImg != null) {
+							<img src="${ctxPath}/${ecSku.showImg}" title="${item.originalFileName!}" style="width:100px;height:100px"/>
+						@}
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">新上传图片：</td>
+					<td colspan="9">
+					<div class="form-group">
+		                    <input type="file" class="file" name="myfile" id="test-upload1">
+		                    <div id="errorBlock" class="help-block"></div>
+		                </div>
+		                <script>
+		                $(document).ready(function() {
+		                	var fList = new Array();
+		                	
+		        	        $("#test-upload1").fileinput({
+		        	            'showPreview' : true,
+		        	            'elErrorContainer': '#errorBlock',
+		        	            'dropZoneEnabled': true,
+		        	            'showUpload' : true,
+		                        'showRemove' : true,
+		        	            'browseClass': "btn btn-primary",
+		        	            'uploadUrl':'${ctxPath}/ecFile/uploadFile2'
+		        	        });
+		        	        $("#test-upload1").on("fileuploaded", function (event, data, previewId, index) {
+		        	        	fList.push(JSON.stringify(data.response));
+		        	 			$("#fileList").val(fList.toString());
+		        	        });
+		        	        
+		        	        $("#test-upload").on("filecleared", function() {
+		        	        	fList.splice(0, fList.length);
+		        	        	$("#fileList").val("");
+		        	        });
+		        	    });
+		                </script>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+		</form>
+		
+	<div class="widget-box widget-color-green2 " id="bomList">
+	<div class="widget-header clearfix">
+		<h5 class="widget-title">配件BOM表：</h5>
+		<div class="widget-toolbar">
+			<a href="#" data-action="fullscreen" class="orange2"> <i
+				class="ace-icon fa fa-expand"></i> </a>
+		</div>
+	</div>
+		<div class="widget-body">
+		<div class="widget-main padding-8">
+			<div class="row">
+		<div class="widget-toolbar  width-100" style="padding-top: 2px;border:0px solid red;float:left">
+			<form method="post" class="form-search" id="search-form2"
+				target="list-page2" action="${ctxPath}/ecBom/list">
+				<span class="input-group-btn">
+						<a class="green" href="javascript:void(0);" 
+							data-mode="page" data-title="添加BOM" 
+							data-url="${ctxPath}/ecBom/add/showlayer" 
+							data-data="{skuId:'${ecSku.id}'}" 
+							data-width="50%"
+						><span class="btn  btn-error btn-sm" id="add_btn"> 
+							添加
+							<i class="ace-icon fa fa-save icon-on-right bigger-110"></i> 
+						  </span>
+						</a> 
+					</span>
+				<div class="input-group" style="line-height: 0px;display:none">
+					<input type="text" class="form-control search-query width-20"
+								name="findBomTxt" placeholder="物料名称" id="search-input2">
+					<span
+						class="input-group-btn"><span
+						class="btn  btn-success btn-sm" id="search-btn2"> 搜索 <i
+							class="ace-icon fa fa-search icon-on-right bigger-110"></i> </span></span>
+				</div>
+				<input type="hidden" name="skuId" value="${ecSku.id!}"/>
+			</form>
+			<div class="" id="list-page2" style="width:100%;border:0px solid blue">
+			</div>
+		</div>
+		</div>
+		</div>
+		</div>
+		</div>
+		
+		<div class="margin-t15" style="padding-top:30px">
+				<span class="btn btn-info btn-block bigger-120" id="ecSku-save-btn">保 存</span>
+		</div>
+	</div>
+	<#save isHide="yes" subBtnId="ecSku-save-btn" formId="ecSku-save-form" config="true" validId="ecSkuForm" reloadUrl="true">
+		var myflag = true;
+		var data = $("#ecSku-save-form").serialize();
+		var saleSku = $("#form-field-tags").val();
+		ecSkuForm.config({
+			beforeSubmit:function(curform){
+				if(saleSkuFlag == 0) {
+					$.ajax({
+						 type:'post',      
+	    		         url:'${ctxPath!}/ecSku/validateNameByAjaxSale?id=${ecSku.id}',  
+	    		         data:{saleSku:saleSku},  
+	    		         dataType:'json',  
+	    		         success:function(data){ 
+	    		         	if(data.status == 'y') {
+	    		  				saleSkuFlag = 1;
+	    		         		$("#ecSku-save-btn").click();
+	    		         	} else {
+	    		         		layer.tips(data.info,'#mytestTd');
+	    		         		saleSkuFlag = 0;
+	    		         	}
+	    		         }
+					});
+				}
+				if(saleSkuFlag == 0){
+					return false;
+				} else {
+					return true;
+				}
+			}
+		});
+	</#save>
+	<script type="text/javascript">
+	var attr = "${ecSku.attr}";
+	$("#attr").change(function(){
+		if(this.value==1) {
+			$("#bomList").show();
+		} else {
+			$("#bomList").hide();
+		}
+	});
+	
+	$(function(){
+		$("#sku").focus();
+		if(attr == 1){
+			$("#bomList").show();		
+		} else {
+			$("#bomList").hide();
+		}
+	});
+		var saleSkuFlag = 0;
+		$("#search-form2").getPageList({'submitBtnId':'search-btn2'});
+		function commodity() {
+			var str = /^[0-9]+([.]{1}[0-9]+)?$/;
+			var commodityLong = $("#commodityLong");
+			var commodityWidth = $("#commodityWidth");
+			var commodityHeight = $("#commodityHeight");
+			var commodityVolume = $("#commodityVolume");
+			var cLong = 0;
+			var cWidth = 0;
+			var cVolume = 0;
+			if(str.test(commodityLong.val())) {
+				cLong = commodityLong.val();
+			}
+			if(str.test(commodityWidth.val())) {
+				cWidth = commodityWidth.val();
+			}
+			if(str.test(commodityHeight.val())) {
+				cVolume = commodityHeight.val();
+			}
+			commodityVolume.val(cLong*cWidth*cVolume);
+		}
+		
+		function packing() {
+			var str = /^[0-9]+([.]{1}[0-9]+)?$/;
+			var packingLong = $("#packingLong");
+			var packingWidth = $("#packingWidth");
+			var packingHeight = $("#packingHeight");
+			var packingVolume = $("#packingVolume");
+			var cLong = 0;
+			var cWidth = 0;
+			var cVolume = 0;
+			if(str.test(packingLong.val())) {
+				cLong = packingLong.val();
+			}
+			if(str.test(packingWidth.val())) {
+				cWidth = packingWidth.val();
+			}
+			if(str.test(packingHeight.val())) {
+				cVolume = packingHeight.val();
+			}
+			packingVolume.val(cLong*cWidth*cVolume);
+		}
+		
+		function checkSelect(obj) {
+			var selectList = $("select[name='suppliersIds']").not(obj);
+			for(var i = 0; i < selectList.length; i++) {
+				var select = selectList[i];
+				if(obj.vlaue != 0 && select.value == obj.value) {
+					alert("不能选择已经存在的供应商");
+					$("#" + obj.id).val(0);
+					$("#" + obj.id).trigger("chosen:updated");
+					break;
+				}
+			}
+			$("#suppliersId"+obj.id).val(obj.value); 
+		}
+		
+		var num = ${num};
+		function addSuppliers() {
+			var options = $("#ecSuppliersSelect0").html().replace("selected","");
+			num = num + 1;
+			var id = "ecSuppliersSelect" + num;
+			var html = '<select class="chosen-select" name="suppliersIds" id="'+id+'" onchange="checkSelect(this)">'+options+'</select>';
+	
+			$("#suppliersT").append('<tr>' + 
+					'<td class="">'+html+'</td>' + 
+					'<td class="CaptionTD">原厂编号：</td>' + 
+					'<td class=""><input type="text" name="factoryNo" datatype="*"  nullmsg="原厂编号！"></td>' + 
+					'<td class="CaptionTD">采购价格：</td>' + 
+					'<td class=""><input type="text" name="purchasePrice" datatype="*"  nullmsg="采购价格！"></td>' + 
+					'<td class="CaptionTD">最小采购量：</td>' + 
+					'<td class=""><input type="text" name="minNum" datatype="*"  nullmsg="最小采购量！"></td>' + 
+					'<td class="CaptionTD"><div class="radio"><label><input class="ace" type="radio" id="suppliersId'+id+'" name="suppliersId"><span class="lbl">设为首选</span></label></div></td>' + 
+					'<td class="CaptionTD"><button class="btn btn-xs" onclick="delSuppliers(this)">删除</button></td></tr>');
+			$("#"+id).chosen({width: "100%",search_contains: true}); 
+		}
+		
+		function delSuppliers(my) {
+			$(my).parent().parent().remove();  
+		}
+		function toUrl() {
+			window.location.href = "#/ajax/ecSku";	
+		}
+		function refreshForm() {
+			$("#search-btn2").click();
+		}
+		function delImg(id){
+			var src = $('#'+id).attr('src');
+			$('#'+id).remove();
+		}
+	</script>

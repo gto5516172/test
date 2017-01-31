@@ -1,0 +1,193 @@
+<style>
+<!--
+.EditTable .DataTD input {
+    width: 50%;
+}
+-->
+</style>
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">任务标题：</td>
+					<td class="DataTD width-100">${task.title} </td>
+				</tr>
+				<tr class="FormData">
+						<td class="CaptionTD">任务类型：</td>
+					<td class="DataTD width-100">
+					@var tk = ecTaskType.getTaskTypeById(task.typeId);
+						${tk.name!}
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">紧急程度：</td>
+					<td class="DataTD width-100">
+						@var attr = dict.getDictByTypeAndValue("task_type",task.emergencyDegree+"");
+						${attr.label!}
+					
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">任务描述：</td>
+					<td class="DataTD width-100">
+						${task.descr}
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">负责人：</td>
+					<td class="DataTD width-100">
+						${user.getUserById(task.personInCharge).name}
+					</td>
+				</tr>
+				<!-- <tr class="FormData">
+					<td class="CaptionTD">参与人：</td>
+					<td class="DataTD width-100" id="userTd">
+						<a id="userF" class="pink" href="javascript:void(0);" 
+							data-mode="page" data-title="查看分配"
+							data-url="${ctxPath}/ecTask/binduser"
+							data-data="{userIds:'0'}"
+							data-height="600px" data-width="1000px"
+						>
+							<i class="ace-icon fa fa-users bigger-130"></i> 分配
+						</a>
+					</td>
+				</tr> -->
+				<tr class="FormData">
+					<td colspan="2">
+					开始时间：${task.startTime}&nbsp;&nbsp;结束时间：${task.endTime}
+					</td>
+				</tr>
+					
+				<tr class="FormData">
+				@if(task.categoryType!=4){	
+					<td colspan="2">
+		<div class="widget-box widget-color-green2" style="margin-top:20px;">
+			<div class="widget-header clearfix">
+				<h5 class="widget-title">产品详细：</h5>
+				<div class="widget-toolbar">
+					<a href="#" data-action="fullscreen" class="orange2"> <i
+						class="ace-icon fa fa-expand"></i> </a>
+				</div>
+			</div>
+				<div class="widget-body">
+				<div class="widget-main padding-8">
+					<div class="row">
+				<div class="widget-toolbar  width-100" style="padding-top: 2px;border:0px solid red;float:left">
+					<form method="post" class="form-search" id="search-form2"
+						target="list-page2" action="${ctxPath}/ecTaskProduct/list">
+						<div class="input-group" style="line-height: 0px;display:none">
+							<span class="input-group-btn">
+							<span class="btn  btn-success btn-sm" id="search-btn2"> 搜索 <i
+									class="ace-icon fa fa-search icon-on-right bigger-110"></i> </span></span>
+						</div>
+						<input type="hidden" name="taskId" value="${task.id!}"/>
+						<input type="hidden" name="categoryType" value="${task.categoryType!}"/>
+					</form>
+			<div class="" id="list-page2" style="width:100%;border:0px solid blue">
+			</div>
+		</div>
+		</div>
+		</div>
+	</div>
+</div>		
+	</td>
+				@}else{
+						<td class="CaptionTD">任务描述：</td>
+						<td class="DataTD width-100">
+							${task.note}
+						</td>
+				@}		
+				</tr>
+				@if(task.categoryType==4){
+				<tr class="FormData">
+				<td class="CaptionTD">处理结果：</td>
+					<td class="DataTD width-100">
+						<textarea rows="10" cols="35" name="productDescr" id="productDescr">${taskDo.productDescr!}</textarea>
+					</td>
+				</tr>
+				
+				@}
+				@if(task.doStatus=='-1'){
+				<tr>
+					<td colspan="2" ><span class="btn btn-info btn-block bigger-120" id="save-btn" onclick="ensureSave()">确认</span></td>
+				</tr>
+				@}	
+				<!-- <tr class="FormData">
+					<td colspan="2">
+							<input type="button" value="接受"/>&nbsp;&nbsp;&nbsp;<input type="button" value="驳回"/>
+					</td>
+				</tr> -->
+			</tbody>
+		</table>
+
+<script type="text/javascript">
+$(document).ready(function(){
+	$("#search-form2").getPageList({'submitBtnId':'search-btn2'});
+});
+function ensureSave(){
+	if("${task.categoryType}"=="4"){
+		//提交处理结果
+		if(saveOtherTask()<0){
+			return ;
+		}
+	}
+	var loadi = layer.load('加载中…');
+	$.ajax({
+		url : "${ctxPath}/ecTaskDo/ajaxFinishTask",
+		type : 'post',
+		dataType : 'json',
+		async: false,
+		data : {
+			'taskId':'${task.id}'
+		},
+		success : function(data) {
+		layer.close(loadi);
+		var status= data.status;
+	      if("0"==status){
+	       	 window.location.reload();
+			 layer.msg(data.message, 3, 1);
+	      }else{
+	    	  layer.msg(data.message, 3, 5);
+	       }
+		},
+		error : function(datas) {
+			layer.close(loadi);
+			layer.msg('<span class="red bigger-120">操作失败</span>', 2, 8);
+		}
+	});
+	
+}
+
+function saveOtherTask() {
+	if($('#productDescr').val()==null){
+		layer.msg("请填写处理结果！", 3, 5);
+		return "-1";
+	}
+	var loadi = layer.load('加载中…');
+	$.ajax({
+		url : "${ctxPath}/ecTaskDo/ajaxSaveOther",
+		type : 'post',
+		dataType : 'json',
+		async: false,
+		data : {
+			productDescr:$('#productDescr').val(),
+			taskId:'${task.id}',
+			doId:'${task.doId}'
+		},
+		success : function(data) {
+			layer.close(loadi);
+			 var status= data.status;
+			 return status;
+		     //  if("0"==status){
+		    	//   window.location.reload();
+				 //  layer.msg('操作成功！', 3, 1);
+		      // }else{
+		    	  // layer.msg('操作失败,请重试！', 3, 5);
+		       //}
+		},
+		error : function(datas) {
+			layer.close(loadi);
+			layer.msg('<span class="red bigger-120">操作失败</span>', 2, 8);
+		}
+	});
+}
+</script>

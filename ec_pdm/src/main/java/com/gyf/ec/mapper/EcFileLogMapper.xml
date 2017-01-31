@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcFileLogMapper">
+
+<sql id="ecFileLogColumns">
+	id,create_by,create_date,update_by,update_date,remarks,del_flag,ec_file_id,type
+</sql>
+
+<sql id="ecFileLogAliasColumns">
+	a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.ec_file_id,a.type
+</sql>
+
+<!-- 分页显示筛选查询 -->
+	<select id="findFileLogList" resultType="com.gyf.ec.model.EcFileLog">
+		select <include refid="ecFileLogAliasColumns"/> 
+		from ec_file_log a 
+		<where>
+			<if test="@Ognl@isNotBlank(ecFileId)">
+				a.ec_file_id = #{ecFileId}
+			</if>
+			and a.del_flag = 0
+		</where>
+		ORDER BY a.update_date desc
+	</select>
+</mapper>

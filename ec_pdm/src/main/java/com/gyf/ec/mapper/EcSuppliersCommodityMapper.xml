@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcSuppliersCommodityMapper">
+
+	<sql id="ecSuppliersCommodityColumns">
+		id,create_by,create_date,update_by,update_date,remarks,del_flag,suppliers_id,commodity_id,factory_no,purchase_price,min_num
+	</sql>
+	
+	<sql id="ecSuppliersCommodityAliasColumns">
+		a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.del_flag,a.suppliers_id,a.commodity_id,a.factory_no,a.purchase_price,a.min_num
+	</sql>
+	
+	<insert id="saveEcSuppliersCommodity" parameterType="java.util.List">
+	    INSERT INTO ec_suppliers_commodity (suppliers_id,commodity_id,factory_no,purchase_price,min_num,create_by,create_date)
+	    VALUES 
+	    <foreach collection="list" item="item" index="index" separator="," >
+	        (#{item.suppliersId},#{item.commodityId},#{item.factoryNo},#{item.purchasePrice},#{item.minNum},#{item.createBy},#{item.createDate})
+	    </foreach>
+	</insert>
+	
+	<delete id="delEcSuppliersCommodityBySku">
+		delete from ec_suppliers_commodity where commodity_id = #{id}
+	</delete>
+	<select id="findEcSuppliersCommodityBySku" resultType="com.gyf.ec.model.EcSuppliersCommodity" >
+		select <include refid="ecSuppliersCommodityAliasColumns"/>, (select t.suppliers_name from 
+		ec_suppliers t where t.id = a.suppliers_id) suppliers_name from ec_suppliers_commodity a 
+		<where >
+			<if test="_parameter>0">
+			a.commodity_id = #{id} and a.del_flag = 0
+			</if>
+		</where>
+		ORDER BY a.update_date desc
+	</select>
+	
+	<sql id="ecSuppliersCommoditySkuAliasColumns">
+		a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.del_flag,a.suppliers_id,a.commodity_id,a.factory_no,a.purchase_price,a.min_num, t.sku, t.name sku_name, t.status sku_status
+	</sql>
+	
+	<select id="findPageInfoSku" resultType="com.gyf.ec.model.EcSuppliersCommodity">
+		select * from (select <include refid="ecSuppliersCommoditySkuAliasColumns"/>, t.ec_catalogue_id, (select t1.brand from ec_commodity_spu t1 where t1.ID = t.spu_id) brand, t.cost_price  from ec_suppliers_commodity a, ec_sku t 
+		<where>
+			a.commodity_id = t.id and 
+			<if test="@Ognl@isNotBlank(suppliersId)">
+				a.suppliers_id = #{suppliersId} and
+			</if>
+			<if test="ecCatalogueId > 0">
+				t.ec_catalogue_id = #{ecCatalogueId} and
+			</if>
+			<if test="@Ognl@isNotBlank(findTxt)">
+				(t.sku like concat( '%' , #{findTxt} , '%' ) or t.name like concat( '%' , #{findTxt} , '%' )) and
+			</if>
+			a.del_flag = 0
+		</where>
+		ORDER BY a.update_date desc) ta 
+		<where>
+		 <if test="@Ognl@isNotBlank(brand)">
+		 ta.brand like concat( '%' , #{brand} , '%' )
+		 </if>
+		</where>
+	</select>
+	
+	<select id="findscDetail" resultType="com.gyf.ec.model.EcSuppliersCommodity">
+		select * from (select <include refid="ecSuppliersCommoditySkuAliasColumns"/>, t.ec_catalogue_id, (select t1.brand from ec_commodity_spu t1 where t1.ID = t.spu_id) brand, t.cost_price  from ec_suppliers_commodity a, ec_sku t 
+		<where>
+			a.commodity_id = t.id and a.id=#{id} and a.del_flag = 0
+		</where>
+		ORDER BY a.update_date desc) ta 
+	</select>
+	<update id="updatePurchasePrice">
+		update ec_suppliers_commodity t set t.purchase_price = #{purchasePrice}, t.update_date = now(),t.update_by = #{updateBy} where t.id = #{id}
+	</update>
+</mapper>

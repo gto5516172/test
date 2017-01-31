@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcSkuMapper">
+
+<sql id="ecSkuColumns">
+	id,create_by,create_date,update_by,update_date,remarks,del_flag,sku,attr,name,status,place_of_origin,customs,sale_sku,ec_catalogue_id,commodity_long,
+	commodity_width,commodity_height,commodity_volume,commodity_company,packing_long,packing_width,packing_height,packing_volume,packing_company,fcl_num,
+	fcl_weight,fcl_volumne,package_type,discount_range_start,discount_range_end,product_label_configuration,sales_staff,release_date,company,shipping_weight,
+	shipping_weight_company,item_weight,item_weight_company,suppliers_id,basic_imgs,show_img,model,specifications,suggested_retail_price,cost_price,spu_id
+</sql>
+
+<sql id="ecSkuAliasColumns">
+	a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.del_flag,a.sku,a.attr,a.name,a.status,a.place_of_origin,a.customs,a.sale_sku,a.ec_catalogue_id,a.commodity_long,
+	a.commodity_width,a.commodity_height,a.commodity_volume,a.commodity_company,a.packing_long,a.packing_width,a.packing_height,a.packing_volume,a.packing_company,a.fcl_num,
+	a.fcl_weight,a.fcl_volumne,a.package_type,a.discount_range_start,a.discount_range_end,a.product_label_configuration,a.sales_staff,a.release_date,a.company,a.shipping_weight,
+	a.shipping_weight_company,a.item_weight,a.item_weight_company,a.suppliers_id,a.basic_imgs,a.show_img,a.model,a.specifications,a.suggested_retail_price,a.cost_price,a.spu_id,a.spu_no
+</sql>
+
+<!-- 分页显示筛选查询 -->
+	<select id="findSkuList" resultType="com.gyf.ec.model.EcSku">
+		select <include refid="ecSkuAliasColumns"/>, (select t.brand from ec_commodity_spu t where t.spu_no = a.spu_no and a.spu_no > 0) brand
+		from ec_sku a 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(findCataloueId) and findCataloueId > 0">
+				and a.ec_catalogue_id in (SELECT cc.id FROM ec_catalogue AS cc WHERE cc.parent_ids LIKE CONCAT((SELECT ccc.parent_ids FROM ec_catalogue AS ccc WHERE ccc.id = #{findCataloueId}), #{findCataloueId}, '%') OR cc.id = #{findCataloueId})  
+			</if>
+			<if test="@Ognl@isNotBlank(sku)">
+				and UPPER(a.sku) = UPPER(#{sku})
+			</if>
+			<if test="@Ognl@isNotBlank(name)">
+				and a.name like concat('%', #{name}, '%')
+			</if>
+			<if test="@Ognl@isNotBlank(salesStaff)">
+				and a.sales_staff = #{salesStaff}
+			</if>
+			<if test="@Ognl@isNotBlank(suppliersName)">
+				and a.suppliers_id = (select t.id from ec_suppliers t where t.suppliers_name = #{suppliersName})
+			</if>
+			<if test="@Ognl@isNotBlank(findTxt)">
+				and a.spu_no in (select t.spu_no from ec_commodity_spu t where t.brand like concat('%', #{findTxt}, '%'))
+			</if>
+			<if test="@Ognl@isNotBlank(model)">
+				and a.model like concat('%', #{model} ,'%')
+			</if>
+			<if test="@Ognl@isNotBlank(specifications)">
+				and a.specifications like concat('%', #{specifications} ,'%')
+			</if>
+			<if test="@Ognl@isNotBlank(status)">
+				and a.status = #{status} 
+			</if>
+			<if test="@Ognl@isNotBlank(spuNo)">
+				and a.spu_no like concat('%', #{spuNo} ,'%') 
+			</if> 
+			and a.del_flag = 0
+		</where>
+		ORDER BY a.update_date desc
+	</select>
+	<!-- 不分页按ID查询 -->
+	<select id="findSkuListByIds" resultType="com.gyf.ec.model.EcSku">
+		select <include refid="ecSkuAliasColumns"/>, (select t.brand from ec_commodity_spu t where t.spu_no = a.spu_no and a.spu_no > 0) brand
+		from ec_sku a 
+		<where>
+		a.id in
+		  <foreach item="item" index="index" collection="list"   
+                        open="(" separator="," close=")">  
+                       #{item}  
+               </foreach>  
+			and a.del_flag = 0
+		</where>
+		
+	</select>
+	
+	
+	<select id="selectByPrimaryKeyMy" resultType="com.gyf.ec.model.EcSku">
+		select <include refid="ecSkuAliasColumns"/>, (select t.spu_no from ec_commodity_spu t where t.id = a.spu_id) spu_no from ec_sku a
+		<where>
+			a.id = #{id}
+		</where> 
+	</select>
+	
+	<select id="findCountByName" resultType="java.lang.Integer">
+		SELECT count(1) FROM ec_sku su 
+		<where>
+				su.sku =#{name}
+		</where> 
+	</select>
+	
+	<select id="findById" resultType="com.gyf.ec.model.EcSku">
+		SELECT <include refid="ecSkuAliasColumns"/>
+		FROM ec_sku a 
+		<where>
+			and a.id=#{id}
+		</where> 
+	</select>
+	
+	<select id="findCountByNameSale" resultType="java.lang.Integer">
+		SELECT count(1) FROM ec_sku su 
+		<where>
+				(FIND_IN_SET(#{name},su.sale_sku))
+				<if test="@Ognl@isNotBlank(id) and id > 0">
+					and su.id != #{id}
+				</if>
+		</where> 
+	</select>
+	
+	<select id="selectBySku" resultType="com.gyf.ec.model.EcSku">
+		select <include refid="ecSkuAliasColumns"/>, (select t.spu_no from ec_commodity_spu t where t.id = a.spu_id) spu_no from ec_sku a
+		<where>
+			a.sku = #{sku}
+		</where> 
+	</select>
+	<select id="querySkuRelation" resultType="java.lang.Integer">
+		select sum(a.ca) from (select count(t.id) ca from ec_suppliers_commodity t where t.commodity_id = #{id} union 
+								select count(t1.id) ca from ec_bom t1 where t1.sku_id = #{id} or t1.code_sku_id = #{id} UNION
+								select count(t2.id) ca from ec_task_product t2 where t2.product_id = #{id} UNION 
+								select count(t3.id) ca from ec_faq_product t3 where t3.type_id = 1 and t3.goods_no = #{id} UNION 
+								select count(t4.id) ca from ec_file t4 where t4.goods_type = 1 and t4.goods_no = #{id} UNION 
+								select count(t5.id) ca from ec_task_offerprice t5 where t5.sku_id = #{id}) a 
+	</select>
+	<select id="querySkuByCatalogue" resultType="java.lang.Integer">
+		select count(1) from ec_sku where ec_catalogue_id=#{param1}
+	</select>
+	<select id="findMainSku" resultType="com.gyf.ec.model.EcSku">
+		select <include refid="ecSkuAliasColumns"/> from ec_sku a order by a.update_date desc limit 0,5
+	</select>
+	<select id="findAllSku" resultType="com.gyf.ec.model.EcSku">
+		select <include refid="ecSkuAliasColumns"/> from ec_sku a order by a.id desc
+	</select>
+</mapper>

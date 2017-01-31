@@ -1,0 +1,76 @@
+@var add = auth.hasPermission("commodity:spu:add");
+
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-list-alt bigger-120"></i>SPU列表
+		</a></li>
+
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<form action="${ctxPath}/commoditySpu/list" method="post" id="search-form" target="list-page" class="clearfix">
+				<div class="col-xs-12">
+				<div class="pull-left width-25">
+					<label>名称：</label>
+					<input type="text" class="width-60" name="name"/>
+				</div>
+				<div class="pull-left width-25">
+					<label>分类：</label>
+						<#pullDownTree order="one" treeData="${ecCataloue}" name="type" 
+								class="width-80" />
+				</div>
+				<div class="pull-right width-30">
+					<label>创建人：</label>
+					<input type="text" class="width-60" name="createBy"/>
+				</div>
+				</div>
+				<div class="col-xs-12" style="margin-top:15px">
+				<div class="pull-left width-25">
+					<label>SPU码：</label>
+					<input type="text" class="width-60" name="spuNo"/>
+				</div>
+				<div class="pull-left width-25">
+					<label>品牌：</label>
+					<input type="text" class="width-60" name="brand"/>
+				</div>
+				<div  class="pull-left width-25">
+				<span data-original-title="Bottm Info" class="btn btn-info btn-sm tooltip-info" id="search-btn" data-rel="tooltip" data-placement="bottom" title="查询">查询</span>
+					@if(add){
+						<a class="btn btn-info btn-sm tooltip-info" href="#/ajax/commoditySpu/add" onclick="addTab(this,'添加SPU')">添加</a>
+					@}
+				</div>
+			</div>
+			<div class="widget-toolbar no-border">
+			<span class="btn btn-purple btn-xs" id="importFile">
+				<i class="ace-icon fa fa-cloud-download bigger-130"></i>
+				<span>导入数据</span>
+				<input type="file" class="phide"  name="myfile" 
+				data-url="${ctxPath}/commoditySpu/import" _accept="application/vnd.ms-excel" 
+				data-progressid="#excel-progress"
+				onchange="Angel.uploadFile.excel(this);" multiple/>
+			</span>
+			<span class="btn btn-purple btn-xs" 
+			onclick="Angel.downloadFile('','${ctxPath}/commoditySpu/downloadModel')">
+			<i class="ace-icon fa fa-cloud-upload bigger-130"></i>
+			导出模板</span>
+		</div>
+		
+		<div class="widget-toolbar no-border">
+			<div class="progress progress-striped active pos-rel" style="width:200px;display: none;" 
+			data-percent="0%" id="excel-progress">
+				<div class="progress-bar progress-bar-pink" style="width:0%"></div>
+			</div>
+		</div>
+			</form>
+			<hr/>
+			<div id="list-page"></div>
+			<script type="text/javascript">
+				$("#search-form").getPageList({'submitBtnId':'search-btn'})
+			</script>
+		</div>
+	 	
+	</div>
+</div>
+

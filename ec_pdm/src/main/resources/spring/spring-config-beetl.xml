@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="
+		http://www.springframework.org/schema/beans 
+		http://www.springframework.org/schema/beans/spring-beans.xsd 
+	    http://www.springframework.org/schema/mvc
+        http://www.springframework.org/schema/mvc/spring-mvc.xsd
+		http://www.springframework.org/schema/context 
+		http://www.springframework.org/schema/context/spring-context.xsd
+		http://www.springframework.org/schema/aop
+		http://www.springframework.org/schema/aop/spring-aop.xsd"
+	default-lazy-init="false">
+
+	<bean id="beetlConfig" class="org.beetl.ext.spring.BeetlGroupUtilConfiguration"
+		init-method="init">
+		<property name="configFileResource" value="classpath:beetl/beetl.properties" />
+		<property name="functions">
+			<map>
+				<entry key="getAllArea" value-ref="areaFunction" />
+				<entry key="getAllEcFileClassification" value-ref="ecFileClassificationFunction" />
+				<entry key="getAllEcCatalogue" value-ref="ecCatalogueFunction" />
+				<entry key="getAllEcTaskType" value-ref="ecTaskTypeFunction" />
+			</map>
+		</property>
+		<property name="functionPackages">
+			<map>
+				<entry key="commoditySpuDescFunction" value-ref="commoditySpuDescFunction" />
+				<entry key="photos" value-ref="photosFunction" />
+				<entry key="faqType" value-ref="faqTypeFunction" />
+				<entry key="dict" value-ref="dictFunction" />
+				<entry key="office" value-ref="officeFunctions" />
+				<entry key="role" value-ref="roleFunctions" />
+				<entry key="auth" value-ref="authUserFunctions" />
+				<entry key="strutil" value-ref="strutilFunction" />
+				<entry key="area" value-ref="areaFunction" />
+				<entry key="platform" value-ref="platformFunction" />
+				<entry key="ecTaskType" value-ref="taskTypeFunction" />
+				<entry key="shop" value-ref="shopFunction" />
+				<entry key="user" value-ref="sysUserFunction" />
+				<entry key="ecTaskOfferPrice" value-ref="ecTaskOfferPriceFunction" />
+				<entry key="ecSuppliersCommodity" value-ref="ecSuppliersCommodityFunction" />
+				<entry key="ecSku" value-ref="ecSkuFunction" />
+				<entry key="ecSpu" value-ref="ecSpuFunction" />
+			</map>
+		</property>
+	</bean>
+
+	<bean id="viewResolver" class="org.beetl.ext.spring.BeetlSpringViewResolver">
+		<property name="suffix" value=".html" />
+		<property name="contentType" value="text/html;charset=UTF-8" />
+	</bean>
+
+</beans>

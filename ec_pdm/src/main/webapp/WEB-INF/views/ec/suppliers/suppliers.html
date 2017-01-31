@@ -1,0 +1,118 @@
+@var area = area.getAreaList(); //地址区域
+@var add = auth.hasPermission("ecsuppliers:add");
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-graduation-cap bigger-120"></i> 供应商列表 </a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<#search>
+			<form action="${ctxPath}/ecsuppliers/list" method="post"
+				id="search-form" target="list-page" class="center clearfix">
+				<div class="row padding-tb-10">
+					<div class="col-sm-6">
+						<label class="inline">供应商地址：</label>
+							<#pullDownTree order="one" treeData="${area}" name="findAreaId" 
+								class="width-80" />
+					</div>
+					<div class="col-sm-6">
+							<label class="inline">供应商状态：</label>
+								<#select id="status" name="status" width="80%">
+									<option value="3">全部</option>
+									<option value="0">启用</option>
+									<option value="1">停用</option>
+								</#select>
+					</div>
+				</div>
+				<div class="row padding-tb-10">
+					<div class="col-sm-6">
+						<label class="inline">供应商分类：</label>
+						@var slevelList = dict.getDictListByType("suppliers_level");
+						<#select id="suppliersLevelS" name="suppliersLevel" width="80%">
+							@for(item in slevelList){
+								<option value="${item.value!}">
+								${item.label!}
+								</option>
+							@}
+						</#select>
+					</div>
+					<div class="col-sm-6">
+						<label class="inline">供应商类型：</label>
+						@var stypelList = dict.getDictListByType("suppliers_type");
+						<#select id="suppliersTypeS" name="suppliersType" width="80%">
+							@for(item in stypelList){
+								<option value="${item.value!}">
+								${item.label!}
+								</option>
+							@}
+						</#select>
+					</div>
+				</div>
+				<div class="row padding-tb-10">
+					<div class="col-sm-6">
+						<label class="inline">供应商搜索：</label>
+						<#select id="findType" name="findType" width="80%">
+						<option value="0">供应商名称</option>
+						<option value="1">联系人</option>
+						<option value="2">联系电话</option>
+						</#select>
+					</div>
+					<div class="col-sm-6">
+						<label class="inline">搜索关键字：</label> <input type="text"
+							class="width-80" name="findTxt" placeholder="输入关键字..." />
+					</div>
+				</div>
+				<div class="row padding-tb-10">
+						<div class="col-sm-6">
+							<span class="btn btn-purple btn-xs" 
+							onclick="Angel.downloadFile('search-form','${ctxPath}/ecsuppliers/export')">
+							<i class="ace-icon fa fa-cloud-upload bigger-130"></i>
+							导出Excel</span>
+							<span class="btn btn-purple btn-xs" id="importFile">
+								<i class="ace-icon fa fa-cloud-download bigger-130"></i>
+								<span>导入数据</span>
+								<input type="file" class="phide"  name="myfile" 
+								data-url="${ctxPath}/ecsuppliers/import" data-accept="application/vnd.ms-excel" 
+								data-progressid="#excel-progress"
+								onchange="Angel.uploadFile.excel(this);"/>
+							</span>
+							<span class="btn btn-purple btn-xs" 
+								onclick="Angel.downloadFile('','${ctxPath}/ecsuppliers/downloadModel')">
+								<i class="ace-icon fa fa-cloud-upload bigger-130"></i>
+							导出模板</span>
+						</div>
+						<div class="col-sm-6" align="left">
+						<span data-original-title="Bottm Info" class="btn btn-info btn-sm tooltip-info" id="search-btn" data-rel="tooltip" data-placement="bottom">查询</span>
+							@if(add){
+								<a class="btn btn-info btn-sm tooltip-info" href="#/ajax/ecsuppliers/toEcSuppliersAdd" onclick="addTab(this,'添加供应商')">添加</a>
+							@}
+						</div>
+					</div>
+				<!--<div class="col-sm-1">
+						<div class="">
+							<span class="btn btn-purple btn-xs" id="importFile">
+								<i class="ace-icon fa fa-cloud-download bigger-130"></i>
+								<span>导入数据</span>
+								<input type="file" class="phide"  name="myfile" 
+								data-url="${ctxPath}/area/import" _accept="application/vnd.ms-excel" 
+								data-progressid="#excel-progress"
+								onchange="Angel.uploadFile.excel(this);" multiple/>
+							</span>
+						</div>
+					</div> -->
+				</div>
+			</form>
+			</#search>
+			<div class="space-6"></div>
+			<div id="list-page"></div>
+		</div>
+
+		
+	</div>
+</div>
+	<script type="text/javascript">
+		$("#search-form").getPageList({'submitBtnId':'search-btn'})
+	</script>

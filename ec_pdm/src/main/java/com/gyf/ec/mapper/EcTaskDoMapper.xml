@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcTaskDoMapper">
+
+<select id="queryOtherDoByUserId" resultType="com.gyf.ec.model.EcTaskDo">
+	select * from ec_task_do 
+	<where>
+		task_user=#{param1} and task_id=#{param2}
+	</where>
+		
+</select>
+
+<select id="queryDoByUserId" resultType="com.gyf.ec.model.EcTaskDo">
+	select * from ec_task_do 
+	<where>
+		task_user=#{param1} and pid=#{param2}
+	</where>
+</select>
+
+<select id="queryCountByStatus" resultType="java.lang.Integer">
+		select count(1) from (select eo.task_Id,eo.id from ec_task_do eo left 
+		join ec_task_product ep on eo.pid=ep.id <where> eo.task_user=#{param1} and 
+		eo.task_Id=#{param2} and eo.status=#{param3}</where>) tt 
+		left join ec_task et on tt.task_Id=et.id 
+	<where> et.category_type=#{param4}</where>
+</select>
+</mapper>

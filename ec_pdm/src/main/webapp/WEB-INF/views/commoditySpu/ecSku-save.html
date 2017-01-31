@@ -1,0 +1,235 @@
+<style>
+<!--
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    height:150px;
+}
+-->
+</style>
+<div class="layer">
+				<form name="FormPost" id="ecSku-save-form" class="FormGrid" method="post"
+					action="${ctxPath}/ecSku/save">
+					<table class="EditTable" width="100%">
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">商品名称：</td>
+					<td class="DataTD">
+					<input type="hidden" name="id" value="${ecSku.id!}"/>
+						<input type="text"
+						name="name" datatype="*"  nullmsg="请输入商品名称！"
+						value="${ecSku.name!}">
+					</td>
+					<td class="CaptionTD">产品属性：</td>
+					<td class="">
+						@var attr = dict.getDictListByType("sku_attr");
+						<#select id="attr" name="attr" width="30%">
+							@for(item in attr){
+								<option value="${item.value!}">
+									${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+					</tr>
+					<tr class="FormData">
+					<td class="CaptionTD">销售SKU：</td>
+					<td class="DataTD" id="mytestTd">
+						<input style="display: none;" name="saleSku" id="sellerSku" value="" placeholder="回车确认" type="text">
+						<script type="text/javascript">
+							var tag_input = $('#sellerSku');
+							if(! ( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())) ) 
+							{
+								tag_input.tag(
+								  {
+									placeholder:tag_input.attr('placeholder'),
+									source: ace.variable_US_STATES,
+									 /**
+					                //从Web后台读取数据的写法
+					                source: function(query, process) {
+					                  $.ajax({url: 'remote_source.php?q='+encodeURIComponent(query)})
+					                  .done(function(result_items){
+					                    process(result_items);
+					                  });
+					                }
+					                */
+								  }
+								);
+							}
+							else {
+								tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="15">'+tag_input.val()+'</textarea>').remove();
+							}
+							
+							 var $tag_obj = $('#sellerSku').data('tag');
+					           var keywors = "${ecSku.saleSku!}".split(",");
+								 for(var i=0;i<keywors.length;i++){
+									 if(keywors[i]!='')
+					           		$tag_obj.add(keywors[i]);
+								 }
+						</script>
+					</td>
+					
+					<td class="CaptionTD">商品状态：</td>
+					<td class="">
+						@var skuStatus = dict.getDictListByType("sku_status");
+						<#select id="status" name="status" width="30%">
+							@for(item in skuStatus){
+								<option value="${item.value!}">
+									${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+				</tr>
+				
+				<tr  class="FormData">
+				<td class="CaptionTD">关联SPU</td>
+					<td>
+						<input type="text" name="spuNo" value="${spuNo!}" readonly="readonly"/>
+					</td>
+				<td class="CaptionTD">本地SKU：</td>
+					<td class="">
+						<input type="text"
+						name="sku" id="sku" datatype="*"  nullmsg="请输入本地SKU！"
+						value="${ecSku.sku!}" ajaxurl="${ctxPath!}/ecSku/validateNameByAjax?id=${ecSku.id!}">
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">型号：</td>
+					<td class="">
+						<input type="text"
+							name="model" value="${ecSku.model!}">
+					</td>
+					<td class="CaptionTD">成本价：</td>
+					<td>
+						<input type="text"
+							name="costPrice" value="${ecSku.costPrice!}">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+				<div class="margin-t15">
+					<span class="btn btn-info btn-block bigger-120" id="ecSku-save-btn">保 存</span>
+				</div>
+				</form>
+			</div>
+	<#save isHide="yes" subBtnId="ecSku-save-btn" formId="ecSku-save-form" config="true" validId="ecSkuForm" reloadUrl="true">
+		var myflag = true;
+		var data = $("#ecSku-save-form").serialize();
+		var saleSku = $("#sellerSku").val();
+		ecSkuForm.config({
+			beforeSubmit:function(curform){
+				if(saleSkuFlag == 0) {
+					$.ajax({
+						 type:'post',      
+	    		         url:'${ctxPath!}/ecSku/validateNameByAjaxSale',  
+	    		         data:{saleSku:saleSku},  
+	    		         dataType:'json',  
+	    		         success:function(data){ 
+	    		         	if(data.status == 'y') {
+	    		  				saleSkuFlag = 1;
+	    		         		$("#ecSku-save-btn").click();
+	    		         	} else {
+	    		         		layer.tips(data.info,'#mytestTd');
+	    		         		saleSkuFlag = 0;
+	    		         	}
+	    		         }
+					});
+				}
+				if(saleSkuFlag == 0){
+					return false;
+				} else {
+					return true;
+				}
+			}
+		});
+	</#save>
+	<script type="text/javascript">
+	$(document).ready(function(){
+		$('#sku').focus();
+	});
+	var saleSkuFlag = 0;
+	function commodity() {
+		var str = /^[0-9]+([.]{1}[0-9]+)?$/;
+		var commodityLong = $("#commodityLong");
+		var commodityWidth = $("#commodityWidth");
+		var commodityHeight = $("#commodityHeight");
+		var commodityVolume = $("#commodityVolume");
+		var cLong = 0;
+		var cWidth = 0;
+		var cVolume = 0;
+		if(str.test(commodityLong.val())) {
+			cLong = commodityLong.val();
+		}
+		if(str.test(commodityWidth.val())) {
+			cWidth = commodityWidth.val();
+		}
+		if(str.test(commodityHeight.val())) {
+			cVolume = commodityHeight.val();
+		}
+		commodityVolume.val(cLong*cWidth*cVolume);
+	}
+	
+	function packing() {
+		var str = /^[0-9]+([.]{1}[0-9]+)?$/;
+		var packingLong = $("#packingLong");
+		var packingWidth = $("#packingWidth");
+		var packingHeight = $("#packingHeight");
+		var packingVolume = $("#packingVolume");
+		var cLong = 0;
+		var cWidth = 0;
+		var cVolume = 0;
+		if(str.test(packingLong.val())) {
+			cLong = packingLong.val();
+		}
+		if(str.test(packingWidth.val())) {
+			cWidth = packingWidth.val();
+		}
+		if(str.test(packingHeight.val())) {
+			cVolume = packingHeight.val();
+		}
+		packingVolume.val(cLong*cWidth*cVolume);
+	}
+	
+	function checkSelect(obj) {
+		var selectList = $("select[name='suppliersIds']").not(obj);
+		for(var i = 0; i < selectList.length; i++) {
+			var select = selectList[i];
+			if(obj.vlaue != 0 && select.value == obj.value) {
+				alert("不能选择已经存在的供应商");
+				$("#" + obj.id).val(0);
+				$("#" + obj.id).trigger("chosen:updated");
+				break;
+			}
+		}
+		$("#suppliersId"+obj.id).val(obj.value); 
+	}
+	
+	var num = 0;
+	function addSuppliers() {
+		var options = $("#ecSuppliersSelect").html();
+		var id = "ecSuppliersSelect" + num;
+		num = num + 1;
+		var html = '<select class="chosen-select" name="suppliersIds" id="'+id+'" onchange="checkSelect(this)">'+options+'</select>';
+
+		$("#suppliersT").append('<tr>' + 
+				'<td class="">'+html+'</td>' + 
+				'<td class="CaptionTD">原厂编号：</td>' + 
+				'<td class=""><input type="text" name="factoryNo" datatype="*"  nullmsg="原厂编号！"></td>' + 
+				'<td class="CaptionTD">采购价格：</td>' + 
+				'<td class=""><input type="text" name="purchasePrice" datatype="*"  nullmsg="采购价格！"></td>' + 
+				'<td class="CaptionTD">最小采购量：</td>' + 
+				'<td class=""><input type="text" name="minNum" datatype="*"  nullmsg="最小采购量！"></td>' + 
+				'<td class="CaptionTD"><div class="radio"><label><input class="ace" type="radio" id="suppliersId'+id+'" name="suppliersId"><span class="lbl">设为首选</span></label></div></td>' + 
+				'<td class="CaptionTD"><button class="btn btn-xs" onclick="delSuppliers(this)">删除</button></td></tr>');
+		$("#"+id).chosen({width: "100%",search_contains: true}); 
+	}
+	function delSuppliers(my) {
+		$(my).parent().parent().remove();  
+	}
+	function delImg(id){
+		$('#'+id).remove();
+	}
+	</script>

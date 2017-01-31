@@ -1,0 +1,64 @@
+<style>
+<!--
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    height:150px;
+}
+-->
+</style>
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-graduation-cap bigger-120"></i> 任务列表 </a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<#search>
+			<form action="${ctxPath}/ecTask/list" method="post"
+				id="search-form" target="list-page" class="center clearfix">
+				<div class="row padding-tb-10">
+					<div class="col-sm-3" align="left">
+						<label class="inline">任务标题：</label> <input type="text"
+							class="width-50" name="title" placeholder="任务标题..." />
+					</div>
+					<div class="col-sm-3">
+					<label class="inline">任务类型：</label>
+						<#select id="typeId" name="typeId" width="40%">
+							<option value="">
+								全部
+							</option>
+							@for(item in ecTaskTypeList){
+								<option value="${item.id!}">
+								${item.name!}
+								</option>
+							@}
+						</#select>
+					</div>
+					<div class="col-sm-2">
+						<input type="hidden" name="actQueryType" value="0"/>
+					</div>
+					<div class="col-sm-3">
+						<span data-original-title="Bottm Info" class="btn btn-info btn-sm tooltip-info" id="search-btn" data-rel="tooltip" data-placement="bottom">查询</span>
+						<a class="btn btn-info btn-sm tooltip-info" href="#/ajax/ecTask/add/showlayer" onclick="addTab(this,'添加任务')">添加</a>
+					</div>
+				</div>
+			</form>
+			</#search>
+			<div class="space-6"></div>
+			<div id="list-page"></div>
+		</div>
+		
+
+	</div>
+</div>
+
+		
+		
+	<script type="text/javascript">
+		$("#search-form").getPageList({'submitBtnId':'search-btn'});
+	</script>

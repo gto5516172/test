@@ -1,0 +1,433 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcStatisticsMapper">
+	<select id="findEcStatistics" resultType="com.gyf.ec.model.EcStatistics">
+		select DATE_FORMAT(t.create_date,'%Y-%m-%d') date_time, count(t.id) num from ec_task_procinst t 
+		<where> 
+			1=1
+			<if test="@Ognl@isNotBlank(start)">
+				and t.create_date >= #{start}
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t.create_date &lt;= #{end}
+			</if>
+			<if test="@Ognl@isNotBlank(selectType) and selectType == 1">
+				and t.status in (0,1,2,3,4,5)
+			</if>
+			<if test="@Ognl@isNotBlank(selectType) and selectType == 2">
+				and t.status in (6,7,8)
+			</if>
+			  GROUP BY DATE_FORMAT(t.create_date,'%Y-%m-%d')
+			</where> 
+			order by t.create_date ASC
+	</select>
+	
+	<select id="findEcStatisticsByUuser" resultType="com.gyf.ec.model.EcStatisticsUserOrType">
+		select t.responsibility_user eid, count(t.id) num, (select t1.`name` from sys_user t1 where t.responsibility_user = t1.id) sname from ec_task_procinst t 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(start)">
+				and t.create_date >= #{start}
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t.create_date &lt;= #{end}
+			</if>
+				GROUP BY t.responsibility_user 
+		</where> 
+		order by t.responsibility_user ASC
+	</select>
+	
+	<select id="findEcStatisticsByTaskType" resultType="com.gyf.ec.model.EcStatisticsUserOrType">
+		select t.type_id eid, (select t1.`name` from ec_task_type t1 where t1.id = t.type_id) sname, count(t.id) num from ec_task t
+		<where>
+			1=1 
+			<if test="@Ognl@isNotBlank(start)">
+				and t.create_date >= #{start}
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t.create_date &lt;= #{end}
+			</if>
+				GROUP BY t.type_id 
+		</where>
+		 order by t.type_id asc
+	</select>
+	
+	<select id="findEcStatisticsBySuppliersCommodity" resultType="com.gyf.ec.model.EcStatisticsUserOrType">
+		select t.commodity_id eid, (select t1.sku from ec_sku t1 where t1.id = t.commodity_id) sname, t.purchase_price price from ec_suppliers_commodity t  
+		<where>
+			t.commodity_id = (select t1.id from ec_sku t1 where t1.sku = #{sku})
+			<if test="@Ognl@isNotBlank(start)">
+				and t.create_date >= #{start}
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t.create_date &lt;= #{end}
+			</if>
+		</where>
+			order by t.purchase_price asc
+	</select>
+	
+	<select id="findEcStatisticsBySku0" resultType="com.gyf.ec.model.EcStatisticsBySku">
+		 select * from (select IFNULL(((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1) -
+		(select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1)),0) float_price, t5.sku_id, 
+		IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1),0) first,
+		 IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name,
+		(select (select t2.suppliers_name from ec_suppliers t2 where t2.id = t.suppliers_id) from ec_sku t where t.id = t5.sku_id) first_sup_name
+		from ec_sku_cost_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(findTxt)">
+				<if test="queryType == 0">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.sku like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 1">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.spu_id in (select ta.id from ec_commodity_spu ta where ta.spu_no like concat('%', #{findTxt}, '%')))
+				</if>
+				<if test="queryType == 2">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.name like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 3">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.suppliers_id in (select ta.id from ec_suppliers ta where ta.suppliers_name like concat('%', #{findTxt}, '%')))
+				</if>
+			</if>
+			<if test="@Ognl@isNotBlank(start)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date >= #{start})
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date &lt;= #{end})
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id) a order by a.float_price desc
+	</select>
+	
+	<select id="findEcStatisticsBySku1" resultType="com.gyf.ec.model.EcStatisticsBySku">
+		 select * from (select IFNULL(((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1) -
+		(select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1)),0) float_price, t5.sku_id, 
+		IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1),0) first,
+		 IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name,
+		(select (select t2.suppliers_name from ec_suppliers t2 where t2.id = t.suppliers_id) from ec_sku t where t.id = t5.sku_id) first_sup_name
+		from ec_sku_cost_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(findTxt)">
+				<if test="queryType == 0">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.sku like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 1">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.spu_id in (select ta.id from ec_commodity_spu ta where ta.spu_no like concat('%', #{findTxt}, '%')))
+				</if>
+				<if test="queryType == 2">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.name like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 3">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.suppliers_id in (select ta.id from ec_suppliers ta where ta.suppliers_name like concat('%', #{findTxt}, '%')))
+				</if>
+			</if>
+			<if test="@Ognl@isNotBlank(start)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date >= #{start})
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date &lt;= #{end})
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id) a order by a.new_time desc
+	</select>
+	
+	<select id="findEcStatisticsBySku2" resultType="com.gyf.ec.model.EcStatisticsBySku">
+		 select * from (select IFNULL(((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1) -
+		(select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1)),0) float_price, t5.sku_id, 
+		IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1),0) first,
+		 IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name,
+		(select (select t2.suppliers_name from ec_suppliers t2 where t2.id = t.suppliers_id) from ec_sku t where t.id = t5.sku_id) first_sup_name
+		from ec_sku_cost_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(findTxt)">
+				<if test="queryType == 0">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.sku like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 1">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.spu_id in (select ta.id from ec_commodity_spu ta where ta.spu_no like concat('%', #{findTxt}, '%')))
+				</if>
+				<if test="queryType == 2">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.name like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 3">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.suppliers_id in (select ta.id from ec_suppliers ta where ta.suppliers_name like concat('%', #{findTxt}, '%')))
+				</if>
+			</if>
+			<if test="@Ognl@isNotBlank(start)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date >= #{start})
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date &lt;= #{end})
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id) a order by a.first desc
+	</select>
+	
+	<select id="findEcStatisticsBySku3" resultType="com.gyf.ec.model.EcStatisticsBySku">
+		 select * from (select IFNULL(((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1) -
+		(select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1)),0) float_price, t5.sku_id, 
+		IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1),0) first,
+		 IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name,
+		(select (select t2.suppliers_name from ec_suppliers t2 where t2.id = t.suppliers_id) from ec_sku t where t.id = t5.sku_id) first_sup_name
+		from ec_sku_cost_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(findTxt)">
+				<if test="queryType == 0">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.sku like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 1">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.spu_id in (select ta.id from ec_commodity_spu ta where ta.spu_no like concat('%', #{findTxt}, '%')))
+				</if>
+				<if test="queryType == 2">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.name like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 3">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.suppliers_id in (select ta.id from ec_suppliers ta where ta.suppliers_name like concat('%', #{findTxt}, '%')))
+				</if>
+			</if>
+			<if test="@Ognl@isNotBlank(start)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date >= #{start})
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date &lt;= #{end})
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id) a order by a.first asc
+	</select>
+	
+	<select id="findEcStatisticsBySku4" resultType="com.gyf.ec.model.EcStatisticsBySku">
+		 select * from (select IFNULL(((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1) -
+		(select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1)),0) float_price, t5.sku_id, 
+		IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 0,1),0) first,
+		 IFNULL((select t.old_cost_price from ec_sku_cost_price_log t where t.sku_id = t5.sku_id  LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name,
+		(select (select t2.suppliers_name from ec_suppliers t2 where t2.id = t.suppliers_id) from ec_sku t where t.id = t5.sku_id) first_sup_name,
+		TIMESTAMPDIFF(SECOND, t5.create_date, now()) interval_time
+		from ec_sku_cost_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(findTxt)">
+				<if test="queryType == 0">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.sku like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 1">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.spu_id in (select ta.id from ec_commodity_spu ta where ta.spu_no like concat('%', #{findTxt}, '%')))
+				</if>
+				<if test="queryType == 2">
+					and t5.sku_id in (select ta.id from ec_sku ta where ta.name like concat('%', #{findTxt}, '%'))
+				</if>
+				<if test="queryType == 3">
+					and t5.sku_id in (select tb.id from ec_sku tb where tb.suppliers_id in (select ta.id from ec_suppliers ta where ta.suppliers_name like concat('%', #{findTxt}, '%')))
+				</if>
+			</if>
+			<if test="@Ognl@isNotBlank(start)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date >= #{start})
+			</if>
+			<if test="@Ognl@isNotBlank(end)">
+				and t5.sku in (select tc.id from ec_sku tc where tc.create_date &lt;= #{end})
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id) a order by a.interval_time desc
+	</select>
+	
+	
+	
+	
+	<select id="findEcStatisticsBySupp0" resultType="com.gyf.ec.model.EcStatisticsBySupp">
+		 select * from (select IFNULL(((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1) -
+		(select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1)),0) float_price, t5.sku_id, t5.suppcom_id,
+		IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1),0) first,
+		 IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name
+		from ec_suppliers_com_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(suppcomId)">
+				and t5.suppcom_id = #{suppcomId}
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id, t5.suppcom_id) a order by a.float_price desc
+	</select>
+	
+	<select id="findEcStatisticsBySupp1" resultType="com.gyf.ec.model.EcStatisticsBySupp">
+		 select * from (select IFNULL(((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1) -
+		(select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1)),0) float_price, t5.sku_id, t5.suppcom_id,
+		IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1),0) first,
+		 IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name
+		from ec_suppliers_com_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(suppcomId)">
+				and t5.suppcom_id = #{suppcomId}
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id, t5.suppcom_id) a order by a.new_time desc
+	</select>
+	
+	<select id="findEcStatisticsBySupp2" resultType="com.gyf.ec.model.EcStatisticsBySupp">
+		 select * from (select IFNULL(((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1) -
+		(select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1)),0) float_price, t5.sku_id, t5.suppcom_id,
+		IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1),0) first,
+		 IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name
+		from ec_suppliers_com_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(suppcomId)">
+				and t5.suppcom_id = #{suppcomId}
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id, t5.suppcom_id) a order by a.first desc
+	</select>
+	
+	<select id="findEcStatisticsBySupp3" resultType="com.gyf.ec.model.EcStatisticsBySupp">
+		 select * from (select IFNULL(((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1) -
+		(select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1)),0) float_price, t5.sku_id, t5.suppcom_id,
+		IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1),0) first,
+		 IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name
+		from ec_suppliers_com_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(suppcomId)">
+				and t5.suppcom_id = #{suppcomId}
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id, t5.suppcom_id) a order by a.first asc
+	</select>
+	
+	<select id="findEcStatisticsBySupp4" resultType="com.gyf.ec.model.EcStatisticsBySupp">
+		 select * from (select IFNULL(((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1) -
+		(select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1)),0) float_price, t5.sku_id, t5.suppcom_id,
+		IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 0,1),0) first,
+		 IFNULL((select t.old_purchase_price from ec_suppliers_com_price_log t where t.sku_id = t5.sku_id and t.suppcom_id = t5.suppcom_id LIMIT 1,1),0) second, 
+		t5.create_date new_time,(select t.sku from ec_sku t where t.id = t5.sku_id) sku,
+		(select t.name from ec_sku t where t.id = t5.sku_id) sku_name,
+		TIMESTAMPDIFF(SECOND, t5.create_date, now()) interval_time
+		from ec_suppliers_com_price_log t5 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(suppcomId)">
+				and t5.suppcom_id = #{suppcomId}
+			</if>
+			<if test="@Ognl@isNotBlank(startNew)">
+				and t5.create_date >= #{startNew}
+			</if>
+			<if test="@Ognl@isNotBlank(endNew)">
+				and t5.create_date &lt;= #{endNew}
+			</if>
+			<if test="@Ognl@isNotBlank(ecCatalogueId)">
+				and t5.sku_id in (select td.id from ec_sku td where td.ec_catalogue_id = #{ecCatalogueId})
+			</if>
+		</where>
+		group by t5.sku_id, t5.suppcom_id) a order by a.interval_time desc
+	</select>
+	
+	<select id="findMainPrice" resultType="com.gyf.ec.model.EcStatisticsBySupp">
+		select a.*, b.sku, c.suppliers_name from (select t.sku_id, t.suppcom_id, MAX(t.create_date) new_time, 
+		IFNULL(((select t1.old_purchase_price from ec_suppliers_com_price_log t1 where t1.sku_id = t.sku_id and t1.suppcom_id = t.suppcom_id LIMIT 0,1) -
+		(select t1.old_purchase_price from ec_suppliers_com_price_log t1 where t1.sku_id = t.sku_id and t1.suppcom_id = t.suppcom_id LIMIT 1,1)),0) float_price
+		from ec_suppliers_com_price_log t GROUP by t.sku_id, t.suppcom_id order by MAX(t.create_date) desc) a, ec_sku b, ec_suppliers c where a.sku_id = b.id and a.suppcom_id = c.id limit 0,5
+	</select>
+	
+	
+	
+</mapper>

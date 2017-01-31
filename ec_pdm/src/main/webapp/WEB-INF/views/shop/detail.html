@@ -1,0 +1,128 @@
+<script type="text/javascript">
+	
+	$(document).ready(function(){
+		var sh = [["tr1","tr2","tr3","tr4","tr5"],
+		            ["tr1","tr2","tr3","tr6","tr7","tr8","tr9","tr_marketpalceId","tr_intreface"],
+		            ["tr1","tr2","tr10"],
+		            ["tr1","tr2","tr3","tr11"],
+		            ["tr1","tr2","tr3","tr6","tr13"],
+		            ["tr1","tr14"]];
+		var p= sh[${shop.platformId}-1];
+		var trs =$("div[id^='tr']");
+		trs.css('display','none');
+		for(var i=0;i<p.length;i++){
+			var tr = '#'+p[i];
+			$(tr).removeAttr('style');
+		}
+		});
+	
+</script>
+<div class="layer">
+	<div class="profile-user-info profile-user-info-striped">
+
+		<div class="profile-info-row">
+			<div class="profile-info-name">平台</div>
+			<div class="profile-info-value">
+				@var platform =platform.getPlatformById(shop.platformId); 
+				${platform.name!}
+			</div>
+		</div>
+		<div class="profile-info-row" id="tr1">
+			<div class="profile-info-name">店铺名称</div>
+			<div class="profile-info-value">${shop.name!}</div>
+		</div>
+		<div class="profile-info-row" id="tr2">
+			<div class="profile-info-name">卖家账号</div>
+			<div class="profile-info-value">${shop.sellerAccount!}</div>
+		</div>
+		<div class="profile-info-row" id="tr3">
+			<div class="profile-info-name">卖家店铺</div>
+			<div class="profile-info-value">${shop.sellerShop!}</div>
+		</div>
+		<div class="profile-info-row" id="tr4">
+			<div class="profile-info-name">刊登账号paypal</div>
+			<div class="profile-info-value">${shop.payPal!}</div>
+		</div>
+		<div class="profile-info-row" id="tr5">
+			<div class="profile-info-name">更新时间</div>
+			<div class="profile-info-value">${shop.timeTask!}</div>
+		</div>
+		<div class="profile-info-row" id="tr6">
+			<div class="profile-info-name">站点</div>
+			<div class="profile-info-value">
+			@aType = dict.getDictListByType("sys_area_type","国家");	
+					@var areas = area.getAreaList(aType.value);
+					
+					@for(a in areas){
+						
+						@if(a.id==shop.siteId){
+									${a.name}
+								@}
+					@}
+					
+		</div>
+		</div>
+		<div class="profile-info-row" id="tr_marketpalceId">
+			<div class="profile-info-name">Marketpalce ID</div>
+			<div class="profile-info-value">
+			@for(a in areas){
+						
+						@if(a.id==shop.siteId){
+									${a.marketplaceId}
+								@}
+					@}
+			</div>
+		</div>
+		<div class="profile-info-row" id="tr_intreface">
+			<div class="profile-info-name">接口地址</div>
+			<div class="profile-info-value">
+			@for(a in areas){
+						
+						@if(a.id==shop.siteId){
+									${a.interfaceAddress}
+								@}
+					@}
+			</div>
+		</div>
+		<div class="profile-info-row" id="tr7">
+			<div class="profile-info-name">AMS Access Key ID</div>
+			<div class="profile-info-value">${shop.akId}</div>
+		</div>
+		<div class="profile-info-row" id="tr8">
+			<div class="profile-info-name">Secrect Key</div>
+			<div class="profile-info-value">${shop.secrectKey}</div>
+		</div>
+		<div class="profile-info-row" id="tr9">
+			<div class="profile-info-name">Seller ID</div>
+			<div class="profile-info-value">${shop.sellerId}</div>
+		</div>
+		<div class="profile-info-row" id="tr10">
+			<div class="profile-info-name">商户ID</div>
+			<div class="profile-info-value">${shop.shopId}</div>
+		</div>
+		<div class="profile-info-row" id="tr11">
+			<div class="profile-info-name">账号类型</div>
+			<div class="profile-info-value">
+			@var adicts = dict.getDictListByType('account_type');
+							@for(dic in adicts){
+							@if(dic.value==shop.accountType){
+										${dic.label!}
+								@}
+						
+							@}
+						</div>
+		</div>
+		<!-- <div class="profile-info-row" id="tr12">
+			<div class="profile-info-name">(主/子)账号</div>
+			<div class="profile-info-value">${shop.account}</div>
+		</div> -->
+		<div class="profile-info-row" id="tr13">
+			<div class="profile-info-name">授权令牌</div>
+			<div class="profile-info-value">${shop.accessOrder}</div>
+		</div>
+		<div class="profile-info-row" id="tr14">
+			<div class="profile-info-name">备注</div>
+			<div class="profile-info-value">${shop.note}</div>
+		</div>
+		</div>
+	</div>

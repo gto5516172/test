@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bety.web.mapper.CommoditySpuMapper">
+
+	
+	
+	<!--SPU列表 -->                                          
+	<select id="findPageInfo" resultType="com.bety.web.model.CommoditySpu">
+		SELECT su.id,su.name,su.descr,su.create_by,update_by,update_date,type,brand,spu_no  
+		FROM ec_commodity_spu su 
+		<where>
+		1=1 
+			<if test="@Ognl@isNotBlank(name)">
+				and su.name like concat('%', #{name} ,'%') 
+			</if>
+			<if test="@Ognl@isNotBlank(createBy)">
+				and su.create_by like concat('%', #{createBy} ,'%')
+			</if>
+			<if test="@Ognl@isNotBlank(brand)">
+				and su.brand=#{brand}
+			</if>
+				<if test="@Ognl@isNotBlank(type) and type > 0">
+				and su.type=#{type}
+			</if>
+			<if test="@Ognl@isNotBlank(spuNo)">
+				and su.spu_no like concat('%', #{spuNo} ,'%')
+			</if>
+		</where> 
+		GROUP BY su.id ORDER BY su.update_date desc
+	</select>
+	<!--SPU-->                                          
+	<select id="findById" resultType="com.bety.web.model.CommoditySpu">
+		SELECT su.id,su.name,su.type,su.spu_no,su.price,su.brand,su.manufactor_no,
+		su.units,su.descr,su.origin_place,su.sell_descr,su.other_descr,su.title,
+		su.platforms,su.keywords,su.create_by,update_by,update_date 
+		FROM ec_commodity_spu su 
+		<where>
+			 su.id=#{id}
+		</where> 
+	</select>
+	<select id="findAllSpu" resultType="com.bety.web.model.CommoditySpu">
+		SELECT su.id,su.name,su.descr,su.create_by,update_by,update_date,spu_no 
+		FROM ec_commodity_spu su 
+		<where>
+			su.del_flag = 0
+		</where> 
+		GROUP BY su.id ORDER BY su.update_date desc
+	</select>
+	<select id="findCountByName" resultType="java.lang.Integer">
+		SELECT count(1) FROM ec_commodity_spu su 
+		<where>
+				su.spu_no =#{name}
+		</where> 
+	</select>
+		<select id="findCountByType" resultType="java.lang.Integer">
+		SELECT count(1) FROM ec_commodity_spu su where type =#{param1}
+	
+	</select>
+</mapper>

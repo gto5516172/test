@@ -1,0 +1,119 @@
+
+<style>
+
+.myplatform{
+	margin: 0px auto 50px;
+	width: 51%;
+}
+.mylable{
+	float:left;	
+	width:10%;
+}
+.mycontent{
+	float:left;
+	width:90%;
+}
+</style>
+
+<div class="layer">
+	<form name="FormPost" id="sysuser-save" class="FormGrid"  method="post"
+		action="${ctxPath}/userCenter/updateInfo">
+		
+		<input type="hidden" value="${user.id!}" name="id"/>
+		<table class="EditTable" width="100%">
+			<tbody>
+			<tr class="FormData">
+				<td class="CaptionTD">头像</td>
+				<td class="DataTD width-100">
+					@layout("/common/upload.html"){};
+					<div id="filePicker">
+						<img alt="110x110" 
+						@if(user.headPath!=null&&""!=user.headPath){
+						src="${ctxPath!}/${user.headPath}"
+						@}else{
+						 src="${ctxPath!}/static/img/big-male-pic.jpg" 
+						 @}
+						 height="110" width="110"  id="showImg">
+					</div>
+					<div id="inputImg" inputName="headPath"></div>
+				</td>
+			</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">真实姓名</td>
+					<td class="DataTD width-100"><input type="text"
+						name="name" datatype="*"  nullmsg="请输入角色名！"
+						value="${user.name!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">登录名</td>
+					<td class="DataTD">
+					<input type="text" value="${user.username!}" name="username" id="username"
+					datatype="*"  nullmsg="请输入登录名！"  ajaxurl="${ctxPath!}/sysuser/validateNameByAjax?id=${user.id}"/>
+					<script type="text/javascript">
+					$(document).ready(function(){
+						$('#username').focus();
+					});
+					</script>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">密码</td>
+					<td class="DataTD">
+					<input type="password" value="" name="password" class="width-70"
+					/>
+					<span class="red">*不填写则不修改</span>
+					<!-- datatype="*6-16" errormsg="密码范围在6~16位之间！" -->
+					</td>
+				</tr>
+				
+				<tr class="FormData">
+					<td class="CaptionTD">性别</td>
+					<td class="DataTD width-100">
+						<input type="radio" name="sex" value="男" style="width:3%" 
+							@if(user.sex=="男"){
+							checked
+							@}
+						> 男
+						<input type="radio" name="sex" value="女" style="width:3%" 
+						@if(user.sex=="女"){
+						checked
+						@}
+						> 女
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">QQ</td>
+					<td class="DataTD">
+					<input type="text" value="${user.qq!}" name="qq"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">电话</td>
+					<td class="DataTD">
+					<input type="text" value="${user.mobile!}" name="moblie"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">手机</td>
+					<td class="DataTD">
+					<input type="text" value="${user.phone!}" name="phone"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">邮箱</td>
+					<td class="DataTD">
+					<input type="text" value="${user.email!}" name="email"/>
+					
+					</td>
+				</tr>
+			<tr>
+				<td colspan="2">
+					<h3 class="red center">为了确保账号安全，修改成功后，自动跳转到登录界面，重新登录</h3>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="sysuser-save" reloadUrl="true"/>
+

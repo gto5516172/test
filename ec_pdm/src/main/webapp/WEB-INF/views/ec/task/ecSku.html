@@ -1,0 +1,60 @@
+<div class="layer">
+<!--产品列表 -->		
+<div class="widget-box widget-color-green2" style="margin-top:20px;">
+	<div class="widget-header clearfix">
+		<h5 class="widget-title">产品列表</h5>
+		<div class="widget-toolbar">
+			<a href="#" data-action="fullscreen" class="orange2"> <i
+				class="ace-icon fa fa-expand"></i> </a>
+		</div>
+	</div>
+		<div class="widget-body">
+		<div class="widget-main padding-8">
+			<div class="row">
+		<div class="widget-toolbar  width-100" style="padding-top: 2px;border:0px solid red;float:left">
+			<form method="post" class="form-search" id="search-form3"
+				target="list-page3" action="${ctxPath}/ecSku/listBySearch">
+			<div class="row padding-tb-10">
+					<div class="col-sm-6">
+						<label class="inline">商品目录：</label>
+							<#pullDownTree order="one" treeData="${ecCataloue}" name="findCataloueId" 
+								class="width-80" />
+					</div>
+					<div class="col-sm-6" align="left">
+						<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0)" id="add">添加</a>
+					</div>
+				</div>
+				
+				<div class="row padding-tb-10">
+					<div class="col-sm-6">
+						<label class="inline">查询条件：</label>
+						<#select id="queryCondition" name="queryCondition" width="80%">
+							<option value="0">查询条件</option>
+							<option value="1">产品编号</option>
+							<option value="2">商品名称【模糊】</option>
+							<option value="3">销售员</option>
+							<option value="4">首选供应商</option>
+						</#select>
+					</div>
+					<div class="col-sm-6" align="left">
+						<label class="inline">搜索关键字：</label> <input type="text"
+							class="width-80" name="findTxt" placeholder="输入关键字..." />
+					</div>
+				</div>
+				<div class="padding-trb-10 col-sm-12">
+					 <span
+						class="btn btn-info btn-sm col-sm-6" id="search-btn3">查询</span>
+				</div>
+				<input type="hidden" name="category" value="${category}"/>
+			</form>
+			<div class="" id="list-page3" style="width:100%;border:0px solid blue">
+			</div>
+		</div>
+		</div>
+		</div>
+	</div>
+</div>
+<script type="text/javascript">
+$("#search-form3").getPageList({'submitBtnId':'search-btn3'});
+</script>
+</div>

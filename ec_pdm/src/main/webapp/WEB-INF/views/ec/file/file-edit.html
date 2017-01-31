@@ -1,0 +1,278 @@
+<div class="layer">
+	<form name="FormPost" id="ecFile-save" class="FormGrid"  method="post"
+		action="${ctxPath}/ecFile/save" >
+		
+		<input type="hidden" value="${ecFile.id!}" name="id"/>
+		<input type="hidden" value="" id="fileList" name="fileList"/>
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr style="display: none;">
+					<td class="ui-state-error" id="FormError"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档主题</td>
+					<td class="DataTD width-100"><input type="text"
+						name="documentTheme" datatype="*"  nullmsg="请输入文档主题！"
+						value="${ecFile.documentTheme!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档分类</td>
+					<td class="DataTD">
+					<#treeselect url="ecFileClassification/tree" modelNameValue="${ecFileClassification.name!}" 
+							modelIdValue="${ecFileClassification.id!0}" selectIds="${ecFileClassification.id!}"
+							modelId="ecFileClassificationId" nameId="ecFileClassification" id="ecFileClassification_id"
+							isCheck="请选择文档分类" />
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">是否公开</td>
+					<td class="DataTD">
+						<div class="radio inline">
+							<label>
+								<input name="showType" type="radio" class="ace" @if(ecFile.showType== 0) {
+								 checked 
+								 @} 
+								 value="0"/>
+								<span class="lbl"> 公开 </span>
+							</label>
+						</div>
+						<div class="radio inline">
+							<label>
+								<input name="showType" type="radio" class="ace" @if(ecFile.showType== 1) {
+								 checked 
+								 @} 
+								 value="1"/>
+								<span class="lbl"> 隐私</span>
+							</label>
+						</div>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">关联本地</td>
+					<td class="">
+						@var types = dict.getDictListByType("faq_type");
+						<#select name="goodsType" id="goodsType" width="10%">
+						@for(type in types){
+							<option value="${type.value!}" 
+							@if(type.value==ecFile.goodsType){
+								selected
+							@}
+							>	${type.label!}</option>
+							@}
+								</#select>
+							<input type="text" name="goodsNo" id="goodsNo" width="100px" nullmsg="请输入商品编码！"/>
+							<script type="text/javascript">
+							$(document).ready(function() {
+								setGoodsNo($('#goodsType').val());
+								$('#goodsType').change(function(){
+									var value = $(this).children('option:selected').val();
+									setGoodsNo(value);
+							});
+							});
+							function setGoodsNo(value){
+								if("0"==value){
+									$("#goodsNo").css("display","none");
+									$("#goodsNo").removeAttr("ajaxurl");
+									$("#goodsNo").removeAttr("datatype");
+									$("#goodsNo").attr("value","");
+									return;
+								}
+								if(value=='${faq.goodsType!}'){
+									$("#goodsNo").css("display","inline");
+									$("#goodsNo").attr("datatype","*");
+									$("#goodsNo").attr("value","${ecFile.goodsNo!}");
+									$("#goodsNo").attr("ajaxurl","${ctxPath!}/customFaq/validateGoodNoByAjax?type="+value);
+									
+								}else{
+									$("#goodsNo").attr("datatype","*");
+									$("#goodsNo").css("display","inline");
+									$("#goodsNo").attr("ajaxurl","${ctxPath!}/customFaq/vaecFileateGoodNoByAjax?type="+value);
+									$("#goodsNo").attr("value","");
+								}
+								$('#goodsNo').focus();
+							}
+							</script>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档描述</td>
+					<td class="DataTD">
+						<textarea name="remarks" class="autosize-transition form-control "
+						style="resize: none;">${ecFile.remarks!}</textarea>	
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">已存在文档</td>
+					<td class="DataTD">
+						@for(item in ecFileUrlList) {
+							@if(item.suffix == ".txt" || item.suffix == ".java" || item.suffix == ".pdf") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/txt.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".mp3" || item.suffix == ".wma" || item.suffix == ".wav" || item.suffix == ".mod") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/music.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".html" || item.suffix == ".htm" || item.suffix == ".jsp") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/html.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".rar" || item.suffix == ".jar" || item.suffix == ".zip") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/zip.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".doc" || item.suffix == ".wps" || item.suffix == ".docx") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/word.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".xls" || item.suffix == ".xlsx") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/excel.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".ppt") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/ppt.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".exe" || item.suffix == ".bat") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/exe.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".bmp" || item.suffix == ".png" || item.suffix == ".gif" || item.suffix == ".jpeg" || item.suffix == ".jpg") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/photo.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else if (item.suffix == ".rmvb" || item.suffix == ".mkv" || item.suffix == ".mp4" || item.suffix == ".avi" || item.suffix == ".wmv" || item.suffix == ".3gp") {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/movie.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@} else {
+								<div id="fileUrl${item.id}" class="fileDetail"><img onclick="downLoad(${item.id})" src="${ctxPath}/static/weipan/images/config.png" title="${item.originalFileName!}" style="width:50px;height:50px"/><br><span>${item.originalFileName!}</span><a class="red" href="javascript:void(0);" 
+								data-title="删除操作"
+								data-msg="<span class='red bigger-120'>你确定删除<${item.originalFileName!}>吗?</span>"
+							    onclick="delFileUrl(${item.id})"
+							>
+								<i class="ace-icon fa fa-trash-o bigger-130"></i>
+							</a></div>
+							@}
+						@}
+					</td>
+				</tr>
+				<script>
+				function downLoad(downLoadFileId) {
+					$("#downLoadFileId").val(downLoadFileId);
+					$("#downLoadForm").submit();
+				}
+					function delFileUrl(id) {
+						var loadi;
+						
+						if(window.confirm('你确定要删除吗？')){
+							loadi = layer.load(5,0);
+							$.ajax({
+								url : "${ctxPath}/ecFileUrl/delete",
+								type : 'post',
+								dataType : 'json',
+								data : {
+									'id':id
+								},
+								success : function(response) {
+									layer.close(loadi);
+									layer.msg('<span class="red bigger-120">删除成功</span>', 1, 1,function(){});
+									$("#fileUrl"+id).remove();
+								},
+								error : function(datas) {
+									layer.close(loadi);
+									layer.msg('<span class="red bigger-120">删除失败</span>', 2, 8);
+								}
+							});
+						}
+						
+					}
+				</script>
+				<tr class="FormData">
+					<td class="CaptionTD">新上传文档</td>
+					<td class="DataTD">
+						 <div class="form-group">
+		                    <input type="file" class="file" name="myfile" id="test-upload" multiple>
+		                    <div id="errorBlock" class="help-block"></div>
+		                </div>
+		                <script>
+		                $(document).ready(function() {
+		                	var fList = new Array();
+		                	
+		        	        $("#test-upload").fileinput({
+		        	            'showPreview' : true,
+		        	            'elErrorContainer': '#errorBlock',
+		        	            'dropZoneEnabled': true,
+		        	            'showUpload' : true,
+		                        'showRemove' : true,
+		        	            'browseClass': "btn btn-primary",
+		        	            'uploadUrl':'${ctxPath}/ecFile/uploadFile'
+		        	        });
+		        	        $("#test-upload").on("fileuploaded", function (event, data, previewId, index) {
+		        	        	fList.push(JSON.stringify(data.response));
+		        	 			$("#fileList").val(fList.toString());
+		        	        });
+		        	        
+		        	        $("#test-upload").on("filecleared", function() {
+		        	        	fList.splice(0, fList.length);
+		        	        	$("#fileList").val("");
+		        	        });
+		        	    });
+		                </script>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	<form action="${ctxPath}/ecFile/downloadFile" id="downLoadForm" target="" method="post">
+		<input type="hidden" id="downLoadFileId" name="downLoadFileId" value=""/>
+	</form>
+</div>
+<#save formId="ecFile-save" />
+
+<script type="text/javascript">
+
+//描述框自动扩张高度
+$('textarea[class*=autosize]').autosize({append: "\n"});
+
+</script>

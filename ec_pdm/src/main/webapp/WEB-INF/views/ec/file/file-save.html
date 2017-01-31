@@ -1,0 +1,144 @@
+<div class="layer">
+	<form name="FormPost" id="ecFile-save" class="FormGrid"  method="post"
+		action="${ctxPath}/ecFile/save" >
+		
+		<input type="hidden" value="${ecFile.id!}" name="id"/>
+		<input type="hidden" value="" id="fileList" name="fileList"/>
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr style="display: none;">
+					<td class="ui-state-error" id="FormError"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档主题</td>
+					<td class="DataTD width-100"><input type="text"
+						name="documentTheme" datatype="*"  nullmsg="请输入文档主题！"
+						value="${ecFile.documentTheme!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档分类</td>
+					<td class="DataTD">
+					<#treeselect url="ecFileClassification/tree" modelNameValue="${ecFileClassification.name!}" 
+							modelIdValue="${ecFileClassification.id!0}" selectIds="${ecFileClassification.id!}"
+							modelId="ecFileClassificationId" nameId="ecFileClassification" id="ecFileClassification_id"
+							isCheck="请选择文档分类" />
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">是否公开</td>
+					<td class="DataTD">
+						<div class="radio inline">
+							<label>
+								<input name="showType" type="radio" class="ace" checked value="0"/>
+								<span class="lbl"> 公开 </span>
+							</label>
+						</div>
+						<div class="radio inline">
+							<label>
+								<input name="showType" type="radio" class="ace" value="1"/>
+								<span class="lbl"> 隐私</span>
+							</label>
+						</div>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">关联本地</td>
+					<td class="">
+						@var types = dict.getDictListByType("faq_type");
+					<#select name="goodsType" id="goodsType" width="10%">
+					@for(type in types){
+						<option value="${type.value!}"
+						@if(type.value=="0"){
+							selected
+						@}
+						>${type.label!}</option>
+						@}
+						</#select>
+						<input type="text" name="goodsNo" id="goodsNo" width="100px" nullmsg="请输入商品编码！"/>
+						<script type="text/javascript">
+						$(document).ready(function() {
+							
+							$('#goodsType').change(function(){
+								var value = $(this).children('option:selected').val();
+								setGoodsNo(value);
+							});
+							$("#goodsType").trigger("change","0");
+						});
+						function setGoodsNo(value){
+							if("0"==value){
+								$("#goodsNo").css("display","none");
+								$("#goodsNo").removeAttr("ajaxurl");
+								$("#goodsNo").removeAttr("datatype");
+								$("#goodsNo").attr("value","");
+								return;
+							}
+							if(value=='${faq.goodsType!}'){
+								$("#goodsNo").css("display","inline");
+								$("#goodsNo").attr("datatype","*");
+								$("#goodsNo").attr("value","${faq.goodsNo!}");
+								$("#goodsNo").attr("ajaxurl","${ctxPath!}/customFaq/validateGoodNoByAjax?type="+value);
+								
+							}else{
+								$("#goodsNo").attr("datatype","*");
+								$("#goodsNo").css("display","inline");
+								$("#goodsNo").attr("ajaxurl","${ctxPath!}/customFaq/validateGoodNoByAjax?type="+value);
+								$("#goodsNo").attr("value","");
+							}
+							$('#goodsNo').focus();
+							
+						}
+						</script>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文档描述</td>
+					<td class="DataTD">
+						<textarea name="remarks" class="autosize-transition form-control "
+						style="resize: none;">${ecFile.remarks!}</textarea>	
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">文件上传</td>
+					<td class="DataTD">
+						 <div class="form-group">
+		                    <input type="file" class="file" name="myfile" id="test-upload" multiple>
+		                    <div id="errorBlock" class="help-block"></div>
+		                </div>
+		                <script>
+		                $(document).ready(function() {
+		                	var fList = new Array();
+		                	
+		        	        $("#test-upload").fileinput({
+		        	            'showPreview' : true,
+		        	            'elErrorContainer': '#errorBlock',
+		        	            'dropZoneEnabled': true,
+		        	            'showUpload' : true,
+		                        'showRemove' : true,
+		        	            'browseClass': "btn btn-primary",
+		        	            'uploadUrl':'${ctxPath}/ecFile/uploadFile'
+		        	        });
+		        	        $("#test-upload").on("fileuploaded", function (event, data, previewId, index) {
+		        	        	fList.push(JSON.stringify(data.response));
+		        	 			$("#fileList").val(fList.toString());
+		        	        });
+		        	        
+		        	        $("#test-upload").on("filecleared", function() {
+		        	        	fList.splice(0, fList.length);
+		        	        	$("#fileList").val("");
+		        	        });
+		        	    });
+		                </script>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="ecFile-save" />
+
+<script type="text/javascript">
+
+//描述框自动扩张高度
+$('textarea[class*=autosize]').autosize({append: "\n"});
+
+</script>

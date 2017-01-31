@@ -1,0 +1,136 @@
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-list-alt bigger-120"></i>FAQ
+		</a></li>
+
+		<!--  <li class=""><a data-toggle="tab" href="#profile">
+		<i class="green ace-icon fa fa-plus bigger-120"></i> FAQ添加
+		</a></li> -->
+	</ul> 
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+	<form name="FormPost" id="faq-save" class="FormGrid"  method="post"
+		action="${ctxPath}/customFaq/save" >
+		
+		<input type="hidden" value="${faq.id!}" name="id"/>
+
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr style="display: none;">
+					<td class="ui-state-error" id="FormError"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">名称</td>
+					<td class="DataTD width-30"><input type="text"
+						name="name" datatype="*"  nullmsg="请输入名称！" value="${faq.name!}"  class="width-45" ></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">FAQ类型</td>
+					<td class="">
+						@var allType = faqType.getAllFaqType();
+					<#select name="typeId" width="45%" id="typeId">
+					@for(type in allType){
+							<option value="${type.id!}" 
+							 @if(type.id==faq.typeId){
+							selected
+							@}
+						>
+							${type.name!}
+							</option>
+						@}
+					</#select>
+					
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">关联本地</td>
+					<td>
+					@var types = dict.getDictListByType("faq_type");
+						<#select name="goodsType" id="goodsType" width="20%">
+						@for(type in types){
+							<option value="${type.value!}" 
+							@if(type.value==faq.goodsType){
+								selected
+							@}
+							>	${type.label!}</option>
+							@}
+								</#select>
+							<input type="text" name="goodsNo" id="goodsNo" class="width-25"  nullmsg="请输入商品编码！"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">描述</td>
+					<td class="DataTD width-100">
+					@layout("/layout/ueditor.html"){}
+				<!-- 加载编辑器的容器 -->
+				<script id="container" name="descr" type="text/plain" style="width:500px;">
+				${faq.descr}
+				</script>
+				<!-- 实例化编辑器 -->
+				</td>
+				</tr>
+				<tr>
+					<td colspan="2">
+					<span class="btn btn-info btn-block  width-50" id="save-btn">保 存</span>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+	</div>
+</div>
+</div>
+<#save isHide="yes" subBtnId="save-btn" formId="faq-save" />
+<script type="text/javascript">
+	var ue = UE.getEditor('container', {
+	    toolbars: [
+	               ['source', 'undo', 'redo'],
+	               ['bold', 'italic', 'underline', 'fontborder', 
+	                'strikethrough', 'superscript', 'subscript', 
+	                'removeformat', 'formatmatch', 'autotypeset', 
+	                'blockquote', 'pasteplain', '|', 'forecolor', 
+	                'backcolor', 'insertorderedlist', 
+	                'insertunorderedlist', 'selectall', 'cleardoc',
+	                'simpleupload', //单图上传
+	                'insertimage' //多图上传
+	                ]
+	           ],
+	    autoHeightEnabled: true,
+	    autoFloatEnabled: true
+	});
+	$(document).ready(function() {
+		setGoodsNo($('#goodsType').val());
+		$('#goodsType').change(function(){
+			var value = $(this).children('option:selected').val();
+			setGoodsNo(value);
+	});
+	});
+	function setGoodsNo(value){
+		if("0"==value){
+			$("#goodsNo").css("display","none");
+			$("#goodsNo").removeAttr("ajaxurl");
+			$("#goodsNo").removeAttr("datatype");
+			$("#goodsNo").attr("value","");
+			return;
+		}
+		if(value=='${faq.goodsType!}'){
+			$("#goodsNo").css("display","inline");
+			$("#goodsNo").attr("datatype","*");
+			$("#goodsNo").attr("value","${faq.goodsNo!}");
+			$("#goodsNo").attr("ajaxurl","${ctxPath!}/customFaq/validateGoodNoByAjax?type="+value);
+			
+		}else{
+			$("#goodsNo").attr("datatype","*");
+			$("#goodsNo").css("display","inline");
+			$("#goodsNo").attr("ajaxurl","${ctxPath!}/customFaq/validateGoodNoByAjax?type="+value);
+			$("#goodsNo").attr("value","");
+		}
+		$('#goodsNo').focus();
+	}
+	function toUrl(){
+		$("li.active").children("i").trigger("click");
+		window.location.href="#/ajax/customFaq/view";
+	}
+</script>
+

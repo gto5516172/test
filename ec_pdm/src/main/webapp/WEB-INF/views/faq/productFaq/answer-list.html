@@ -1,0 +1,163 @@
+<div class="layer">
+	<div class="widget-box ">
+		<div class="widget-header">
+			<h4 class="lighter smaller">
+				<i class="icon-comment blue center">问题</i>
+			</h4>
+		</div>
+
+		<div class="widget-body">
+			<div class="widget-main padding-left">
+			<h3>${faq.name}</h3>
+			${faq.descr}
+		</div>
+	</div>
+	</div>
+	<div class="widget-box ">
+		<div class="widget-header">
+			<h4 class="lighter smaller">
+				<i class="icon-comment blue">回复</i> 
+			</h4>
+		</div>
+
+		<div class="widget-body">
+			<div class="widget-main no-padding">
+				<div
+					style="position: relative; overflow: hidden; width: auto; height: auto;margin-bottom: 15px;"
+					class="slimScrollDiv">
+					<div style="overflow: hidden; width: auto; height: auto;"
+						class="dialogs">
+						@for(item in page.list){
+						<div class="itemdiv dialogdiv">
+							<div class="user">
+								@if(item.headPath!=null){
+									<img alt="${item.name}" src="${ctxPath}/${item.headPath!}">
+								@}else{
+								<img alt="${item.name}" src="${ctxPath}/static/img/big-male-pic.jpg">
+								@}
+							</div>
+
+							<div class="body">
+								<div class="text">
+								<div class="accordion-style1 panel-group accordion-style2">
+								<div id="accordion" class="accordion-style2 panel-group">
+									<div class="panel panel-default">
+										<div class="panel-heading">
+											<h4 class="panel-title">
+												<a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion" href="#collapse${item.id}">
+													<i class="bigger-110 icon-angle-down" data-icon-hide="icon-angle-down" data-icon-show="icon-angle-right"></i>
+													${item.name} 
+													<span style="float:right">${item.timeDistance} </span>
+												</a>
+											</h4>
+										</div>
+										<div class="panel-collapse collapse in" id="collapse${item.id}">
+											<div class="panel-body">
+												${item.descr}	
+											</div>
+										</div>
+									</div>
+									</div>
+								</div>
+								
+								</div>
+								<div class="tools">
+									<a href="#" class="btn btn-minier btn-info delete"  itemId="${item.id}"> <i
+										class="fa fa-minus"></i>
+									</a>
+								</div>
+							</div>
+						</div>
+						@}
+						</div>
+					<div
+						style="background: rgb(0, 0, 0) none repeat scroll 0% 0%; width: 7px; position: absolute; top: 50px; opacity: 0.4; display: none; border-radius: 7px; z-index: 99; right: 1px; height: 250px;"
+						class="slimScrollBar ui-draggable"></div>
+					<div
+						style="width: 7px; height: 100%; position: absolute; top: 0px; display: none; border-radius: 7px; background: rgb(51, 51, 51) none repeat scroll 0% 0%; opacity: 0.2; z-index: 90; right: 1px;"
+						class="slimScrollRail"></div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div style="width:800px;margin:20px auto 40px; overflow: auto;" class="form-actions">
+	<form action="${ctxPath}/productFaqAnswer/save" method="post" id="myAnswer">
+	<input name="faqId" type="hidden" value="${faq.id}"> 
+	@layout("/layout/ueditor.html"){}
+				<!-- 加载编辑器的容器 -->
+				<script id="container" name="descr" type="text/plain" style="width:700px;height:300px" >
+				</script>
+				<div style="float:right;margin-right:60px;">
+					<button class="btn btn-sm btn-info no-radius" type="button" id="submitAnswer">
+						<i class="icon-share-alt"></i> 发送
+					</button>
+				</div>
+		</form>
+</div>
+</div>
+<script type="text/javascript">
+var ue = UE.getEditor('container', {
+    toolbars: [
+               ['source', 'undo', 'redo'],
+               ['bold', 'italic', 'underline', 'fontborder', 
+                'strikethrough', 'superscript', 'subscript', 
+                'removeformat', 'formatmatch', 'autotypeset', 
+                'blockquote', 'pasteplain', '|', 'forecolor', 
+                'backcolor', 'insertorderedlist', 
+                'insertunorderedlist', 'selectall', 'cleardoc',
+                'simpleupload', //单图上传
+                'insertimage' //多图上传
+                ]
+           ],
+    autoHeightEnabled: true,
+    autoFloatEnabled: true
+});
+$("#submitAnswer").click(function(){
+	if(!UE.getEditor('container').hasContents())
+	{
+		layer.msg('请输入内容！', 3, 5);
+		return ;
+	
+	}
+	var myform = $("#myAnswer");
+	var loadi = layer.load('加载中…');
+	$.ajax({
+              cache: true,
+              type: "POST",
+              url:myform.attr("action"),
+              data:myform.serialize(),
+              error: function(request) {
+              	 layer.close(loadi);
+              	 layer.msg('操作失败,请重试！', 3, 5);
+              },
+              success: function(data) {
+              	   layer.close(loadi);
+              	   layer.msg('操作成功！', 3, 1);
+              	   $("#search-btn5").trigger("click");
+              }
+          });
+});
+$(".delete").click(function(){
+	var id = $(this).attr("itemId");
+	var loadi = layer.load('加载中…');
+	$.ajax({
+              type: "POST",
+              url:"${ctxPath}/productFaqAnswer/delete",
+              data:{id:id},
+              error: function(request) {
+              	 layer.close(loadi);
+              	 layer.msg('操作失败,请重试！', 3, 5);
+              },
+              success: function(data) {
+              	   layer.close(loadi);
+              	   layer.msg('操作成功！', 3, 1);
+              	   $("#search-btn5").trigger("click");
+              }
+          });
+});
+$(".accordion-toggle").click(function(){
+	$(this).children("i").removeClass("icon-angle-down");
+	$(this).children("i").addClass("icon-angle-right");
+});
+</script>
+

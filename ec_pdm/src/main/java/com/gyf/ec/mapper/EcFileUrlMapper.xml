@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcFileUrlMapper">
+
+<sql id="ecFileUrlColumns">
+	id,create_by,create_date,update_by,update_date,remarks,del_flag,ec_file_id,save_directory,file_name,original_file_name,relative_url,content_type,suffix
+</sql>
+
+<sql id="ecFileUrlAliasColumns">
+	a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.ec_file_id,a.save_directory,file_name,original_file_name,a.relative_url,a.content_type,a.suffix
+</sql>
+
+<!-- 分页显示筛选查询 -->
+	<select id="findFileUrlList" resultType="com.gyf.ec.model.EcFileUrl">
+		select <include refid="ecFileUrlAliasColumns"/> 
+		from ec_file_url a 
+		<where>
+			<if test="@Ognl@isNotBlank(ecFileId)">
+				a.ec_file_id = #{ecFileId}
+			</if>
+			and a.del_flag = 0
+		</where>
+		ORDER BY a.update_date desc
+	</select>
+	
+	<select id="findFileUrlListTwo" resultType="com.gyf.ec.model.EcFileUrl">
+		select <include refid="ecFileUrlAliasColumns"/> 
+		from ec_file_url a 
+		<where>
+			1=1
+			<if test="@Ognl@isNotBlank(userId)">
+				and a.original_file_name like concat('%', #{originalFileName}, '%')
+			</if>
+			<if test="@Ognl@isNotBlank(userId)">
+				and (a.user_id = #{userId} or (a.ec_file_id in (select t1.file_id from ec_user_file t1 where t1.file_id = a.ec_file_id and t1.user_id = #{userId})))
+			</if>
+			<if test="type==1">
+				and (a.suffix = '.txt' or a.suffix = '.java' or a.suffix = '.pdf')
+			</if>
+			<if test="type==2">
+				and (a.suffix = '.mp3' or a.suffix = '.wma' or a.suffix = '.wav' or a.suffix = '.mod')
+			</if>
+			<if test="type==3">
+				and (a.suffix = '.html' or a.suffix = '.htm' or a.suffix = '.jsp')
+			</if>
+			<if test="type==4">
+				and (a.suffix = '.rar' or a.suffix = '.jar' or a.suffix = '.zip')
+			</if>
+			<if test="type==5">
+				and (a.suffix = '.doc' or a.suffix = '.wps' or a.suffix = '.docx')
+			</if>
+			<if test="type==6">
+				and (a.suffix = '.xls' or a.suffix = '.xlsx')
+			</if>
+			<if test="type==7">
+				and (a.suffix = '.ppt')
+			</if>
+			<if test="type==8">
+				and (a.suffix = '.exe' or a.suffix = '.bat')
+			</if>
+			<if test="type==9">
+				and (a.suffix = '.bmp' or a.suffix = '.png' or a.suffix = '.gif' or a.suffix = '.jpeg' or a.suffix = '.jpg')
+			</if>
+			<if test="type==10">
+				and (a.suffix = '.rmvb' or a.suffix = '.mkv' or a.suffix = '.mp4' or a.suffix = '.avi' or a.suffix = '.wmv' or a.suffix = '.3gp')
+			</if>
+			and a.del_flag = 0
+		</where>
+		ORDER BY a.content_type asc, a.id desc
+	</select>
+
+	<!-- 根据节点Id删除底下全部子节点包括孙子节点 -->
+	<update id="deleteEcFileUrlByRootId">
+		update ec_file_url set del_flag = 1 where id = #{id}
+	</update>
+
+	<select id="findFileUrlMain" resultType="com.gyf.ec.model.EcFileUrl">
+		select <include refid="ecFileUrlAliasColumns"/> 
+		from ec_file_url a order by a.create_date desc limit 0,5
+	</select>
+
+</mapper>

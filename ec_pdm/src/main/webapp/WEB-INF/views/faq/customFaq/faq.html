@@ -1,0 +1,100 @@
+@var add = auth.hasPermission("faq:custom:add");
+
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-list-alt bigger-120"></i>FAQ列表
+		</a></li>
+
+		<!--  <li class=""><a data-toggle="tab" href="#profile">
+		<i class="green ace-icon fa fa-plus bigger-120"></i> FAQ添加
+		</a></li> -->
+	</ul> 
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<form action="${ctxPath}/customFaq/list" method="post" id="search-form" target="list-page" class="clearfix">
+				<div class="pull-left width-25">
+					<label>问题：</label>
+					<input type="text" class="width-60" name="name"/>
+				</div>
+				<div class="pull-left width-20">
+				<label>类型：</label>
+						@var allType = faqType.getAllFaqType();
+					<#select name="typeId" width="60%">
+						<option value="">全部</option>
+					@for(type in allType){
+							<option value="${type.id!}">
+							${type.name!}
+							</option>
+						@}
+					</#select>
+				</div> 
+				<div class="pull-left width-35">
+					<label>关联本地：</label>
+					@var types = dict.getDictListByType("faq_type");
+					<#select name="goodsType" id="goodsType1" width="20%">
+					@for(type in types){
+						<option value="${type.value!}"
+						@if(type.value=="0"){
+							selected
+						@}
+						>${type.label!}</option>
+						@}
+						</#select>
+						<input type="text" name="goodsNo" id="goodsNo1" width="100px" nullmsg="请输入商品编码！"/>
+						<script type="text/javascript">
+						$(document).ready(function() {
+							
+							$('#goodsType1').change(function(){
+								var value = $(this).children('option:selected').val();
+								setGoodsNo1(value);
+							});
+							$("#goodsType1").trigger("change","0");
+						});
+						function setGoodsNo1(value){
+							if("0"==value){
+								$("#goodsNo1").css("display","none");
+								$("#goodsNo1").attr("value","");
+								return;
+							}else{
+								$("#goodsNo1").css("display","inline");
+								$("#goodsNo1").attr("value","");
+							}
+							$('#goodsNo1').focus();
+						}
+						</script>
+				</div>
+				<span data-original-title="Bottm Info" class="btn btn-info btn-sm tooltip-info" id="search-btn" data-rel="tooltip" data-placement="bottom" title="查询">查询</span>
+				@if(add){
+				 <a class="btn btn-info btn-sm tooltip-info" 
+					href="#/ajax/customFaq/add/layer"
+					onclick="addTab(this,'添加客服常见问题')">添加</a>
+				@}
+			</form>
+			<hr/>
+			<div id="list-page"></div>
+			<script type="text/javascript">
+				$("#search-form").getPageList({'submitBtnId':'search-btn'})
+			</script>
+		</div>
+
+		<!-- <div id="profile" class="tab-pane">
+			<form action="${ctxPath!}/commonFaq/save" method="post" id="save-form">
+				<div class="center padding-10">
+					<label>名称：</label>
+					<input type="hidden" value="0" name="status"/>
+					<input type="text" class="width-50" name="name" datatype="*"  nullmsg="请输入名称！"/>
+				</div>
+				<div class="center padding-10">
+					<label>描述：</label>
+				
+				</div>
+				<div class="margin-t15">
+					<span class="btn btn-info btn-block bigger-120" id="save-btn">保 存</span>
+				</div>
+			</form>
+		</div> -->
+	</div> 
+</div>
+<#save isHide="yes" subBtnId="save-btn" formId="save-form" />

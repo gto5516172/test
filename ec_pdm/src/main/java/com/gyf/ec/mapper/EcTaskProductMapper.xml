@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcTaskProductMapper">
+<select id="findPageInfo" resultType="com.gyf.ec.model.EcTaskProduct">
+select t.*,etu.* from (select su.*,tt.sku,tt.name,tt.show_img   	 
+		from ec_task_product su left join ec_sku tt on tt.id=su.product_id <where> su.task_id=#{taskId}</where>  ) t 
+		left join (select saler_price,supply_price,new_price,my_url,status,product_descr,task_user,pid,id do_id
+ 		from ec_task_do ed <where>  ed.task_user=#{taskUser}</where>) etu on etu.pid=t.id  order by t.id desc
+	</select>
+	<select id="findCountByShop" resultType="java.lang.Integer">
+		select count(1) from ec_task_product where shop_id=#{param1}
+	</select>
+	<select id="findCountBySku" resultType="java.lang.Integer">
+		select count(1) from ec_task_product where product_id=#{param1}
+	</select>
+</mapper>

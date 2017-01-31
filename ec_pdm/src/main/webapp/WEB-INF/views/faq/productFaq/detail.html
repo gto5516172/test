@@ -1,0 +1,29 @@
+<div class="layer">
+	<div class="profile-user-info profile-user-info-striped">
+		<div class="profile-info-row">
+			<div class="profile-info-name">名称</div>
+			<div class="profile-info-value">${faq.name!}</div>
+		</div>
+	<div class="profile-info-row">
+			<div class="profile-info-name">FAQ类型</div>
+			
+			@var type = faqType.getFaqTypeById(faq.typeId);
+			<div class="profile-info-value">${type.name!}</div>
+		</div>
+		<div class="profile-info-row">
+			<div class="profile-info-name">关联本地
+			
+			</div>
+			<div class="profile-info-value">
+			@var di = dict.getDictByTypeAndValue("faq_type",faq.goodsType);
+			${di.label!}
+			${faq.goodsNo!}
+			</div>
+		</div>
+		<div class="profile-info-row">
+			<div class="profile-info-name">描述</div>
+			<div class="profile-info-value">${faq.descr!}</div>
+		</div>
+		
+		</div>
+	</div>

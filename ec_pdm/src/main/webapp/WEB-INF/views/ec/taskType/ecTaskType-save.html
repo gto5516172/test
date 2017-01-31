@@ -1,0 +1,33 @@
+<div class="layer">
+	<form name="FormPost" id="ecTaskType-save" class="FormGrid"  method="post"
+		action="${ctxPath}/ecTaskType/save" >
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr style="display: none;">
+					<td class="ui-state-error" id="FormError"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">任务类型名称</td>
+					<td class="DataTD width-100"><input type="text"
+						name="name" datatype="*"  nullmsg="请输任务类型名称！"
+						></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">任务类型描述</td>
+					<td class="DataTD width-100"><textarea id="remarks" name="remarks" class="autosize-transition form-control "
+						style="resize: none;" datatype="*" nullmsg="请输入任务类型描述！"></textarea>	</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="ecTaskType-save" />
+
+<script>
+	function refreshForm() {
+		$("#search-btn2").click();
+	}
+	function trim(str){ //删除左右两端的空格
+    	return str.replace(/(^\s*)|(\s*$)/g, "");
+ 	}
+</script>

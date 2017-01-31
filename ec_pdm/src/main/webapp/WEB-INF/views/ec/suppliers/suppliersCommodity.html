@@ -1,0 +1,79 @@
+<div class="widget-box widget-color-green2 ">
+	<div class="widget-header clearfix">
+		<h5 class="widget-title">供应商商品管理</h5>
+		<div class="widget-toolbar">
+			<a href="#" data-action="fullscreen" class="orange2"> <i
+				class="ace-icon fa fa-expand"></i> </a>
+		</div>
+	</div>
+
+	<div class="widget-body">
+		<div class="widget-main padding-8">
+			<div class="row">
+				<div class="widget-toolbar  width-30" style="padding-top: 2px;border:0px solid red;float:left">
+					<form method="post" class="form-search" id="search-form"
+						target="list-page" action="${ctxPath}/ecSuppliersCommodity/ecSuppliersList">
+						<div class="input-group" style="line-height: 0px;">
+							<input type="hidden" name="findType" value="0">
+							<input type="text" class="form-control search-query width-50"
+								name="findTxt" placeholder="供应商名称" id="search-input">
+							<input type="text" class="form-control search-query width-50"
+								name="findTxt2" placeholder="SKU" id="search-input">
+							<span
+								class="input-group-btn"> <span
+								class="btn  btn-success btn-sm" id="search-btn"> 搜索 <i
+									class="ace-icon fa fa-search icon-on-right bigger-110"></i> </span> </span>
+						</div>
+						<input type="hidden" name="id" />
+					</form>
+					<div class="" id="list-page" style="width:100%;border:0px solid blue">
+					</div>
+				</div>
+				
+				<div class="widget-toolbar  width-70" style="padding-top: 2px;border:0px solid red;float:left">
+					<form method="post" class="form-search" id="search-form2"
+						target="list-page2" action="${ctxPath}/ecSuppliersCommodity/ecCommodityList">
+						<div class="input-group" style="line-height: 0px;">
+							<label class="inline">商品目录：</label>
+							<#pullDownTree order="one" treeData="${ecCataloue}" name="ecCatalogueId" 
+								class="width-20" />
+							<input type="text" class="form-control search-query width-20"
+								name="brand" placeholder="品牌名" id="search-input2">
+							<input type="text" class="form-control search-query width-40"
+								name="findTxt" placeholder="商品名称/商品编号" id="search-input2">
+								<!-- <div class="widget-toolbar no-border">
+									<span class="btn btn-purple btn-xs" id="importFile">
+										<i class="ace-icon fa fa-cloud-download bigger-130"></i>
+										<span>导入数据</span>
+										<input type="file" class="phide"  name="excel" 
+										data-url="${ctxPath}/area/import" _accept="application/vnd.ms-excel" 
+										data-progressid="#excel-progress"
+										onchange="Angel.uploadFile.excel(this);"/>
+									</span>
+								</div> -->
+								<span
+								class="input-group-btn"> <span
+								class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+							data-mode="page" data-title="批量报价"
+							data-url="${ctxPath}/ecSuppliersCommodity/editBatch/showlayer"
+							data-data="{id:''}"
+							data-width="50%" title="批量报价">批量报价 </span> </span>
+							<span
+								class="input-group-btn"> <span
+								class="btn  btn-success btn-sm" id="search-btn2"> 搜索 <i
+									class="ace-icon fa fa-search icon-on-right bigger-110"></i> </span> </span>
+						</div>
+						<input type="hidden" name="suppliersId" id="suppliersId2" />
+					</form>
+					<div class="" id="list-page2" style="width:100%;border:0px solid blue">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript">
+	$("#search-form").getPageList({'submitBtnId':'search-btn'});
+	$("#search-form2").getPageList({'submitBtnId':'search-btn2'});
+</script>

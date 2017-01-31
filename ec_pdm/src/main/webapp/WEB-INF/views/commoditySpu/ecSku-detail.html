@@ -1,0 +1,118 @@
+<style>
+<!--
+.myinput{
+	 margin:0 auto 15px;
+	 width:53%;
+	 overflow: auto;
+}
+.myinputhidden{
+	 margin:0 auto 15px;
+	 width:53%;
+	 height:250px;
+	 display:none;
+	 overflow: auto;
+}
+.mytextarea{
+	 margin:0 auto 15px;
+	 width:90%;
+	 height:100px;
+	 overflow: auto;
+}
+.myplatform{
+	margin: 0px auto 50px;
+	width: 51%;
+}
+.mylable{
+	float:left;	
+	width:10%;
+}
+.mycontent{
+	float:left;
+	width:90%;
+}
+.tags{
+	display: inline-block;
+	padding: 4px 6px;
+	color: #777;
+	vertical-align: middle;
+	background-color: #FFF;
+	border: 1px solid #d5d5d5;
+	width: 100%
+}
+
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    display:none;
+}
+.well1{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+}
+.carousel-control.left {
+   background-image:none!important;
+    background-repeat: repeat-x;
+}
+.carousel-control.right{
+   background-image:none!important;
+    background-repeat: repeat-x;
+}
+
+
+-->
+</style>
+<div class="layer">
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">商品名称：</td>
+					<td class="DataTD">
+						${ecSku.name!}
+					</td>
+					<td class="CaptionTD">产品属性：</td>
+					<td class="">
+							${dict.getDictByTypeAndValue("sku_attr",ecSku.attr + "").label}
+					</td>
+					</tr>
+					<tr class="FormData">
+					<td class="CaptionTD">销售SKU：</td>
+					<td class="DataTD" id="mytestTd">
+						${ecSku.saleSku}
+					</td>
+					
+					<td class="CaptionTD">商品状态：</td>
+					<td class="">
+						${dict.getDictByTypeAndValue("sku_status",ecSku.status + "").label}
+					</td>
+				</tr>
+				
+				<tr  class="FormData">
+				<td class="CaptionTD">关联SPU</td>
+					<td>
+						${ecSku.spuNo!}
+					</td>
+				<td class="CaptionTD">本地SKU：</td>
+					<td class="">
+						${ecSku.sku!}
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">型号：</td>
+					<td class="">
+						${ecSku.model!}
+					</td>
+					@var purchasePricePermison = user.isDataPersion(auth.getLoginUser().id,"1");
+					@if(purchasePricePermison){
+					<td class="CaptionTD">成本价：</td>
+					<td>
+						${ecSku.costPrice!}
+					</td>
+					@}else{
+					<td class="CaptionTD"></td>
+					<td></td>
+					@}
+				</tr></tbody></table></div>

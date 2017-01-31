@@ -1,0 +1,423 @@
+<style>
+<!--
+.EditTable .DataTD input {
+    width: 50%;
+}
+-->
+</style>
+	<form name="FormPost" id="save-form" class="FormGrid"  method="post"
+		action="${ctxPath}/ecTask/save">
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">任务标题</td>
+					<td class="DataTD width-100"><input type="text"
+						name="title" datatype="*"  nullmsg="请输入任务标题！"></td>
+				</tr>
+				<tr class="FormData">
+						<td class="CaptionTD">任务类型</td>
+					<td class="DataTD width-100">
+					@var tasks = ecTaskType.getAllTaskType();
+					<#select name="typeId" id="typeId" width="50%">
+					@for(task in tasks){
+						<option value="${task.id!}" >
+						${task.name!}
+						</option>
+						@}
+					</#select>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">紧急程度</td>
+					<td class="DataTD width-100">
+						@var types = dict.getDictListByType("task_type");
+					<#select name="emergencyDegree" id="emergencyDegree" width="50%">
+					@for(type in types){
+						<option value="${type.value!}" >
+						${type.label!}
+						</option>
+						@}
+					</#select>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">任务描述</td>
+					<td class="DataTD width-100">
+						<textarea rows="10" cols="76" name="descr"></textarea>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">负责人</td>
+					<td class="DataTD width-100">
+						<input name="personInCharge" type="hidden" value="${auth.getLoginUser().id}"/>
+						<input type="text"
+						value="${auth.getLoginUser().name}" readOnly>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">参与人
+					<input type="hidden" id="myUser" name="userIds" value="" datatype="*"  nullmsg="请选择参与人！"/>
+					</td>
+
+					<td class="DataTD width-100" id="userTd">
+						<a id="userF" class="pink" href="javascript:void(0);" 
+							data-mode="page" data-title="查看分配"
+							data-url="${ctxPath}/ecTask/binduser"
+							data-data="{userIds:'0'}"
+							data-height="600px" data-width="1000px"
+						>
+							<i class="ace-icon fa fa-users bigger-130"></i> 分配
+						</a>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td colspan="2">
+					开始时间&nbsp;&nbsp;<input type="text"	id="startTime" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" name="startTime" datatype="*"  nullmsg="请输入开始时间！">
+					结束时间&nbsp;&nbsp;<input type="text" id="endTime" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"	name="endTime" datatype="*"  nullmsg="请输入结束时间！">
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">详细分类</td>
+					<td class="DataTD width-100">
+					<button class="btn btn-grey"  type="button" onclick="selectcategory(this,1)" name="category">商品</button>
+					<button class="btn btn-light" type="button"  onclick="selectcategory(this,2)" name="category">供应商</button>
+					<button class="btn btn-light" type="button"  onclick="selectcategory(this,3)" name="category">采购询价</button>
+					<button class="btn btn-light" type="button" onclick="selectcategory(this,4)" name="category">其他任务</button>
+					<input type="hidden" value="1" name="categoryType" id="category"/>
+					@var shops = shop.getAll();
+					<script type="text/javascript">
+					var shops = "";
+					var data1 = new Array();
+					var data2 = new Array();
+					var data3 = new Array();
+					$(document).ready(function() {
+						shops= "<select name='shopIds'>";
+				    	 @for(shop in shops){
+				    		 shops+="<option value='${shop.id}'> ${shop.name}</option>";
+				    	 @}
+						shops += "</select>";
+						}); 
+						function selectcategory(obj,category){
+							var categorys = $("button[name='category']");
+							categorys.attr("class","btn btn-light");
+							$(obj).attr("class","btn btn-grey");
+							if(category==1){
+								var trs =$("tr[id^='tr']");
+								trs.css("display","none");
+								$("#tr1").css("display","");
+								$("#category").val("1");
+							}
+							if(category==2){
+								var trs =$("tr[id^='tr']");
+								trs.css("display","none");
+								$("#tr2").css("display","");
+								$("#category").val("2");
+							}
+							if(category==3){
+								var trs =$("tr[id^='tr']");
+								trs.css("display","none");
+								$("#tr3").css("display","");
+								$("#category").val("3");
+							}
+							if(category==4){
+								var trs =$("tr[id^='tr']");
+								trs.css("display","none");
+								$("#tr4").css("display","");
+								$("#category").val("4");
+							}
+						}
+						function addProduct(category){
+							var html = "";
+							var loadi = layer.load('加载中…');
+								var skuNo1=$("#skuNo1").val();
+								var skuNo2=$("#skuNo2").val();
+								var skuNo3=$("#skuNo3").val();
+							if(category==1&&!checkExsit(skuNo1,1)){
+								$.ajax( {  
+							     url:'${ctxPath!}/ecSku/getByAjaxSkuNo',  
+							     data:{skuNo:skuNo1},  
+							     type:'post',  
+							     cache:false,  
+							     dataType:'json',  
+							     success:function(data) {  
+							       layer.close(loadi);
+							       if(data.isExist){
+							    	   addDom(data,category);
+							       }else{
+							    	   layer.msg('商品不存在，请重新输入！'); 
+							       }
+							       
+							      },  
+							      error : function() {  
+							    	  layer.close(loadi)
+							          layer.msg('出错了，请重试！'); 
+							      }  
+								});
+							}
+							if(category==2&&!checkExsit(skuNo2,2)){
+								
+								$.ajax( {  
+							     url:'${ctxPath!}/ecSku/getByAjaxSkuNo',  
+							     data:{skuNo:skuNo2},  
+							     type:'post',  
+							     cache:false,  
+							     dataType:'json',  
+							     success:function(data) {  
+							       layer.close(loadi);
+							       if(data.isExist){
+							    	   addDom(data,category);
+							       }else{
+							    	   layer.msg('商品不存在，请重新输入！'); 
+							       }
+							       
+							      },  
+							      error : function() {  
+							    	  layer.close(loadi)
+							          layer.msg('出错了，请重试！'); 
+							      }  
+								});
+								
+							}
+							if(category==3&&!checkExsit(skuNo3,3)){
+								$.ajax( {  
+							     url:'${ctxPath!}/ecSku/getByAjaxSkuNo',  
+							     data:{skuNo:skuNo3},  
+							     type:'post',  
+							     cache:false,  
+							     dataType:'json',  
+							     success:function(data) {  
+							       layer.close(loadi);
+							       if(data.isExist){
+							    	   addDom(data,category);
+							       }else{
+							    	   layer.msg('商品不存在，请重新输入！'); 
+							       }
+							       
+							      },  
+							      error : function() {  
+							    	  layer.close(loadi)
+							          layer.msg('出错了，请重试！'); 
+							      }  
+								});
+								
+							}
+						}
+						function addDom(data,category){
+							var html = "";
+							if(category==1){
+							 html=  "<tr><td class='center'>"+data.id+"<input type='hidden' name='product1' value='"+data.id+"'/>"
+								+"</td><td class='center'><img src='${ctxPath!}/"+data.showImg+"' width='50px' height='50px'/></td><td class='center'>"+data.sku+"</td>"
+								+"<td class='center'>"+data.name+"</td><td class='center'>"+shops+"</td><td class='center'><input type='text' name='notes1' value=''></td>"
+								+"<td class='center'><a href='#' onclick=\"removeProduct(this,\'"+data.sku+"\',1)\">删除</a></td></tr>";
+					    	   $("#tb1").append(html);	
+					    	   data1.push(data.sku);
+							}
+							if(category==2){
+								 html=  "<tr><td class='center'>"+data.id+"<input type='hidden' name='product2' value='"+data.id+"'/>"
+									+"</td><td class='center'><img src='${ctxPath!}/"+data.showImg+"' width='50px' height='50px'/></td><td class='center'>"+data.sku+"</td>"
+									+"<td class='center'>"+data.name+"</td><td class='center'><input type='text' name='notes2' value=''></td>"
+									+"<td class='center'><a href='#' onclick=\"removeProduct(this,'"+data.sku+"',2)\">删除</a></td></tr>";
+						    	   $("#tb2").append(html);	
+						    	   data2.push(data.sku);
+							}
+							if(category==3){
+								 var supplier = eval("("+data.supplier+")");
+						    	 var sPrice = "";
+						    	 var spl ="";
+						    	 if(supplier.length>0){
+					    			spl = "<select name='suppliers' onChange='changePrice(this,"+supplier[0].id+")'>"
+						    	for(var i=0;i<supplier.length;i++){
+						    		var suppliersName = supplier[i].suppliersName;
+						    		var supplierPrice =  supplier[i].purchasePrice;
+						    		if(i==0){
+						    			spl+="<option value='"+supplier[i].id+"' selected data='"+supplierPrice+"'>"+supplier[i].suppliersName+"</option>"
+						    			sPrice = "<input type='text' value='"+supplierPrice+"' id='super_"+supplier[i].id+"' readOnly>"
+						    		}else{
+						    			spl+="<option value='"+supplier[i].id+"' data='"+supplierPrice+"'>"+supplier[i].suppliersName+"</option>"
+						    		}
+						    	}
+					    		spl+="</select>";
+						    	 }
+						    	 html=  "<tr><td class='center'>"+data.id+"<input type='hidden' name='product3' value='"+data.id+"'/>"
+									+"</td><td class='center'><img src='${ctxPath!}/"+data.showImg+"' width='50px' height='50px'/></td><td class='center'>"+data.sku+"</td>"
+									+"<td class='center'>"+data.name+"</td><td class='center'>"+spl+"</td><td class='center'>"+sPrice+"</td>"
+									+"<td class='center'><input type='text' name='notes3' value=''></td><td class='center'><a href='#' onclick=\"removeProduct(this,'"+data.sku+"',3)\">删除</a></td></tr>";
+						    	   $("#tb3").append(html);	
+						    	  data3.push(data.sku);
+							}
+						}
+						function changePrice(obj,id){
+							$("#super_"+id).attr("value",$(obj).find("option:selected").attr("data"));
+						}
+						function removeProduct(obj,id,type){
+							if(type==1){
+								for(var i=0;i<data1.length;i++){
+									if(data1[i]==id){
+										data1.splice(i,1);
+									}
+								}
+							}else if(type==2){
+								for(var i=0;i<data2.length;i++){
+									if(data2[i]==id){
+										data2.splice(i,1);
+									}
+								}
+							}else if(type==3){
+								for(var i=0;i<data3.length;i++){
+									if(data3[i]==id){
+										data3.splice(i,1);
+									}
+								}
+							}
+							$(obj).parent().parent().remove();
+						}
+						function checkExsit(id,type){
+							var flag = false;
+							if(id==null||id==''){
+								 layer.msg('请填写商品编码！！！'); 
+								return true;
+							}
+							if(type==1){
+								for(var i=0;i<data1.length;i++){
+									if(data1[i]==id){
+										flag = true;
+									}
+								}
+							}else if(type==2){
+								for(var i=0;i<data2.length;i++){
+									if(data2[i]==id){
+										flag = true;
+									}
+								}
+							}else if(type==3){
+								for(var i=0;i<data3.length;i++){
+									if(data3[i]==id){
+										flag = true;
+									}
+								}
+							}
+							if(flag){
+								 layer.msg('该商品['+id+']已存在，请重新选择！！！'); 
+							}
+							return flag;
+						}
+					</script>
+					</td>
+				</tr>
+				<tr id="tr1" ><td colspan="2">
+			
+				<div class="pull-left width-40">
+					<label>商品编码：</label>
+					<input type="text" class="width-50" name="skuNo1" id="skuNo1" />
+					<a class="btn btn-info btn-sm tooltip-info" href="#" onclick="addProduct(1)">添加</a>
+					<a class="btn btn-info btn-sm tooltip-info" href="#" data-mode="page" data-title="批量添加" 
+					data-url="${ctxPath}/ecSku/taskSearch/layer3" 
+					data-data="{category:1}" 
+					data-width="100%"
+					data-height="100%">批量添加</a>
+					
+				</div>
+			<hr/>
+				<div id="list-page">
+					<table class="table table-striped table-bordered table-hover nomargin-bottom" >
+					<thead>
+						<tr>
+						<th class="center">ID</th>
+							<th class="center">商品图片</th>
+							<th class="center">商品编码</th>
+							<th class="center">商品名称</th>
+							<th class="center">店铺</th>
+							<th class="center">备注信息</th>
+							<th class="center">操作</th>
+						</tr>
+					</thead>
+					<tbody id="tb1">
+					</tbody>
+				</table>
+				
+				</div>
+				</td>
+				</tr>
+					<tr id="tr2" style="display:none;"><td colspan="2">
+			
+				<div class="pull-left width-40">
+					<label>名称：</label>
+					<input type="text" class="width-50" name="skuNo2" id="skuNo2"/>
+					<a class="btn btn-info btn-sm tooltip-info" href="#" onclick="addProduct(2)">添加</a>
+					<a class="btn btn-info btn-sm tooltip-info" href="#" data-mode="page" data-title="批量添加" 
+					data-url="${ctxPath}/ecSku/taskSearch/layer3" 
+					data-data="{category:2}" 
+					data-width="100%"
+					data-height="100%">批量添加</a>
+				</div>
+			<hr/>
+				<div id="list-page">
+					<table class="table table-striped table-bordered table-hover nomargin-bottom">
+					<thead>
+						<tr>
+						<th class="center">ID</th>
+							<th class="center">商品图片</th>
+							<th class="center">商品编码</th>
+							<th class="center">商品名称</th>
+							<th class="center">备注信息</th>
+							<th class="center">操作</th>
+						</tr>
+					</thead>
+					<tbody id="tb2">
+					</tbody>
+				</table>
+				
+				</div>
+				</td>
+				</tr>
+					<tr id="tr3" style="display:none;"><td colspan="2">
+			
+				<div class="pull-left width-40">
+					<label>名称：</label>
+					<input type="text" class="width-50" name="skuNo3" id="skuNo3"/>
+					<a class="btn btn-info btn-sm tooltip-info" href="#" onclick="addProduct(3)">添加</a>
+					<a class="btn btn-info btn-sm tooltip-info" href="#" data-mode="page" data-title="批量添加" 
+					data-url="${ctxPath}/ecSku/taskSearch/layer3" 
+					data-data="{category:3}" 
+					data-width="100%"
+					data-height="100%">批量添加</a>
+				</div>
+			<hr/>
+				<div id="list-page">
+					<table class="table table-striped table-bordered table-hover nomargin-bottom">
+					<thead>
+						<tr >
+						<th class="center">ID</th>
+							<th class="center">商品图片</th>
+							<th class="center">商品编码</th>
+							<th class="center">商品名称</th>
+							<th class="center">供应商选择</th>
+							<th class="center">价格</th>
+							<th class="center">备注信息</th>
+							<th class="center">操作</th>
+						</tr>
+					</thead>
+					<tbody id="tb3">
+					</tbody>
+				</table>
+				</div>
+				</td>
+				</tr>
+				<tr id="tr4" style="display:none;"><td colspan="2">
+				任务描述	<textarea rows="10" cols="76" name="note"></textarea><hr/>
+				</td></tr>
+			</tbody>
+		</table>
+		<div class="margin-t15">
+		<span class="btn btn-info btn-block bigger-120" id="save-btn">保 存</span>
+		</div>
+	</form>
+	<#save isHide="yes" subBtnId="save-btn" formId="save-form" />
+
+<script type="text/javascript">
+function toUrl(){
+	window.location.href="#/ajax/ecTask/toEcTask";
+}
+//描述框自动扩张高度
+$('textarea[class*=autosize]').autosize({append: "\n"});
+</script>

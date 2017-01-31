@@ -1,0 +1,83 @@
+<div class="layer">
+	<form name="FormPost" id="ecCatalogue-save" class="FormGrid"  method="post"
+		action="${ctxPath}/ecCatalogue/save" >
+		<input type="hidden" value="${mytid!}" name="mytid"/>
+		<input type="hidden" value="${ecCatalogue.id!}" name="id"/>
+		<input type="hidden" value="${pEcCatalogue.parentIds!}" name="parentIds" />
+		<input type="hidden" value="${ecCatalogue.parentIds!}" name="oldParentIds" />
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr style="display: none;">
+					<td class="ui-state-error" id="FormError"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">目录中文名</td>
+					<td class="DataTD width-100"><input type="text"
+						name="name" datatype="*"  nullmsg="请输入目录中文名称！"
+						value="${ecCatalogue.name!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">目录英文名称</td>
+					<td class="DataTD width-100"><input type="text"
+						name="englishDirectory" datatype="*"  nullmsg="请输入目录英文名称！"
+						value="${ecCatalogue.englishDirectory!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">中文报关名称</td>
+					<td class="DataTD width-100"><input type="text"
+						name="chCustoms" datatype="*"  nullmsg="请输入中文报关名称！"
+						value="${ecCatalogue.chCustoms!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">英文报关名称</td>
+					<td class="DataTD width-100"><input type="text"
+						name="enCustoms" datatype="*"  nullmsg="请输入英文报关名称！"
+						value="${ecCatalogue.enCustoms!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">描述</td>
+					<td class="DataTD">
+						<textarea name="remarks" class="autosize-transition form-control "
+						style="resize: none;">${ecFileClassification.remarks!}</textarea>	
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">上级目录</td>
+					<td class="DataTD">
+					<#treeselect url="ecCatalogue/tree" modelNameValue="${pEcCatalogue.chineseDirectory!}" 
+							modelIdValue="${pEcCatalogue.id!0}" selectIds="${pEcCatalogue.id!}"
+							curId="${pEcCatalogue.id!}" />
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">目录图标</td>
+					<td class="DataTD">
+					<#iconselect value="${ecCatalogue.icon!}"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">模板分类</td>
+					<td class="DataTD width-100">
+						@var slevelList = dict.getDictListByType("template_type");
+						<#select id="catalogueSave" name="templateType" width="80%">
+							@for(item in slevelList){
+								<option value="${item.value!}" ${decode(parseInt(item.value),ecCatalogue.templateType!,"selected","")}>
+								${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+				</tr>
+				
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="ecCatalogue-save" />
+
+<script type="text/javascript">
+
+//描述框自动扩张高度
+$('textarea[class*=autosize]').autosize({append: "\n"});
+
+</script>

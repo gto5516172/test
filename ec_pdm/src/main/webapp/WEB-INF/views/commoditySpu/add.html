@@ -1,0 +1,334 @@
+<style>
+.myinput{
+	 margin:0 auto 15px;
+	 width:53%;
+	 overflow: auto;
+}
+.xubox_main {
+    position: relative;
+    height: 100%;
+    overflow: auto;
+}
+.myinputhidden{
+	 margin:0 auto 15px;
+	 width:53%;
+	 height:250px;
+	 display:none;
+	 overflow: auto;
+}
+.mytextarea{
+	 margin:0 auto 15px;
+	 width:90%;
+	 height:100px;
+	 overflow: auto;
+}
+.myplatform{
+	margin: 0px auto 50px;
+	width: 51%;
+}
+.mylable{
+	float:left;	
+	width:10%;
+}
+.mycontent{
+	float:left;
+	width:90%;
+}
+.tags{
+	display: inline-block;
+	padding: 4px 6px;
+	color: #777;
+	vertical-align: middle;
+	background-color: #FFF;
+	border: 1px solid #d5d5d5;
+	width: 100%
+}
+
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    height:150px;
+}
+.carousel-control.left {
+   background-image:none!important;
+    background-repeat: repeat-x;
+}
+.carousel-control.right{
+   background-image:none!important;
+    background-repeat: repeat-x;
+}
+vertical {
+    position: relative;
+    display: inline-block;
+    padding: 3;
+}
+</style>
+<form action="${ctxPath!}/commoditySpu/save" method="post" id="save-form">
+<div class="tabbable">
+		<ul class="nav nav-tabs" id="myTab">
+			<li class="active"><a data-toggle="tab" href="#basic_profile"> <i
+					class="green ace-icon fa fa-plus bigger-120"></i>基本信息添加
+			</a></li>
+	
+			 <li class=""><a data-toggle="tab" href="#affiliated_profile">
+			<i class="green ace-icon fa fa-plus bigger-120"></i> 附属信息添加
+			</a></li>
+			 <li class=""><a data-toggle="tab" href="#detail_profile">
+			<i class="green ace-icon fa fa-plus bigger-120"></i> 详细信息添加
+			</a></li>
+		</ul>
+	 	<div class="tab-content">
+		<div id="basic_profile" class="tab-pane active clearfix">
+		<table class="EditTable" width="60%"   align="center" >
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD" >商品名称：</td>
+					<td class="DataTD width-100">
+						<input type="text" class="width-100" name="name" datatype="*"  nullmsg="请输入名称！"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品SPU码：</td>
+					<td class="DataTD width-100">
+						<input type="text" class="width-100" name="spuNo" datatype="*"  nullmsg="请输入商品SPU码！" ajaxurl="${ctxPath!}/commoditySpu/validateNameByAjax"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">分类：</td>
+					<td class="DataTD width-100">
+					<#treeselect url="ecCatalogue/tree" modelNameValue="${ecCatalogue.name!}" 
+							modelIdValue="${ecCatalogue.id!0}" selectIds="${ecCatalogue.id!}"
+							modelId="type" nameId="ecCatalogue" id="ecCatalogue_id"
+							isCheck="请选择商品分类"   class="width-100"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">建议零售价：</td>
+					<td class="DataTD width-100">
+						<input type="text" class="width-100" name="price" datatype="*"  nullmsg="请输入建议零售价！"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">品牌：</td>
+					<td class="DataTD width-100">
+						<input type="text" class="width-100" name="brand" datatype="*"  nullmsg="请输入品牌！"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">原厂编号：</td>
+					<td class="DataTD width-100">
+						<input type="text" class="width-100" name="manufactorNo" datatype="*"  nullmsg="请输入原厂编号！"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">单位：</td>
+					<td class="DataTD width-100">
+						@var types = dict.getDictListByType("spu_units");
+						<#select name="units" id="select_id"  class="width-100">
+						@for(type in types){
+							<option value="${type.value!}" >
+							${type.label!}
+							</option>
+							@}
+						</#select>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品产地：</td>
+					<td class="DataTD width-100">
+						<input type="text" class="width-100" name="originPlace" datatype="*"  nullmsg="请输入商品产地！"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">描述：</td>
+					<td class="DataTD width-100">
+						<textarea class="width-100" name="descr"></textarea>
+					</td>
+				</tr>
+				<tr class="FormData">
+				<td class="DataTD width-100" colspan="2">
+							<div class="tabbable">
+							<ul class="nav nav-tabs" id="myTab0">
+							<li class="active">
+									<a data-toggle="tab" href="#home0">
+										<i class="green icon-home bigger-110"></i>
+										图片	
+									</a>
+								</li></ul>
+								<div class="tab-content">
+									<div id="home0" class="tab-pane active">
+									<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+									data-mode="page" data-title="添加图片"
+									data-data="{inputId:'basicImgs',max:'',imgId:'img1'}"
+									data-url="${ctxPath}/myUpload/view"
+									data-width="60%"
+									data-height="80%">点击上传</a>
+									<!-- <a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);">链接地址</a> -->
+									<div class="well well-lg">
+									<input type="hidden" name="basicImgs"/>
+									<ul class='ace-thumbnails' id="img1" jsname="delImg"></ul>
+								
+							</div>		
+						</div>
+						</div>
+					</div>
+					</td>
+				</tr>
+			</tbody>
+			</table>
+		</div>
+	
+	<div id="affiliated_profile" class="tab-pane">
+			<div class="center padding-10" >
+					<label style="vertical-align: top;">销售信息：</label>
+					<textarea class="width-50" name="sellDescr"></textarea>
+				</div>
+				<div class="center padding-10" >
+					<label style="vertical-align: top;">其他备注：</label>
+					<textarea class="width-50" name="otherDescr"></textarea>
+				</div>
+		</div>
+		<div id="detail_profile" class="tab-pane">
+			<div class="center padding-10" >
+					<label>产品标题：</label>
+					<input type="text" class="width-50" name="title" datatype="*"  nullmsg="请输入标题！"/>
+				</div>
+			<div class="myplatform" >
+				<div class="mylable">平台：</div>
+				<div class="mycontent">
+				@var allPlatform = platform.getAllPlatform();
+					@for(platform in allPlatform){
+					<span style='margin-left:3px'>${platform.name!}&nbsp;<input type="checkbox" name="pf" value='${platform.id}'/></span>
+				@}
+				</div>
+			</div>
+				<div class="myinput">
+				<div class="mylable">关键词：</div> 
+				<div class="mycontent">
+					<input style="display: none;" name="keywords" id="form-field-tags" value="" placeholder="回车确认" type="text">
+				</div>
+				<script type="text/javascript">
+				var tag_input = $('#form-field-tags');
+				if(! ( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())) ) 
+				{
+					tag_input.tag(
+					  {
+						placeholder:tag_input.attr('placeholder'),
+						source: ace.variable_US_STATES,
+					  }
+					);
+				}
+				else {
+					tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="15">'+tag_input.val()+'</textarea>').remove();
+				}
+			</script>
+			</div>
+		
+		<div class="myinput">
+		<label>图片：</label>
+		 <div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab1">
+				<li class="active">
+					<a data-toggle="tab" href="#home1">
+						<i class="green icon-home bigger-110"></i>
+						有背景
+					</a>
+				</li>
+
+				<li class="">
+					<a data-toggle="tab" href="#profile1">
+						无背景
+					</a>
+				</li>
+			</ul>
+
+				<div class="tab-content">
+					<div id="home1" class="tab-pane active">
+						<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+						data-mode="page" data-title="添加图片"
+						data-data="{inputId:'backImgs',max:'',imgId:'img2'}"
+						data-url="${ctxPath}/myUpload/view"
+						data-width="60%"
+						data-height="80%">点击上传</a>
+					<!-- 	<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);">链接地址</a> -->
+						<div class="well well-lg">
+						<input type="hidden" name="backImgs"/>
+						<ul class='ace-thumbnails' id="img2" jsname="delImg"></ul>
+						</div>	
+					</div>
+
+					<div id="profile1" class="tab-pane">
+						<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+						data-mode="page" data-title="添加图片"
+						data-data="{inputId:'noBackImgs',max:'',imgId:'img3'}"
+						data-url="${ctxPath}/myUpload/view"
+						data-width="60%"
+						data-height="80%">点击上传</a>
+						<!-- <a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);">链接地址</a> -->
+						<div class="well well-lg" >
+						<input type="hidden" name="noBackImgs"/>
+						<ul class='ace-thumbnails' id="img3" jsname="delImg"></ul>
+					</div>
+					</div>
+				</div>
+			</div>
+			</div>	
+			<div class="myinput">
+				<label>产品描述：	</label>
+					<div style="float: right;">		
+					<a href="javascript:void(0);" id="descrs_view">预览</a></div>
+				@layout("/layout/ueditor.html"){}
+				<!-- 加载编辑器的容器 -->
+				<script id="container" name="descs" type="text/plain" style="width:100%;height:300px">
+				</script>
+				<!-- 实例化编辑器 -->
+				<script type="text/javascript">
+				    var ue = UE.getEditor('container');
+				    ue.addListener("blur",function(){
+				    var content=ue.getContent();
+		    		$('#descrs_view').on('click', function(){
+		    			var content = ue.getContent();
+		    			if(content==''){
+		    				alert('请先填写产品描述！');
+		    				return;
+		    			}
+		    			$.layer({
+		    				type : 1,
+		    	            title: '产品描述',
+		    	            shadeClose: true,
+		    	            maxmin: true,
+		    	            fix : false,  
+		    	            scrolling: "auto",
+		    	            area: ['1024px', 500], 
+		    		        page: {html:content}
+		    		    });
+		    		});});
+
+		    		
+				</script>	
+			
+				</div>	
+				
+		</div>
+		</div>
+	</div>
+	<div class="margin-t15">
+		<span class="btn btn-info btn-block bigger-120" id="save-btn">保 存</span>
+	</div>
+</form>
+	<#save isHide="yes" subBtnId="save-btn" formId="save-form" />
+	<script type="text/javascript">
+	//描述框自动扩张高度
+	$('textarea[class*=autosize]').autosize({append: "\n"});
+	function toUrl(){
+		$("li.active").children("i").trigger("click");
+		window.location.href="#/ajax/commoditySpu/view";
+	}
+	function delImg(id){
+		$('#'+id).remove();
+	}
+	</script>
+@layout("/common/colorbox.html"){};
+					

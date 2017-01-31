@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcTaskOfferPriceMapper">
+
+
+<select id="queryByProductId" resultType="com.gyf.ec.model.EcTaskOfferPrice">
+	select a.*,sa.name areaName from ec_task_offerprice a left join sys_area sa on a.area_id=sa.id 
+	<where>
+		do_id=#{param1}
+	</where>
+		ORDER BY a.id desc
+</select>
+</mapper>

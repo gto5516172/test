@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcFileMapper">
+
+<sql id="ecFileColumns">
+	id,create_by,create_date,update_by,update_date,remarks,del_flag,document_theme,ec_file_classification_id,show_type,goods_type,goods_no,status,user_id
+</sql>
+
+<sql id="ecFileAliasColumns">
+	a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.del_flag,a.document_theme,a.ec_file_classification_id,a.show_type,a.goods_type,
+	a.goods_no,a.status,a.user_id
+</sql>
+
+<!-- 分页显示筛选查询 -->
+	<select id="findFileList" resultType="com.gyf.ec.model.EcFile">
+		select <include refid="ecFileAliasColumns"/> 
+		from ec_file a 
+		<where>
+			<if test="@Ognl@isNotBlank(documentTheme)">
+				a.document_theme like concat( '%' , #{documentTheme} , '%' )
+			</if>
+			<if test="id != 0 and @Ognl@isBlank(documentTheme) and @Ognl@isNotBlank(id) "> 
+				a.ec_file_classification_id	in (select t.id from ec_file_classification t where (FIND_IN_SET(#{id},t.parent_ids) or t.id = #{id}))
+			</if>
+			and ((select count(t1.id) from ec_user_file t1 where t1.file_id = a.id and t1.user_id = #{userId}) > 0 or a.user_id = #{userId} or a.show_type = 0)
+			and a.del_flag = 0
+		</where>
+		ORDER BY a.update_date desc
+	</select>
+	
+	<update id="updateStatus">
+		update ec_file t set t.status = #{status} where t.id = #{id}
+	</update>
+
+
+	<!-- 根据文件id查找用户 -->
+	<select id="findUserByFileId" resultType="com.gohuinuo.web.sys.model.SysUser">
+		select su.id,su.name from sys_user su left join ec_user_file t 
+		on su.id = t.user_id 
+		where t.file_id = #{fieId} 
+	</select>
+	
+	<!-- 根据文件id查找绑定用户ids -->
+	<select id="findUserIdsByFileId" resultType="java.lang.Long">
+		select user_id from ec_user_file where file_id = #{file_id}
+	</select>
+	
+	<!-- 删除文件所绑定的用户 -->
+	<delete id="deleteUserFileByFileId">
+		delete from ec_user_file where file_id = #{fileId}
+	</delete>
+	
+	<!-- 添加文件绑定的用户 -->
+	<insert id="insertUserFileByFileId">
+		insert into ec_user_file (file_Id,user_id) values 
+		<foreach collection="userIds" index="index" item="userId" separator=",">
+			(#{id},#{userId,jdbcType=NUMERIC})
+		</foreach>
+	</insert>
+	
+	<!--  -->
+	<select id="authentication" resultType="java.lang.Integer">
+		select count(t.id) from ec_user_file t where t.file_id = #{fileId} and t.user_id = #{userId}
+	</select>
+
+</mapper>

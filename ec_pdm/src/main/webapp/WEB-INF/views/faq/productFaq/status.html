@@ -1,0 +1,33 @@
+<style>
+<!--
+.mybut{
+	 margin:0 auto 0px auto;
+	 width:98%;
+	 overflow: auto;
+}
+-->
+</style>
+<div class="layer">
+<form name="FormPost" id="faq-save" class="FormGrid"  method="post"
+		action="${ctxPath}/productFaq/save" >
+	<div class="profile-user-info profile-user-info-striped">
+		<div class="profile-info-row">
+		<div class="profile-info-name">状态</div>
+		<input type="hidden" name="id" value="${faq.id}"/>
+		@var status = dict.getDictListByType("faq_status");
+		<div class="profile-info-value"><#select name="status" id="status" width="90%">
+		@for(s in status){
+			<option value="${s.value!}"
+			@if(s.value==faq.status){
+				selected
+			@}
+			>${s.label!}</option>
+			@}
+		</#select>
+		</div>
+		</div>
+	</div>
+	</form>
+</div>
+
+<#save formId="faq-save" reloadUrl="true"/>

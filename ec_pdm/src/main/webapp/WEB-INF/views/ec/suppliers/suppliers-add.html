@@ -1,0 +1,241 @@
+@var area = area.getAreaList(); //地址区域
+<div class="layer">
+	<div id="profile" class="tab-pane">
+			<div id="profile" class="tab-pane">
+				<form name="FormPost" id="ecsuppliers-save-form" class="FormGrid" method="post"
+					action="${ctxPath}/ecsuppliers/save">
+
+					<input type="hidden" value="${sysrole.id!}" name="id" />
+					<table class="EditTable" width="100%">
+			<tbody>
+				<tr class="FormData">
+					<td class="CaptionTD">供应商名称：</td>
+					<td class="DataTD">
+						<input type="text"
+						name="suppliersName" datatype="*"  nullmsg="请输入供应商名称！"
+						value="${ecSuppliers.suppliersName!}">
+					</td>
+					<td class="CaptionTD">供应商简称：</td>
+					<td class="DataTD"><input type="text"
+						name="abbreviation" 
+						value="${ecSuppliers.abbreviation!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">等级分类：</td>
+					<td class="">
+						@var slevelList = dict.getDictListByType("suppliers_level");
+						<#select id="suppliersLevel" name="suppliersLevel" width="30%">
+							@for(item in slevelList){
+								<option value="${item.value!}">
+								${item.label!}(${item.value!})
+								</option>
+							@}
+						</#select>
+					</td>
+					<td class="CaptionTD">供应商类型：</td>
+					<td class="">
+						@var stypelList = dict.getDictListByType("suppliers_type");
+						<#select id="suppliersType" name="suppliersType" width="30%">
+							@for(item in stypelList){
+								<option value="${item.value!}">
+								${item.label!}(${item.value!})
+								</option>
+							@}
+						</#select>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">供应商地址：</td>
+					<td class="DataTD width-100" colspan="3"><input type="text"
+						name="suppliersAddr" 
+						value="${ecSuppliers.suppliersAddr!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">官 方 网 址：</td>
+					<td class="DataTD width-100" colspan="3"><input type="text"
+						name="suppliersWeb" 
+						value="${ecSuppliers.suppliersWeb!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">纳税识别号：</td>
+					<td class="DataTD"><input type="text"
+						name="taxIdentificationNumber" 
+						value="${ecSuppliers.taxIdentificationNumber!}"></td>
+					<td class="CaptionTD">一般纳税认定时间：</td>
+					<td class="DataTD"><input type="text"
+						name="taxTime" 
+						value="${ecSuppliers.taxTime!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">联系人1：</td>
+					<td class="DataTD"><input type="text"
+						name="personName1" 
+						value="${ecSuppliers.personName1!}"></td>
+					<td class="CaptionTD">联系电话1：</td>
+					<td class="DataTD"><input type="text"
+						name="personPhone1" 
+						value="${ecSuppliers.personPhone1!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">联系人2：</td>
+					<td class="DataTD"><input type="text"
+						name="personName2" 
+						value="${ecSuppliers.personName2!}"></td>
+					<td class="CaptionTD">联系电话2：</td>
+					<td class="DataTD"><input type="text"
+						name="personPhone2" 
+						value="${ecSuppliers.personPhone2!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">传真号：</td>
+					<td class="DataTD"><input type="text"
+						name="faxNumber" 
+						value="${ecSuppliers.faxNumber!}"></td>
+					<td class="CaptionTD">email：</td>
+					<td class="DataTD"><input type="text"
+						name="email" 
+						value="${ecSuppliers.email!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">QQ号：</td>
+					<td class="DataTD"><input type="text"
+						name="qq" 
+						value="${ecSuppliers.qq!}"></td>
+					<td class="CaptionTD">阿里旺旺：</td>
+					<td class="DataTD"><input type="text"
+						name="aliWangwang" 
+						value="${ecSuppliers.aliWangwang!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">地址：</td>
+					<td class="DataTD width-100" colspan="3">
+						<#pullDownTree order="two" treeData="${area}" name="areaId" 
+								class="width-80" />
+					</td>
+				</tr>
+				
+				<tr class="FormData">
+					<td class="CaptionTD">结算方式：</td>
+					<td class="">
+						@var settlementMethodList = dict.getDictListByType("settlement_method");
+						<#select id="settlementMethod" name="settlementMethod" width="30%">
+							@for(item in settlementMethodList){
+								<option value="${item.value!}">
+								${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+					<td class="CaptionTD">结算周期：</td>
+					<td class=""><input type="text"
+						name="settlementPeriodNum" 
+						value="${ecSuppliers.settlementPeriodNum!}">
+						@var settlementPeriodList = dict.getDictListByType("settlement_period");
+						<#select id="settlementPeriod" name="settlementPeriod" width="30%">
+							@for(item in settlementPeriodList){
+								<option value="${item.value!}">
+								${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">支付方式：</td>
+					<td class=" ">
+						@var paymentMethodList = dict.getDictListByType("payment_method");
+						<#select id="paymentMethod" name="paymentMethod" width="30%">
+							@for(item in paymentMethodList){
+								<option value="${item.value!}">
+								${item.label!}
+								</option>
+							@}
+						</#select>
+					</td>
+					<td class="CaptionTD">汇款公司名：</td>
+					<td class=" DataTD"><input type="text"
+						name="remittanceCompanyName" 
+						value="${ecSuppliers.remittanceCompanyName!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">收款人：</td>
+					<td class="DataTD"><input type="text"
+						name="payeeName" 
+						value="${ecSuppliers.payeeName!}"></td>
+					<td class="CaptionTD">汇款银行名：</td>
+					<td class="DataTD"><input type="text"
+						name="remittanceBankName" 
+						value="${ecSuppliers.remittanceBankName!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">汇款银行账号：</td>
+					<td class="DataTD"><input type="text"
+						name="remittanceBankAccount" 
+						value="${ecSuppliers.remittanceBankAccount!}"></td>
+					<td class="CaptionTD">汇款银行地址：</td>
+					<td class=" DataTD"><input type="text"
+						name="remittanceBankAddr" 
+						value="${ecSuppliers.remittanceBankAddr!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">结算备注：</td>
+					<td class="DataTD width-100" colspan="3">
+						<textarea name="clearingNotes" class="autosize-transition form-control "
+						style="resize: none;">${ecSuppliers.clearingNotes!}</textarea>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">平均到货周期：</td>
+					<td class=" "><input type="text"
+						name="averageDeliveryCycle" 
+						value="${ecSuppliers.averageDeliveryCycle!}">(天数)</td>
+					<td class="CaptionTD">Swift Code：</td>
+					<td class=" DataTD"><input type="text"
+						name="swiftCode" 
+						value="${ecSuppliers.swiftCode!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">货期：</td>
+					<td class=" width-100" colspan="3"><input type="text"
+						name="delivery" 
+						value="${ecSuppliers.delivery!}">(天数)</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">经营产品：</td>
+					<td class="DataTD width-100" colspan="3"><input type="text"
+						name="operatingProducts" 
+						value="${ecSuppliers.operatingProducts!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">产品类别：</td>
+					<td class="DataTD width-100" colspan="3"><input type="text"
+						name="productCategory" 
+						value="${ecSuppliers.productCategory!}"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">备注：</td>
+					<td class="DataTD width-100" colspan="3"><textarea name="remarks" class="autosize-transition form-control "
+						style="resize: none;">${ecSuppliers.remarks!}</textarea></td>
+				</tr>
+			</tbody>
+		</table>
+				<div class="margin-t15">
+					<span class="btn btn-info btn-block bigger-120" id="ecsuppliers-save-btn">保 存</span>
+				</div>
+				</form>
+			</div>
+		</div>
+</div>
+<#save isHide="yes" subBtnId="ecsuppliers-save-btn" formId="ecsuppliers-save-form" config="true" validId="ecsuppliersForm">
+	var data = $("#ecsuppliers-save-form").serialize();
+	ecsuppliersForm.config({
+		 ajaxpost:{
+			 data:data
+		 }
+	});
+</#save>
+<script>
+function toUrl() {
+	window.location.href = "#/ajax/ecsuppliers";	
+}
+</script>

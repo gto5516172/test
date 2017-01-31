@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+<link href="${ctxPath}/static/photoScroll1/css/style.css" rel="stylesheet" type="text/css" />
+<script type="text/javascript" src="http://code.jquery.com/jquery-1.7.1.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/static/photoScroll1/js/jquery.flexisel.js"></script>
+
+
+<meta charset="UTF-8">
+<title>详细描述</title>
+</head>
+<body>
+@if(list.~size>0){
+<ul id="flexiselItem"> 	
+	@for(item in list){
+	<li>
+		<a href="${ctxPath}/commoditySpuDesc/toDetail?id=${item.id}" target="_blank"><img alt=Paracletos  src="${ctxPath}/${item.image}"> </a>
+ 	</li>
+ 	@}
+  </ul>
+
+<script type="text/javascript">
+
+$(window).load(function() {
+    $("#flexiselItem").flexisel();
+ 
+});
+</script>
+@}
+	</body>
+</html>

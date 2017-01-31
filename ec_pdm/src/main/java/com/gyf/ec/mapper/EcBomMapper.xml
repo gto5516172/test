@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcBomMapper">
+
+<sql id="ecBomColumns">
+	id,create_by,create_date,update_by,update_date,remarks,del_flag,requirements,sku_id,code_sku_id
+</sql>
+
+<sql id="ecBomAliasColumns">
+	a.id,a.create_by,a.create_date,a.update_by,a.update_date,a.remarks,a.del_flag,a.requirements,a.sku_id,a.code_sku_id
+</sql>
+
+<!-- 分页显示筛选查询 -->
+	<select id="findBomList" resultType="com.gyf.ec.model.EcBom">
+		select <include refid="ecBomAliasColumns"/>, a1.sku item_codes, a1.name item_name, a1.cost_price cost, a1.company company, a1.show_img
+		from ec_bom a, ec_sku a1
+		<where>
+			a.code_sku_id = a1.id and 
+			a.sku_id = #{skuId} and a1.name like concat( '%' , #{findBomTxt} , '%' ) and a.del_flag = 0
+		</where>
+		ORDER BY a.update_date desc
+	</select>
+	
+	<select id="findBom" resultType="com.gyf.ec.model.EcBom">
+		select <include refid="ecBomAliasColumns"/>, a1.sku item_codes, a1.name item_name, a1.cost_price cost, a1.company company, a1.show_img
+		from ec_bom a, ec_sku a1
+		<where>
+			a.code_sku_id = a1.id and 
+			a.id = #{id} and a.del_flag = 0
+		</where>
+	</select>
+</mapper>

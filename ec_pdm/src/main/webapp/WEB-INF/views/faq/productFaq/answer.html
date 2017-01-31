@@ -1,0 +1,27 @@
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-list-alt bigger-120"></i>FAQ
+		</a></li>
+
+</ul> 
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<form method="post" class="form-search" id="search-form5"
+				target="list-page5" action="${ctxPath}/productFaqAnswer/list">
+			<div class="row padding-tb-10">
+				 <span
+					class="btn btn-info btn-sm col-sm-6" id="search-btn5" style="display:none">条 件 查
+					询</span>
+				</div>
+				<input type="hidden" name="faqId" value="${faqId}"/>
+			</form>
+			<div id="list-page5"></div>
+			</div>
+		</div>
+		
+<script type="text/javascript">
+$("#search-form5").getPageList({'submitBtnId':'search-btn5'});
+</script>
+</div>

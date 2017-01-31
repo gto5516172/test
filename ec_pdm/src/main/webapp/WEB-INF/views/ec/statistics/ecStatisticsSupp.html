@@ -1,0 +1,75 @@
+﻿<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-users bigger-120"></i>价格变动（SKU） </a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<#search>
+			<form action="${ctxPath}/ecStatistics/findEcStatisticsBySupp" method="post" id="search-form"
+				target="list-page" class="center clearfix">
+				<div class="col-xs-12">
+				<div class="pull-left width-30">
+							<label class="inline">供应商名称：</label>
+							<#select id="ecSuppliersSelect" name="suppcomId" width="60%">
+										<option value="">全部供应商</option>
+										@for(item in ecSuppliersList){
+											<option value="${item.id!}">
+											${item.suppliersName!}
+											</option>
+										@}
+									</#select>
+					</div>
+					<div class="pull-left width-25">
+						<label class="inline">最新价格时间：</label>
+						<input readonly type="text" class="width-35"  name="startNew" id="startNew" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>~
+						<input readonly type="text" class="width-35"  name="endNew" id="endNew" onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})"/>
+					</div>
+				</div>
+				<div class="col-xs-12" style="margin-top:15px">
+					<div class="pull-left width-30">
+							<label class="inline">商品目录：</label>
+							<#pullDownTree order="one" treeData="${ecCataloue}" name="findCataloueId" 
+								class="width-60" />
+					</div>
+					<div class="pull-left width-25">
+						<label class="inline">排序方式：</label>
+							<#select id="order" name="order" width="60%">
+								<option value="0">价格变动浮动降序</option>
+								<option value="1">价格更新时间降序</option>
+								<option value="2">最新价格降序</option>
+								<option value="3">最新价格升序</option>
+								<option value="4">价格未更新时间降序</option>
+							</#select>
+					</div>
+				</div>
+				<div class="col-xs-12" style="margin-top:15px">
+				
+					<div class="pull-left width-25">
+						<span class="btn btn-info btn-sm col-sm-6" id="search-btn">查询</span>
+					</div>
+				</div>
+			</form>
+			</#search>
+			<div class="space-6"></div>
+			<div id="list-page">
+				<div id="container" style="min-width: 700px; height: 400px"></div>
+				﻿
+				<div id="sliders"
+					style="min-width: 310px; max-width: 800px; margin: 0 auto;">
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+#profile .center>label {
+	width: 100px;
+	text-align: right;
+}
+</style>
+	<script type="text/javascript">
+		$("#search-form").getPageList({'submitBtnId':'search-btn'});
+	</script>

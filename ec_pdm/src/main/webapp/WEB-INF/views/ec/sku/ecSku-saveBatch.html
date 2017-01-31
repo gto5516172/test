@@ -1,0 +1,310 @@
+<style>
+<!--
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    height:150px;
+}
+-->
+</style>
+<div class="layer">
+	<div id="profile" class="tab-pane">
+			<div id="profile" class="tab-pane">
+				<form name="FormPost" id="ecSku-saveBatch-form" class="FormGrid" method="post"
+					action="${ctxPath}/ecSku/saveBatch">
+					<input type="hidden" value="" id="fileList" name="fileList"/>
+					<table class="EditTable" width="100%">
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+					<colgroup width="10%"></colgroup>
+			<tbody>
+				<tr class="FormData">
+					<td class="DataTD" colspan="10">
+						<textarea class="autosize-transition form-control" style="resize: none;" readonly="readonly">
+							${skuBatch}
+						</textarea>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品状态：</td>
+					<td class="" colspan="3">
+						@var skuStatus = dict.getDictListByType("sku_status");
+						<#select name="status" width="50%">
+						<option value="-1">
+							无修改
+						</option>
+							@for(item in skuStatus){
+								<option value="${item.value!}">
+									${item.label!}(${item.value!})
+								</option>
+							@}
+						</#select>
+					</td>
+					<td colspan="2"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">原产地：</td>
+					<td class="">
+						<input type="text"
+						name="placeOfOrigin" 
+						value="">
+					</td>
+					<td class="CaptionTD">产品属性：</td>
+					<td class="">
+					@var attr = dict.getDictListByType("sku_attr");
+						<#select id="attr" name="attr" width="80%">
+						<option value="-1">
+							无修改
+						</option>
+							@for(item in attr){
+								<option value="${item.value!}">
+									${item.label!}(${item.value!})
+								</option>
+							@}
+						</#select>
+					</td>
+					<td class="CaptionTD" colspan="">关联SPU</td>
+					<td colspan="DataTD width-100"><#select id="spuNo" name="spuNo" width="100%">	
+										<option value="0">选择SPU</option>
+										@for(item in spuList){
+											<option value="${item.spuNo!}">
+											${item.spuNo!}
+											</option>
+										@}
+									</#select></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品细类目录：</td>
+					<td class="" colspan="3">
+						<#treeselect url="ecCatalogue/tree" modelNameValue="${ecCatalogue.name!}" 
+							modelIdValue="${ecCatalogue.id!0}" selectIds="${ecCatalogue.id!}"
+							modelId="ecCatalogueId" nameId="ecCatalogue" id="ecCatalogue_id"/>
+					</td>
+					<td colspan="6"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">首选供应商：</td>
+					<td class="" colspan="6">
+						<table class="EditTable" width="100%" id="suppliersT">
+						<tbody>
+							<tr>
+								<td class="" id="myTd">
+									<#select id="ecSuppliersSelect" name="suppliersIds" width="100%" onchange="checkSelect(this)">
+										<option value="0">选择供应商</option>
+										@for(item in ecSuppliersList){
+											<option value="${item.id!}">
+											${item.suppliersName!}
+											</option>
+										@}
+									</#select>
+									
+								</td>
+								<td class="CaptionTD">原厂编号：</td>
+								<td class="">
+									<input type="text" 
+										name="factoryNo">
+								</td>
+								<td class="CaptionTD">采购价格：</td>
+								<td class="">
+									<input type="text"
+										name="purchasePrice">
+								</td>
+								<td class="CaptionTD">最小采购量：</td>
+								<td class="">
+									<input type="text"
+										name="minNum">
+								</td>
+							</tr>
+							</tbody>
+						</table>
+					</td>
+					<td colspan="3"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">包材类型：</td>
+					<td>
+						@var packageType = dict.getDictListByType("package_type");
+						<#select id="packageType" name="packageType" width="80%">
+							<option value="-1">
+									无修改
+								</option>
+							@for(item in packageType){
+								<option value="${item.value!}">
+									${item.label!}(${item.value!})
+								</option>
+							@}
+						</#select>
+					</td>
+					<td class="CaptionTD">销售员：</td>
+					<td><input type="text"
+						name="salesStaff"></td>
+					<td class="CaptionTD">单位：</td>
+					<td class="DataTD width-100">
+						@var types = dict.getDictListByType("spu_units");
+						<#select name="company" id="select_id" width="50%">
+						<option value="-1">
+									无修改
+								</option>
+						@for(type in types){
+							<option value="${type.value!}" >
+							${type.label!}(${item.value!})
+							</option>
+							@}
+						</#select>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">商品毛重：</td>
+					<td class="">
+						<input type="text"
+						name="shippingWeight">
+					</td>
+					<td class="DataTD width-50">
+						@var weightCompany = dict.getDictListByType("weight_company");
+						<#select id="shippingWeightCompany" name="shippingWeightCompany" width="80%">
+							<option value="-1">
+									无修改
+								</option>
+							@for(item in weightCompany){
+								<option value="${item.value!}">
+									${item.label!}(${item.value!})
+								</option>
+							@}
+						</#select>
+					</td>
+					<td class="CaptionTD">商品净重：</td>
+					<td class="">
+						<input type="text"
+						name="itemWeight">
+					</td>
+					<td class="DataTD width-50">
+						@var weightCompany2 = dict.getDictListByType("weight_company");
+						<#select id="itemWeightCompany" name="itemWeightCompany" width="80%">
+							<option value="-1">
+									无修改
+								</option>
+							@for(item in weightCompany2){
+								<option value="${item.value!}">
+									${item.label!}(${item.value!})
+								</option>
+							@}
+						</#select>
+					</td>
+					<td colspan="4"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">成本价：</td>
+					<td class="">
+						<input type="text"
+							name="costPrice">
+					</td>
+				</tr>
+			</tbody>
+		</table>
+				<div class="margin-t15">
+					<span class="btn btn-info btn-block bigger-120" id="ecSku-save-btn">保 存</span>
+				</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	<#save isHide="yes" subBtnId="ecSku-save-btn" formId="ecSku-saveBatch-form" config="true" validId="ecSkuForm">
+		var myflag = true;
+		var data = $("#ecSku-saveBatch-form").serialize();
+	</#save>
+	<script type="text/javascript">
+	var saleSkuFlag = 0;
+	function commodity() {
+		var str = /^[0-9]+([.]{1}[0-9]+)?$/;
+		var commodityLong = $("#commodityLong");
+		var commodityWidth = $("#commodityWidth");
+		var commodityHeight = $("#commodityHeight");
+		var commodityVolume = $("#commodityVolume");
+		var cLong = 0;
+		var cWidth = 0;
+		var cVolume = 0;
+		if(str.test(commodityLong.val())) {
+			cLong = commodityLong.val();
+		}
+		if(str.test(commodityWidth.val())) {
+			cWidth = commodityWidth.val();
+		}
+		if(str.test(commodityHeight.val())) {
+			cVolume = commodityHeight.val();
+		}
+		commodityVolume.val(cLong*cWidth*cVolume);
+	}
+	
+	function packing() {
+		var str = /^[0-9]+([.]{1}[0-9]+)?$/;
+		var packingLong = $("#packingLong");
+		var packingWidth = $("#packingWidth");
+		var packingHeight = $("#packingHeight");
+		var packingVolume = $("#packingVolume");
+		var cLong = 0;
+		var cWidth = 0;
+		var cVolume = 0;
+		if(str.test(packingLong.val())) {
+			cLong = packingLong.val();
+		}
+		if(str.test(packingWidth.val())) {
+			cWidth = packingWidth.val();
+		}
+		if(str.test(packingHeight.val())) {
+			cVolume = packingHeight.val();
+		}
+		packingVolume.val(cLong*cWidth*cVolume);
+	}
+	
+	function checkSelect(obj) {
+		var selectList = $("select[name='suppliersIds']").not(obj);
+		for(var i = 0; i < selectList.length; i++) {
+			var select = selectList[i];
+			if(obj.vlaue != 0 && select.value == obj.value) {
+				alert("不能选择已经存在的供应商");
+				$("#" + obj.id).val(0);
+				$("#" + obj.id).trigger("chosen:updated");
+				break;
+			}
+		}
+		$("#suppliersId"+obj.id).val(obj.value); 
+	}
+	
+	var num = 0;
+	function addSuppliers() {
+		var options = $("#ecSuppliersSelect").html();
+		var id = "ecSuppliersSelect" + num;
+		num = num + 1;
+		var html = '<select class="chosen-select" name="suppliersIds" id="'+id+'" onchange="checkSelect(this)">'+options+'</select>';
+
+		$("#suppliersT").append('<tr>' + 
+				'<td class="">'+html+'</td>' + 
+				'<td class="CaptionTD">原厂编号：</td>' + 
+				'<td class=""><input type="text" name="factoryNo" datatype="*"  nullmsg="原厂编号！"></td>' + 
+				'<td class="CaptionTD">采购价格：</td>' + 
+				'<td class=""><input type="text" name="purchasePrice" datatype="*"  nullmsg="采购价格！"></td>' + 
+				'<td class="CaptionTD">最小采购量：</td>' + 
+				'<td class=""><input type="text" name="minNum" datatype="*"  nullmsg="最小采购量！"></td>' + 
+				'<td class="CaptionTD"><div class="radio"><label><input class="ace" type="radio" id="suppliersId'+id+'" name="suppliersId"><span class="lbl">设为首选</span></label></div></td>' + 
+				'<td class="CaptionTD"><button class="btn btn-xs" onclick="delSuppliers(this)">删除</button></td></tr>');
+		$("#"+id).chosen({width: "100%",search_contains: true}); 
+	}
+	function delSuppliers(my) {
+		$(my).parent().parent().remove();  
+	}
+	function delImg(id){
+		$('#'+id).remove();
+	}
+	function toUrl() {
+		window.location.href = "#/ajax/ecSku";	
+	}
+	</script>

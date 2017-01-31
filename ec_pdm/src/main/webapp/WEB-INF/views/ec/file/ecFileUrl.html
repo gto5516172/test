@@ -1,0 +1,46 @@
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-graduation-cap bigger-120"></i> 文件查看 </a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<#search>
+			<form action="${ctxPath}/ecFileUrl/list2" method="post"
+				id="search-form" target="list-page" class="center clearfix">
+				<div class="row padding-tb-10">
+					<div class="col-sm-1">
+						<select name="type">
+							<option value="">全部</option>
+							<option value="1">文本文件</option>
+							<option value="2">音频文件</option>
+							<option value="3">网页文件</option>
+							<option value="4">压缩文件</option>
+							<option value="5">word文件</option>
+							<option value="6">excel文件</option>
+							<option value="7">ppt文件</option>
+							<option value="8">执行文件</option>
+							<option value="9">图片文件</option>
+							<option value="10">视频文件</option>
+						</select>
+					</div>
+					<div class="col-sm-2">
+						<input type="text"
+							class="width-60" name="originalFileName" placeholder="输入文件名称" />
+					</div>
+					<div class="col-sm-6">
+						<span class="btn btn-info btn-sm col-sm-1" id="search-btn">查询</span>
+					</div>
+				</div>
+			</form>
+			</#search>
+			<div class="space-6"></div>
+			<div id="list-page"></div>
+		</div>
+	</div>
+</div>
+	<script type="text/javascript">
+		$("#search-form").getPageList({'submitBtnId':'search-btn'})
+	</script>

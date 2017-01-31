@@ -1,0 +1,35 @@
+<table class="table table-striped table-bordered table-hover nomargin-bottom" style="width:100%">
+	<thead>
+		<tr>
+			<th class="center">供应商名称</th>
+			<th class="center">供应商品数</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@for(item in ecSuppliersPage.list){
+			<tr onclick="findCommodity(${item.id}, this)">
+				<td class="center">
+					<!-- <a href="javascript:;" 
+						data-title="< ${item.suppliersName!} >详情" data-mode="detail"
+						data-url="${ctxPath}/ecsuppliers/detail/showlayer"
+						data-data="{id:'${item.id}'}"
+						data-width="50%"
+					> -->${item.suppliersName}<!-- </a> -->
+				</td>
+				<td class="center">
+					${item.comSize}
+				</td>
+			</tr>
+		@}
+	</tbody>
+</table>
+<div class="space-8"></div>
+<#paginate page="${ecSuppliersPage}" />
+<script>
+	function findCommodity(suppliersId, obj) {
+		//$(obj).css("background-color", "red");
+		$("#suppliersId2").val(suppliersId);
+		$("#search-btn2").click();
+	}
+</script>

@@ -1,0 +1,100 @@
+<div class="layer">
+	<form name="FormPost" id="ecBom-save" class="FormGrid"  method="post"
+		action="${ctxPath}/ecBom/save" >
+		<input type="hidden" id="skuId" name="skuId" value="${skuId}"/>
+		<input type="hidden" id="codeSkuId" name="codeSkuId" value=""/>
+		<table class="EditTable" width="100%">
+			<tbody>
+				<tr style="display: none;">
+					<td class="ui-state-error" id="FormError"></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">物料编码</td>
+					<td class="DataTD width-100"><input type="text"
+						name="itemCodes" datatype="*"  nullmsg="请输入物料编码！" onblur="querySku(this)"
+						></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">物料名称</td>
+					<td class="DataTD width-100"><input type="text"
+						id="itemName" name="itemName" readonly="readonly"
+						></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">需求数量</td>
+					<td class="DataTD width-100"><input type="text"
+						id="requirements" name="requirements" datatype="*"  nullmsg="请输入需求数量！"
+						></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">成本价</td>
+					<td class="DataTD width-100"><input type="text"
+						name="cost" id="cost" readonly="readonly"
+						></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">单位</td>
+					<td class="DataTD width-100"><input type="text"
+						name="company" id="company" readonly="readonly"
+						></td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">物料图片</td>
+					<td class="DataTD">
+						<div id="home1" class="tab-pane active" style="display:none">
+							<img id="showImg" src="" style="width:100px;height:100px"/>
+						</div>
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="ecBom-save" />
+
+<script>
+	function refreshForm() {
+		$("#search-btn2").click();
+	}
+	function delImg(id){
+		var src = $('#'+id).attr('src');
+		$('#'+id).remove();
+	}
+	function querySku(obj) {
+		var value = $(obj).val();
+		var skuId = $("#skuId").val();
+		if(trim(value) != "") {
+			$.ajax({
+				url:"${ctxPath!}/ecBom/querySku",
+				type:"post",
+				dataType:'json',
+				data:{
+					itemCodes:value,
+					skuId:skuId
+				},
+				success:function(result) {
+					if(result.status == 0) {
+						var sku = result.sku;
+						$("#itemName").val(sku.name);
+						$("#cost").val(sku.costPrice);
+						$("#company").val(sku.company);
+						$("#showImg").attr("src","${ctxPath}/" + sku.showImg);						
+						$("#home1").show();
+						$("#codeSkuId").val(sku.id);
+					} else {
+						layer.alert(result.info);
+						$("#itemName").val("");
+						$("#cost").val("");
+						$("#company").val("");
+						$("#home1").hide();
+						$("#codeSkuId").val("");
+						$("#itemCodes").val("");
+					}
+				}
+			});
+		}
+	}
+	function trim(str){ //删除左右两端的空格
+    	return str.replace(/(^\s*)|(\s*$)/g, "");
+ 	}
+</script>

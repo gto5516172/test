@@ -1,0 +1,51 @@
+<style>
+<!--
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+    height:150px;
+}
+-->
+</style>
+<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-graduation-cap bigger-120"></i> 任务类型列表 </a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<#search>
+			<form action="${ctxPath}/ecTaskType/list" method="post"
+				id="search-form" target="list-page" class="center clearfix">
+				<div class="row padding-tb-10">
+					<div class="col-sm-6">
+						<label class="inline">类型名称：</label> <input type="text"
+							class="width-80" name="name" placeholder="输入类型名称..." />
+					</div>
+					<div class="col-sm-6" align="left">
+						<span data-original-title="Bottm Info" class="btn btn-info btn-sm tooltip-info" id="search-btn" data-rel="tooltip" data-placement="bottom">查询</span>
+						<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+							data-mode="page" data-title="添加" 
+							data-url="${ctxPath}/ecTaskType/add/showlayer" 
+							data-data="{}">添加</a>
+					</div>
+				</div>
+			</form>
+			</#search>
+			<div class="space-6"></div>
+			<div id="list-page"></div>
+		</div>
+		
+
+	</div>
+</div>
+
+		
+		
+	<script type="text/javascript">
+	$("#search-form").getPageList({'submitBtnId':'search-btn'});
+	</script>

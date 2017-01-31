@@ -1,0 +1,54 @@
+<style>
+<!--
+.mybut{
+	 margin:0 auto 15px 7px;
+	 width:98%;
+	 overflow: auto;
+}
+
+-->
+</style>
+<div class="layer">
+	@layout("/layout/ueditor.html"){}
+		<!-- 加载编辑器的容器 -->
+		<script id="container" name="detail" type="text/plain" style="width:100%;height:300px"></script>
+		<!-- 实例化编辑器 -->
+		<script type="text/javascript">
+		    var ue = UE.getEditor('container');
+			ue.ready(function() {
+			   ue.setContent(decodeURI('${cs.descr!}'));
+			});
+		    
+		    $("#ensure").click(function() {
+		    var content=encodeURI(ue.getContent());
+		    var loadi= layer.load('加载中…'); 
+		    	$.ajax({  
+    		         type:'post',      
+    		         url:'${ctxPath}/commoditySpuDesc/save',  
+    		         data:{spuId:'${spuId}',descr:content,id:'${cs.id!}'},  
+    		        dataType:'json',  
+    		         success:function(data){  
+    		        	 if(data>0){
+    		        		 //添加成功
+    		        		layer.close(loadi);
+    		        		layer.msg('操作成功！', 3, 1);
+    		        	
+    		        		if('${cs.descr!}'!=null&&'${cs.descr!}'!=''){
+    		        			//修改成功
+    		        			$('#edit_desc_'+data).attr('value',content);
+    		        		}else{
+    		        			//添加成功
+    		        			$('#descs').prepend("<div class='btn-group1'  id='desc_"+data+"'><button data-toggle='dropdown' class='btn btn-info btn-sm dropdown-toggle'>"+
+		      					data+"<span class='icon-caret-down icon-on-left'></span></button><ul class='dropdown-menu dropdown-info pull-left'><li><a href='#' id='edit_desc_"+data+"' onclick='detail(this)' value='"+
+		      					content+"'>预览</a></li>	<li class='divider'></li><li><a href='javascript:void(0);' data-mode='page' data-title='修改描述'	data-data=\"{spuId:'${commoditySpu.id!}',id:'"+data+"'}\" data-url='${ctxPath}/commoditySpuDesc/edit' data-width='60%'	data-height='80%'>修改</a></li><li class='divider'></li><li><a href='#' onclick=\"delDesc('"+data+"')\">删除</a></li></ul></div>");
+    		        		}
+    		        		$("#ensure").parents('.xubox_main').find('.xubox_close').click();  
+    		        	 }else{
+    		        		 layer.msg('操作失败，请重试！', 3, 5);
+    		        	 }
+    		         }  
+    		     });  
+		    }); 
+		</script>	
+</div>
+		<div class="mybut"><span class="btn btn-info btn-block bigger-120" id="ensure" >确定</span></div>	

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.bety.web.mapper.FaqTypeMapper">
+	<!-- FAQ类型列表 -->
+	<select id="findPageInfo" resultType="com.bety.web.model.FaqType">
+		SELECT su.id,su.name,su.descr,su.create_by,update_by,update_date,status,create_date 
+		FROM ec_faq_type su 
+		
+		<where>
+			1=1 
+			<if test="@Ognl@isNotBlank(name)">
+				and su.name like concat('%', #{name} ,'%') 
+			</if>
+			<if test="@Ognl@isNotBlank(createBy)">
+				and su.create_by like concat('%', #{createBy} ,'%')
+			</if>
+		</where> 
+		GROUP BY su.id ORDER BY su.update_date desc
+	</select>
+
+
+</mapper>

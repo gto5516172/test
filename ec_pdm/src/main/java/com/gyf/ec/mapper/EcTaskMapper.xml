@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcTaskMapper">
+
+<sql id="ecTaskColumns">
+	id,title,type_id,emergency_degree,create_user,create_date,finish_time,days_late,process_instance_id,
+	model,note,user_ids,descr,person_In_charge,start_time,end_time,category_type,create_by,update_by,update_date,del_flag,product_descr
+</sql>
+
+<sql id="ecTaskAliasColumns">
+	a.id,a.title,a.type_id,a.emergency_degree,a.create_user,a.create_date,a.finish_time,a.days_late,a.process_instance_id,
+	a.model,note,a.user_ids,descr,a.person_In_charge,a.start_time,a.end_time,a.category_type,a.create_by,a.update_by,a.update_date,a.del_flag
+</sql>
+
+<select id="findUserByEcTaskId" resultType="com.gohuinuo.web.sys.model.SysUser">
+	select t.id, t.name, t.username from sys_user t where t.id in (select t1.user_ids from ec_task t1 where t1.id = #{id})
+</select>
+
+<select id="findUserByIds" resultType="com.gohuinuo.web.sys.model.SysUser">
+	select t.id, t.name, t.username from sys_user t where t.id in 
+	<foreach item="item" index="index" collection="array" open="(" separator="," close=")">  
+		#{item}  
+	</foreach>
+</select>
+
+<select id="queryActivitiTaskList" resultType="com.gyf.ec.model.EcTask">
+	select <include refid="ecTaskAliasColumns" />
+	from ec_task a 
+	<where>
+		a.create_user = #{userId} or FIND_IN_SET(#{userId},user_ids) 
+		<if test="@Ognl@isNotBlank(title)">
+			and a.title like concat( '%' , #{title} , '%' )
+		</if>
+		<if test="@Ognl@isNotBlank(typeId)">
+			and a.type_id = #{typeId}
+		</if>
+	</where>
+		ORDER BY a.update_date desc
+</select>
+
+
+<select id="queryActivitiTaskByCreate" resultType="com.gyf.ec.model.EcTask">
+	select <include refid="ecTaskAliasColumns" />, t2.NAME_ as taskName, t2.ID_ as taskId, (select t3.name from sys_user t3 where t3.id = t1.responsibility_user) as user_name, t1.status  
+	from ec_task a, ec_task_procinst t1, ACT_RU_TASK t2 
+	<where>
+		a.id = t1.task_id and t2.PROC_INST_ID_ = t1.proc_inst_id and t1.create_user = #{userId}
+		<if test="@Ognl@isNotBlank(title)">
+			and a.title like concat( '%' , #{title} , '%' )
+		</if>
+		<if test="@Ognl@isNotBlank(typeId)">
+			and a.type_id = #{typeId}
+		</if>
+	</where>
+		ORDER BY t2.PROC_INST_ID_ desc
+</select>
+
+<select id="queryActivitiTaskByAbnormal" resultType="com.gyf.ec.model.EcTask">
+	select <include refid="ecTaskAliasColumns" />, t2.NAME_ as task_name, t2.ID_ as task_id, t1.`status`, t1.responsibility_user, (select t3.name from sys_user t3 where t3.id = t1.responsibility_user) as user_name 
+	from ec_task a, ec_task_procinst t1, ACT_RU_TASK t2 
+	<where>
+		a.id = t1.task_id and t2.PROC_INST_ID_ = t1.proc_inst_id and t2.ASSIGNEE_ = #{userId} and t1.`status` = 4
+		<if test="@Ognl@isNotBlank(title)">
+			and a.title like concat( '%' , #{title} , '%' )
+		</if>
+		<if test="@Ognl@isNotBlank(typeId)">
+			and a.type_id = #{typeId}
+		</if>
+	</where>
+		ORDER BY t2.PROC_INST_ID_ desc
+</select>
+
+<select id="queryActivitiTaskByFinish" resultType="com.gyf.ec.model.EcTask">
+	select <include refid="ecTaskAliasColumns" />, t1.`status`, t1.responsibility_user, (select t3.name from sys_user t3 where t3.id = t1.responsibility_user) as user_name
+		from ec_task a, ec_task_procinst t1 
+	<where>
+		a.id = t1.task_id and (t1.create_user = #{userId} or t1.responsibility_user = #{userId}) and t1.status > 5
+		<if test="@Ognl@isNotBlank(title)">
+			and a.title like concat( '%' , #{title} , '%' )
+		</if>
+		<if test="@Ognl@isNotBlank(typeId)">
+			and a.type_id = #{typeId}
+		</if>
+	</where>
+		ORDER BY t1.id desc
+</select>
+
+<update id="updateDaysLate">
+	update ec_task t set t.days_late = #{daysLate} where t.id = #{id} 
+</update>
+
+<select id="queryActivitiTask" resultType="com.gyf.ec.model.EcTask">
+	select <include refid="ecTaskAliasColumns" />, t2.NAME_ as task_name, t2.ID_ as task_id, t1.`status`, t1.responsibility_user, (select t3.name from sys_user t3 where t3.id = t1.responsibility_user) as user_name  
+	from ec_task a, ec_task_procinst t1, ACT_RU_TASK t2 
+	<where>
+		a.id = t1.task_id and t2.PROC_INST_ID_ = t1.proc_inst_id and t2.ASSIGNEE_ = #{userId} 
+		<if test="@Ognl@isNotBlank(title)">
+			and a.title like concat( '%' , #{title} , '%' )
+		</if>
+		<if test="@Ognl@isNotBlank(typeId)">
+			and a.type_id = #{typeId}
+		</if>
+	</where>
+		ORDER BY t2.PROC_INST_ID_ desc
+</select>
+
+<select id="queryActivitiAll" resultType="com.gyf.ec.model.EcTask">
+	select <include refid="ecTaskAliasColumns" />, t2.NAME_ as task_name, t2.ID_ as task_id, t1.`status`, t1.responsibility_user, (select t3.name from sys_user t3 where t3.id = t1.responsibility_user) as user_name  
+	from ec_task a INNER join ec_task_procinst t1 on a.id = t1.task_id LEFT JOIN ACT_RU_TASK t2 on t2.PROC_INST_ID_ = t1.proc_inst_id 
+	<where>
+		1=1
+		<if test="@Ognl@isNotBlank(title)">
+			and a.title like concat( '%' , #{title} , '%' )
+		</if>
+		<if test="@Ognl@isNotBlank(typeId)">
+			and a.type_id = #{typeId}
+		</if>
+	</where>
+	ORDER BY t1.id desc
+</select>
+
+<select id="queryDetailById" resultType="com.gyf.ec.model.EcTask">
+	select et.* ,ed.*,ifnull((select do_status from ec_task_status <where> 
+	task_user=#{taskUser} and task_id=#{taskId}</where>),'-1') do_status from ec_task et 
+	left join (select id do_id ,product_descr,task_id from ec_task_do 
+	<where> task_user=#{taskUser}</where>) ed
+		on et.id=ed.task_id <where> et.id=#{taskId}</where>
+</select>
+<select id="findCountByType" resultType="java.lang.Integer">
+	select count(1) from ec_task where type_id=#{param1}
+</select>
+
+
+<select id="findMainTaskStatus" resultType="com.gyf.ec.model.EcMainTaskStatus">
+	select t.`status` status_type, count(t.id) status_num from ec_task_procinst t where t.create_user = #{userId} or t.responsibility_user = #{userId} group by t.`status` 
+</select>
+
+</mapper>

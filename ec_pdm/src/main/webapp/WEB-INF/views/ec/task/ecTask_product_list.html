@@ -1,0 +1,191 @@
+@var shopMap = shop.getAllMap();
+@var suppliersMap = ecSuppliersCommodity.getAllSuppliersMap();
+@var eos = null; 
+
+<table class="table table-striped table-bordered table-hover nomargin-bottom">
+	<thead>
+		<tr>
+		<th class="center">ID</th>
+			<th class="center">商品图片</th>
+			<th class="center">商品名称</th>
+			<th class="center">商品编码</th>
+			@if(categoryType=="1"){
+			<th class="center">店铺</th>
+			<th class="center">销售刊登价格</th>
+			<th class="center">URL</th>
+			@}
+			@if(categoryType=="2"){
+			<td class="center">供应商报价录入</td>
+			@}
+			@if(categoryType=="3"){
+			<th class="center">供应商选择</th>
+			<th class="center">价格</th>
+			<th class="center">最新报价</th>
+			@}
+			<th class="center">备注信息</th>
+			<th class="center">创建时间</th>
+			<th class="center">操作</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@for(item in page.list){
+		@var index=1;
+			<tr>
+				<td class="center">${item.productId!}</td>
+				<td class="center"><img src='${ctxPath!}/${item.showImg!}' width='50px' height='50px'/></td>
+				<td class="center">${item.name!}</td>
+				<td class="center">${item.sku!}</td>
+				@if(categoryType=="1"){
+				<td class="center">${shopMap[item.shopId].name}</td>
+				<td class="center"><input type="text" name="salerPrice" value="${item.salerPrice!}" id="salerPrice_${item.id}"></td>
+				<td class="center"><input type="text" name="myurl" value="${item.myUrl!}" id="myUrl_${item.id}"></td>
+				@}
+				@if(categoryType=="2"){
+					<td class="center">
+					@var purchasePricePermison = user.isDataPersion(auth.getLoginUser().id,"0");
+					@if(purchasePricePermison){
+					@eos = ecTaskOfferPrice.queryByProductId(item.doId);
+					@for(eo in eos){
+					<a data-mode="page" data-title="修改报价单" href="javascript:void(0);" 
+					data-width="80%" data-url="${ctxPath!}/ecTaskOfferPrice/edit/showlayer"
+					data-data="{skuId:'${item.productId}',doId:'${item.doId!}',pid:'${item.id}',index:${index},id:${eo.id},taskId:'${taskId}'}"  id="ecTaskOfferPrice_${item.id!}_${index}" class='label label-sm label-primary arrowed arrowed-right'>${eo.offerNo}</a>
+					@index++;
+					@}
+					@if(item.status!="1"){
+					@for(var i=index;i<=3;i++){
+						<a data-mode="page" data-title="添加报价单" href="javascript:void(0);" 
+						data-width="80%" data-url="${ctxPath!}/ecTaskOfferPrice/add/showlayer"
+						data-data="{skuId:'${item.productId}',pid:'${item.id}',doId:'${item.doId!}',index:${i},taskId:'${taskId}'}"  id="ecTaskOfferPrice_${item.id!}_${i}" class='label label-sm label-primary arrowed arrowed-right'>添加</a>
+						&nbsp;
+					@}}
+					@}
+					</td>
+				@}
+				@if(categoryType=="3"){
+				<td class="center">${suppliersMap[item.supplierId].suppliersName}</td>
+				<td class="center">${suppliersMap[item.supplierId].purchasePrice}</td>
+				<td class="center"><input name="newPrice" value="${item.newPrice!}" id="newPrice_${item.id}" type="text" /></td>
+				@}
+				<td class="center">${item.note!}</td>
+				<td class="center">${item.createDate!,dateFormat="yyyy-MM-dd HH:mm:ss"}</td>
+				<td class="center">
+				@if(doStatus=="-1"){
+				@if(categoryType=="1"&&item.status!="1"){
+				<span class="label label-sm label-primary arrowed arrowed-right" onclick="updateSalerPrice('${item.id}','1','${item.doId}')">确认</span>
+				<span class="label label-sm label-primary arrowed arrowed-right" onclick="updateSalerPrice('${item.id}','-1','${item.doId}')">异常</span> 
+				@}
+				@if(categoryType=="1"&&item.status=="1"){
+					已确认
+				@}
+				@if(categoryType=="1"&&item.status=="-1"){
+					已异常
+				@}
+				@if(categoryType=="2"&&item.status!="1"){
+				<span class="label label-sm label-primary arrowed arrowed-right" onclick="updateSupplyPrice('${item.id}','${item.doId}')">截止</span>
+				@if(item.doId!=null){
+				<span class="label label-sm label-primary arrowed arrowed-right" data-mode="page" data-title="报价单对比" href="javascript:void(0);" 
+					data-width="80%" data-url="${ctxPath!}/ecTaskOfferPrice/compare/showlayer"
+					data-data="{doId:'${item.doId!}',taskId:'${taskId}'}">对比</span>
+				@}}
+				@if(categoryType=="2"&&item.status=="1"){
+				已截止
+				@}
+				@if(categoryType=="3"&&item.status!="1"){
+				<span class="label label-sm label-primary arrowed arrowed-right" onclick="updateNewPrice('${item.id}','${item.doId}')">确认报价</span> 
+				@}
+				@if(categoryType=="3"&&item.status=="1"){
+					已确认
+				@}}
+				</td>
+			
+			</tr>
+		@}
+	</tbody>
+</table>
+<div class="space-8"></div>
+<script type="text/javascript">
+
+function updateSalerPrice(id,status,doId){
+	var price = $("#salerPrice_"+id).val();
+	var myUrl = $("#myUrl_"+id).val();
+	if(price==""){
+		   layer.msg('请先填写销售刊登价格！', 3, 5);
+		return ;
+	}
+	if(myUrl==""){
+		 layer.msg('请先填写URL！', 3, 5);
+	}
+	var loadi = layer.load('加载中…');
+	$.ajax( {  
+     url:'${ctxPath!}/ecTaskDo/ajaxSaveSalerPrice',  
+     data:{salerPrice:price,myUrl:myUrl,status:status,pid:id,id:doId,taskId:'taskId'},  
+     type:'post',  
+     cache:false,  
+     dataType:'json',  
+     success:function(data) {  
+       layer.close(loadi);
+       var mystatus= data.status;
+      
+       if("0"==mystatus){
+    	   layer.msg('操作成功！', 3, 1);
+    	   window.location.reload();
+       }else{
+    	   layer.msg('操作失败,请重试！', 3, 5);
+       }
+     }}
+	);
+}
+
+function updateSupplyPrice(pid,doId){
+	if(doId==null||doId==''){
+		  layer.msg('请先填写供应商报价录入！', 3, 5);
+		  return;
+	}
+	var loadi = layer.load('加载中…');
+	$.ajax( {  
+     url:'${ctxPath!}/ecTaskDo/ajaxUpdateStatus',  
+     data:{id:doId,pid:pid},  
+     type:'post',  
+     cache:false,  
+     dataType:'json',  
+     success:function(data) {  
+       layer.close(loadi);
+       var status= data.status;
+       if("0"==status){
+	   		layer.msg('操作成功！', 3, 1);
+	   		window.location.reload();
+       }else{
+    	   layer.msg('操作失败,请重试！', 3, 5);
+       }
+     }}
+	);
+}
+
+function updateNewPrice(id,doId){
+	var price = $("#newPrice_"+id).val();
+	if(price==""){
+		layer.msg('请先填写最新报价！', 3, 5);
+		return;
+	}
+	var loadi = layer.load('加载中…');
+	$.ajax( {  
+     url:'${ctxPath!}/ecTaskDo/ajaxSaveNewPrice',  
+     data:{newPrice:price,id:doId,pid:id,taskId:'${taskId}'},  
+     type:'post',  
+     cache:false,  
+     dataType:'json',  
+     success:function(data) {  
+       layer.close(loadi);
+       var mystatus= data.status;
+       if("0"==mystatus){
+    	   layer.msg('操作成功！', 3, 1);
+    	   window.location.reload();
+       }else{
+    	   layer.msg('操作失败,请重试！', 3, 5);
+       }
+     }}
+	);
+}
+</script>
+<#paginate page="${page}" />

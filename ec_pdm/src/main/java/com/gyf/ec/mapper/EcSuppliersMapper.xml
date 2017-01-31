@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.gyf.ec.mapper.EcSuppliersMapper">
+	
+	<sql id="ecSuppliersColumns">
+		id,create_by,create_date,update_date,create_by,update_by,remarks,del_flag,suppliers_name,abbreviation,suppliers_level,suppliers_type,suppliers_addr,
+		suppliers_web,tax_identification_number,tax_time,person_name1,person_phone1,person_name2,person_phone2,fax_number,qq,email,ali_wangwang,
+		area_id,settlement_method,settlement_period,settlement_period_num,payment_method,remittance_company_name,
+		payee_name,remittance_bank_name,remittance_bank_account,remittance_bank_addr,clearing_notes,average_delivery_cycle,swift_code,delivery,operating_products,
+		product_category,area_id,status
+	</sql>
+	
+	<!-- 分页查询角色 -->
+	<select id="findPageInfo" resultType="com.gyf.ec.model.EcSuppliers">
+		SELECT <include refid="ecSuppliersColumns"/>, (select count(t1.id) from ec_suppliers_commodity t1 where t1.suppliers_id = t.id) com_size FROM ec_suppliers t 
+		<where>
+			<if test="suppliersLevel!=null and suppliersLevel!=0">
+				t.suppliers_level = #{suppliersLevel}
+			</if>
+		
+			<if test="suppliersType!=null and suppliersType!=0">
+				and t.suppliers_type = #{suppliersType} 
+			</if>
+			
+			<if test="findType!=null and findType ==0">
+				and t.suppliers_name like concat('%', #{findTxt}, '%')
+			</if>
+			<if test="findType!=null and findType ==0 and @Ognl@isNotBlank(findTxt2)">
+				and t.id in (select t2.suppliers_id from ec_sku t1, ec_suppliers_commodity t2 where t1.id = t2.commodity_id and t1.sku = #{findTxt2})
+			</if>
+			<if test="findType!=null and findType ==1">
+				and (t.person_name1 = #{findTxt} or t.person_name2 = #{findTxt})
+			</if>
+			<if test="findType!=null and findType ==2">
+				and (t.person_Phone1 = #{findTxt} or t.person_Phone2 = #{findTxt})
+			</if>
+			<if test="status!=null and status!=3">
+				and t.status = ${status}
+			</if>
+			<if test="findAreaId != null and findAreaId !=0">
+				and t.area_id in (select t1.id from sys_area t1 where t1.id = #{findAreaId} or t1.parent_ids like concat('%,',#{findAreaId},',%'))
+			</if>
+		</where>
+		ORDER BY t.id desc
+	</select>
+	
+	<update id="updateStatus">
+		update ec_suppliers t set t.status = #{status} where t.id = #{id}
+	</update>
+	
+	<select id="findAllSuppliers" resultType="com.gyf.ec.model.EcSuppliers">
+		select <include refid="ecSuppliersColumns"/>, (select count(t1.id) from ec_suppliers_commodity t1 where t1.suppliers_id = t.id) com_size FROM ec_suppliers t order by t.id desc
+	</select>
+	
+	<select id="querySuppliersRelation" resultType="java.lang.Integer">
+		select sum(a.ca) from (select count(t.id) ca from ec_sku t where t.suppliers_id = #{id} union select count(t1.id) from ec_suppliers_commodity t1 where t1.suppliers_id = #{id}) a
+	</select>
+	
+</mapper>

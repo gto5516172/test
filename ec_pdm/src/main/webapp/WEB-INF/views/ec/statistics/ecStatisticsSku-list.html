@@ -1,0 +1,85 @@
+﻿<table class="table table-striped table-bordered table-hover nomargin-bottom" style="width:100%">
+	<thead>
+		<tr>
+			<th class="center">SKU</th>
+			<th class="center">商品名称</th>
+			<th class="center">首选供应商</th>
+			<th class="center">产品成本变动</th>
+			<th class="center">上一次价格/最新价格</th>
+			<th class="center">浮动金额</th>
+			<th class="center">最新更新时间</th>
+			<th class="center">浮动百分比</th>
+		</tr>
+	</thead>
+
+	<tbody>
+		@if(ecStatisticsBySkuPage.list != null) {
+			@for(item in ecStatisticsBySkuPage.list){
+				<tr>
+					<td class="center">
+						${item.sku}
+					</td>
+					<td class="center">
+						${item.skuName}
+					</td>
+					<td class="center">
+						${item.firstSupName}
+					</td>
+					<td class="center">
+					<div class="infobox infobox-orange2  ">
+					<div class="infobox-chart">
+					<span class="sparkline"
+								data-values="${item.costPriceList}"> <canvas
+									style="display: inline-block; width: 44px; height: 28px; vertical-align: top;"
+									width="44" height="28"></canvas> </span></div></div>
+						
+					</td>
+					<td class="center">
+						${item.second}/${item.first}
+					</td>
+					<td class="center">
+						${item.floatPrice}
+					</td>
+					<td class="center">
+						${item.newTime!,dateFormat="yyyy-MM-dd HH:mm:ss" }
+					</td>
+					<td class="center">
+						${item.floatProportion}
+					</td>
+				</tr>
+			@}
+		@}
+	</tbody>
+</table>
+<div class="space-8"></div>
+<#paginate page="${ecStatisticsBySkuPage}" />
+<script type="text/javascript">
+		$(document)
+				.ready(
+						function() {
+							$('.sparkline')
+									.each(
+											function() {
+												var $box = $(this).closest(
+														'.infobox');
+												var barColor = !$box
+														.hasClass('infobox-dark') ? $box
+														.css('color')
+														: '#FFF';
+												$(this)
+														.sparkline(
+																'html',
+																{
+																	tagValuesAttribute : 'data-values',
+																	type : 'bar',
+																	barColor : barColor,
+																	chartRangeMin : $(
+																			this)
+																			.data(
+																					'min') || 0
+																});
+											});
+
+							$.resize.throttleWindow = false;
+						})
+	</script>

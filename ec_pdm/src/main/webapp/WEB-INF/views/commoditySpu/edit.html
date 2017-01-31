@@ -1,0 +1,581 @@
+<style>
+.myinput{
+	 margin:0 auto 15px;
+	 width:53%;
+	 overflow: auto;
+}
+.myinputhidden{
+	 margin:0 auto 15px;
+	 width:53%;
+	 height:250px;
+	 display:none;
+	 overflow: auto;
+}
+.mytextarea{
+	 margin:0 auto 15px;
+	 width:90%;
+	 height:100px;
+	 overflow: auto;
+}
+.myplatform{
+	margin: 0px auto 50px;
+	width: 51%;
+}
+.mylable{
+	float:left;	
+	width:10%;
+}
+.mycontent{
+	float:left;
+	width:90%;
+}
+.tags{
+	display: inline-block;
+	padding: 4px 6px;
+	color: #777;
+	vertical-align: middle;
+	background-color: #FFF;
+	border: 1px solid #d5d5d5;
+	width: 100%
+}
+
+.well{
+    border-radius: 0px;
+    overflow: auto;
+    margin:5px auto 15px;
+    width:100%;
+  	height:150px;
+}
+
+.carousel-control.left {
+   background-image:none!important;
+    background-repeat: repeat-x;
+}
+.carousel-control.right{
+   background-image:none!important;
+    background-repeat: repeat-x;
+}
+
+.btn-group1{
+    position: relative;
+    display: inline-block;
+    margin-top:5px;
+}
+</style>
+<form action="${ctxPath!}/commoditySpu/save" method="post" id="save-form">
+<input type="hidden" name="id" value="${commoditySpu.id}"/>
+<div class="tabbable">
+		<ul class="nav nav-tabs" id="myTab">
+			<li class="active"><a data-toggle="tab" href="#basic_profile"> <i
+					class="green ace-icon fa fa-plus bigger-120"></i>基本信息添加
+			</a></li>
+	
+			 <li class=""><a data-toggle="tab" href="#affiliated_profile">
+			<i class="green ace-icon fa fa-plus bigger-120"></i> 附属信息添加
+			</a></li>
+			 <li class=""><a data-toggle="tab" href="#detail_profile">
+			<i class="green ace-icon fa fa-plus bigger-120"></i> 详细信息添加
+			</a></li>
+		</ul>
+	 	<div class="tab-content">
+		<div id="basic_profile" class="tab-pane active clearfix">
+				<div class="center padding-10">
+					<label>商品名称：</label>
+					<input type="text" class="width-50" name="name" value="${commoditySpu.name}" datatype="*"  nullmsg="请输入名称！"/>
+				</div>
+				<div class="center padding-10">
+					<label>商品SPU码：</label>
+					<input type="text" class="width-50" id="spuNoId"  name="spuNo" value="${commoditySpu.spuNo}"
+					 datatype="*"  nullmsg="请输入商品SPU码！" ajaxurl="${ctxPath!}/commoditySpu/validateNameByAjax?id=${commoditySpu.id}" />
+				</div>
+				<div class="myplatform" >
+				<div class="mylable">分类:</div>
+				<div class="mycontent">
+					<#treeselect url="ecCatalogue/tree" modelNameValue="${ecCatalogue.name!}" 
+							modelIdValue="${ecCatalogue.id!0}" selectIds="${ecCatalogue.id!}"
+							modelId="type" nameId="ecCatalogue" id="ecCatalogue_id"
+							isCheck="请选择商品分类"  /></div>
+					<!-- <input type="text" class="width-50" name="type" value="${commoditySpu.type}" datatype="*"  nullmsg="请输入商品分类！"/>
+				 --></div>
+				<div class="center padding-10">
+					<label>建议零售价：</label>
+					<input type="text" class="width-50" name="price" value="${commoditySpu.price}" datatype="*"  nullmsg="请输入建议零售价！"/>
+				</div>
+				<div class="center padding-10">
+					<label>品牌：</label>
+					<input type="text" class="width-50" name="brand" value="${commoditySpu.brand}" datatype="*"  nullmsg="请输入品牌！"/>
+				</div>
+				<div class="center padding-10">
+					<label>原厂编号：</label>
+					<input type="text" class="width-50" name="manufactorNo" value="${commoditySpu.manufactorNo}" datatype="*"  nullmsg="请输入原厂编号！"/>
+				</div>
+				<div class="center padding-10">
+					<label>单位：</label>
+						@var types = dict.getDictListByType("spu_units");
+					<#select name="units" id="select_id" width="50%">
+					@for(type in types){
+						<option value="${type.value!}" 
+						@if(commoditySpu.units==type.value){
+						selected
+						@}
+						>
+						${type.label!}
+						</option>
+						@}
+					</#select>
+				</div>
+				<div class="center padding-10">
+					<label>商品产地：</label>
+					<input type="text" class="width-50" name="originPlace" value="${commoditySpu.originPlace}" datatype="*"  nullmsg="请输入商品产地！"/>
+				</div>
+				<div class="center padding-10" >
+					<label>描述：</label>
+					<textarea class="width-50" name="descr">${commoditySpu.descr}</textarea>
+				</div>
+			<div class="myinput">
+					<div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab0">
+			<li class="active">
+					<a data-toggle="tab" href="#home0">
+						<i class="green icon-home bigger-110"></i>
+						图片
+					</a>
+				</li></ul>
+				<div class="tab-content">
+					<div id="home0" class="tab-pane active">
+					<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+					data-mode="page" data-title="添加图片"
+					data-data="{inputId:'basicImgs',max:'',imgId:'img1'}"
+					data-url="${ctxPath}/myUpload/view"
+					data-width="60%"
+					data-height="80%">点击上传</a>
+					<!-- <a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);">链接地址</a> -->
+					<div class="well well-lg">
+					<ul class='ace-thumbnails' id="img1" jsname="delImg">
+					<input name="basicImgs" type="hidden"/>
+					@ var ps = photos.getPhotosByFrom("0",commoditySpu.id,1);
+					@ var basicImgs="";
+						@for(p in ps){
+						<li id='img1_s_${p.id}'>
+						@ basicImgs="{'url':'"+p.imgUrl+"','original':'"+p.original+"'}";
+							<a class='cboxElement' href='${ctxPath}${p.imgUrl}' data-rel='colorbox'>
+								<img alt='110x110' width='110' height='110' src='${ctxPath}${p.imgUrl}'>
+								<div class="text">
+									<div class="inner">${p.original}</div>
+									<input name="basicImgs" type="hidden" value="${basicImgs}"/>
+								</div>
+							</a>
+							<div class="tools tools-bottom">
+								<a href='#'>
+									<i class='icon-link' onclick="delImg('img1_s_${p.id}')">
+										<img src='${ctxPath}/static/img/del3.png'>
+									</i>
+								</a>
+							</div>
+						</li>
+						@}
+					</ul>
+					
+			</div>		
+				</div>
+				</div></div></div>
+	
+		
+		</div> 
+		<div id="affiliated_profile" class="tab-pane">
+			<div class="center padding-10" >
+					<label style="vertical-align: top;">销售信息：</label>
+					<textarea class="width-50" name="sellDescr">${commoditySpu.sellDescr}</textarea>
+				</div>
+				<div class="center padding-10" >
+					<label style="vertical-align: top;">其他备注：</label>
+					<textarea class="width-50" name="otherDescr">${commoditySpu.otherDescr}</textarea>
+				</div>
+		</div>
+		<div id="detail_profile" class="tab-pane">
+			<div class="center padding-10" >
+					<label>产品标题：</label>
+					<input type="text" class="width-50" name="title" value="${commoditySpu.title}" datatype="*"  nullmsg="请输入标题！"/>
+				</div>
+			<div class="myplatform" >
+				<div class="mylable">平台：</div>
+				<div class="mycontent">
+				@var allPlatform = platform.getAllPlatform();
+					@for(platform in allPlatform){
+					<span style='margin-left:3px'>${platform.name!}&nbsp;<input type="checkbox" name="pf" value='${platform.id}'/></span>
+				@}
+				<script type="text/javascript">
+					var platforms = document.getElementsByName("pf");
+					for(var i=0;i<platforms.length;i++){
+						var pf="${commoditySpu.platforms}";
+						var plf = pf.split(',');
+						for(var j=0;j<plf.length;j++){
+							if(platforms[i].value==plf[j]){
+							platforms[i].checked=true;
+							}
+						}
+						
+					}
+				</script>
+				</div>
+			</div>
+				<div class="myinput">
+				<div class="mylable">关键词：</div> 
+				<div class="mycontent">
+					<input style="display: none;" name="keywords" id="form-field-tags" value="" placeholder="回车确认" type="text">
+				</div>
+				<script type="text/javascript">
+				var tag_input = $('#form-field-tags');
+				if(! ( /msie\s*(8|7|6)/.test(navigator.userAgent.toLowerCase())) ) 
+				{
+					tag_input.tag(
+					  {
+						placeholder:tag_input.attr('placeholder'),
+						source: ace.variable_US_STATES,
+						 /**
+		                //从Web后台读取数据的写法
+		                source: function(query, process) {
+		                  $.ajax({url: 'remote_source.php?q='+encodeURIComponent(query)})
+		                  .done(function(result_items){
+		                    process(result_items);
+		                  });
+		                }
+		                */
+		                
+					  }
+					);
+				}
+				else {
+					tag_input.after('<textarea id="'+tag_input.attr('id')+'" name="'+tag_input.attr('name')+'" rows="15">'+tag_input.val()+'</textarea>').remove();
+				}
+				 //编程的方式添加一个项
+	           var $tag_obj = $('#form-field-tags').data('tag');
+	           var keywors = "${commoditySpu.keywords}".split(",");
+				 for(var i=0;i<keywors.length;i++){
+					 if(keywors[i]!='')
+	           		$tag_obj.add(keywors[i]);
+				 }
+			</script>
+			</div>
+		
+		<div class="myinput">
+		<label>相关图片：</label>
+		 <div class="tabbable">
+			<ul class="nav nav-tabs" id="myTab1">
+				<li class="active">
+					<a data-toggle="tab" href="#home1">
+						<i class="green icon-home bigger-110"></i>
+						有背景
+					</a>
+				</li>
+
+				<li class="">
+					<a data-toggle="tab" href="#profile1">
+						无背景
+					</a>
+				</li>
+			</ul>
+
+				<div class="tab-content">
+					<div id="home1" class="tab-pane active">
+						<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+						data-mode="page" data-title="添加图片"
+						data-data="{inputId:'backImgs',max:'',imgId:'img2'}"
+						data-url="${ctxPath}/myUpload/view"
+						data-width="60%"
+						data-height="80%">点击上传</a>
+						<!-- <a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);">链接地址</a> -->
+						<div class="well well-lg">
+						<input name="backImgs" type="hidden"/>
+						<ul class='ace-thumbnails' id="img2" jsname="delImg">
+						@ var ps1 = photos.getPhotosByFrom("2",commoditySpu.id,1);
+						@ var backImgs = "";
+						@for(p in ps1){
+						@ backImgs="";
+						<li id='img1_s_${p.id}'>
+						@ backImgs="{'url':'"+p.imgUrl+"','original':'"+p.original+"'}";
+							<a class='cboxElement' href='${ctxPath}${p.imgUrl}' data-rel='colorbox'>
+								<img alt='110x110' width='110' height='110' src='${ctxPath}${p.imgUrl}'>
+								<div class="text">
+									<div class="inner">${p.original}</div>
+									<input name="backImgs" type="hidden" value="${backImgs}"/>
+								</div>
+							</a>
+							<div class='tools tools-bottom'>
+								<a href='#'>
+									<i class='icon-link' onclick="delImg('img1_s_${p.id}')">
+										<img src='${ctxPath}/static/img/del3.png'>
+									</i>
+								</a>
+							</div>
+						</li>
+						@}
+						</ul>
+						</div>	
+					</div>
+
+					<div id="profile1" class="tab-pane">
+						<a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);" 
+						data-mode="page" data-title="添加图片"
+						data-data="{inputId:'noBackImgs',max:'',imgId:'img3'}"
+						data-url="${ctxPath}/myUpload/view"
+						data-width="60%"
+						data-height="80%">点击上传</a>
+						
+					<!-- <a class="btn btn-info btn-sm tooltip-info" href="javascript:void(0);">链接地址</a> -->
+ 					<div class="well well-lg">
+ 					<input name="noBackImgs" type="hidden"/>
+						<ul class='ace-thumbnails' id="img3" jsname="delImg">
+						@ var ps2 = photos.getPhotosByFrom("1",commoditySpu.id,1);
+						@ var noBackImgs = "";
+						@for(p in ps2){
+						@ noBackImgs="";
+						<li id='img1_s_${p.id}'>
+						@ noBackImgs="{'url':'"+p.imgUrl+"','original':'"+p.original+"'}";
+							<a class='cboxElement' href='${ctxPath}${p.imgUrl}' data-rel='colorbox'>
+								<img alt='110x110' width='110' height='110' src='${ctxPath}${p.imgUrl}'>
+								<div class="text">
+									<div class="inner">${p.original}</div>
+									<input name="noBackImgs" type="hidden" value="${noBackImgs}"/>
+								</div>
+							</a>
+							<div class='tools tools-bottom'>
+								<a href='#'>
+									<i class='icon-link' onclick="delImg('img1_s_${p.id}')">
+										<img src='${ctxPath}/static/img/del3.png'>
+									</i>
+								</a>
+							</div>
+						</li>
+						@}
+						</ul>
+					</div>
+					</div>
+				</div>
+			</div>
+			</div>	
+			<div class="myinput">
+				<label>产品描述：</label>
+				<div style="float: right;">		
+				<a href="javascript:void(0);" 
+				data-mode="page" data-title="添加描述"
+				data-data="{spuId:'${commoditySpu.id}'}"
+				data-url="${ctxPath}/commoditySpuDesc/edit"
+				data-width="60%"
+				data-height="80%">添加</a>
+				</div>
+				<div class="well well-lg" id="descs">
+				
+				@ var cs = commoditySpuDescFunction.getDescBySpu(commoditySpu.id,1);
+				@for(desc in cs){
+				<div class="btn-group1" id="desc_${desc.id}">
+					<button data-toggle="dropdown" class="btn btn-info btn-sm dropdown-toggle">
+					${desc.id}
+						<span class="icon-caret-down icon-on-left"></span>
+					</button>
+
+					<ul class="dropdown-menu dropdown-info pull-left">
+						<li>
+							<a href="${ctxPath}/commoditySpuDesc/toDetail?id=${desc.id}" target="_blank" value="${desc.descr}" id="edit_desc_${desc.id}">预览</a>
+						</li>
+						<li class="divider"></li>
+
+						<li>
+							<a  href="javascript:void(0);" 
+							data-mode="page" data-title="修改描述"
+							data-data="{spuId:'${commoditySpu.id}',id:${desc.id}}"
+							data-url="${ctxPath}/commoditySpuDesc/edit"
+							data-width="60%"
+							data-height="80%">修改</a>
+						</li>
+						<li class="divider"></li>
+						<li>
+							<a href="#" onclick="delDesc('${desc.id}')">删除</a>
+						</li>
+					</ul>
+				</div>
+					@}
+				</div>
+			</div>
+		</div>
+		</div>
+	</div>
+	<div class="margin-t15">
+		<span class="btn btn-info btn-block bigger-120" id="save-btn">保 存</span>
+	</div>
+</form>
+	<#save isHide="yes" subBtnId="save-btn" formId="save-form" />
+	<script type="text/javascript">
+	//描述框自动扩张高度
+	$('textarea[class*=autosize]').autosize({append: "\n"});
+	 function detail(obj){
+		   var str = $(obj).attr('value');
+			$.layer({
+				type : 1,
+	            title: '产品描述',
+	            shadeClose: true,
+	            maxmin: true,
+	            fix : false,  
+	            scrolling: "auto",
+	            area: ['1024px', 500], 
+		        page: {html:decodeURI(str)}
+		    });
+	   }
+	function toUrl(){
+		window.location.href="#/ajax/commoditySpu/view";
+	}
+	function delImg(id){
+		var src = $('#'+id).attr('src');
+		$('#'+id).remove();
+	}
+	function delDesc(id){
+		layer.confirm('确认删除？',function(index){
+			 var loadi= layer.load('加载中…'); 
+		    	$.ajax({  
+			         type:'post',      
+			         url:'${ctxPath}/commoditySpuDesc/delete',  
+			         data:{id:id},  
+			        dataType:'json',  
+			         success:function(data){  
+			        	 if(data==1){
+			        		layer.close(loadi);
+			        		layer.msg('操作成功！', 3, 1);
+			        		$("#desc_"+id).remove();
+			        	 }
+			         }  
+			     });  
+		});
+	}
+	$(document).ready(function(){
+		$('#spuNoId').focus();
+		$("#search-form2").getPageList({'submitBtnId':'search-btn2'});
+		$("#search-form3").getPageList({'submitBtnId':'search-btn3'});
+	});
+	</script>
+@layout("/common/colorbox.html"){};
+
+
+
+
+<!--产品规格 -->		
+<div class="widget-box widget-color-green2" style="margin-top:20px;">
+	<div class="widget-header clearfix">
+		<h5 class="widget-title">产品规格</h5>
+		<div class="widget-toolbar">
+			<a href="#" data-action="fullscreen" class="orange2"> <i
+				class="ace-icon fa fa-expand"></i> </a>
+		</div>
+	</div>
+		<div class="widget-body">
+		<div class="widget-main padding-8">
+			<div class="row">
+		<div class="widget-toolbar  width-100" style="padding-top: 2px;border:0px solid red;float:left">
+			<form method="post" class="form-search" id="search-form3"
+				target="list-page3" action="${ctxPath}/ecSku/listBySpuNo">
+				<span class="input-group-btn">
+						<a class="green" href="javascript:void(0);" 
+							data-mode="page" data-title="添加产品规格" 
+							data-url="${ctxPath}/ecSku/add/layer3" 
+							data-data="{spuNo:'${commoditySpu.spuNo!}'}" 
+							data-width="80%"
+						><span class="btn  btn-error btn-sm" id="add_btn"> 
+							添加
+							<i class="ace-icon fa fa-save icon-on-right bigger-110"></i> 
+						  </span>
+						</a> 
+					</span>
+					<div class="input-group" style="line-height: 0px;display:none">
+					<span
+						class="input-group-btn"><span
+						class="btn  btn-success btn-sm" id="search-btn3"> 搜索 <i
+							class="ace-icon fa fa-search icon-on-right bigger-110"></i> </span></span>
+				</div>
+				<input type="hidden" name="spuNo" value="${commoditySpu.spuNo!}"/>
+				<input type="hidden" name="isEdit" value="1"/>
+			</form>
+			<div class="" id="list-page3" style="width:100%;border:0px solid blue">
+			</div>
+		</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+
+
+
+
+<!-- 产品常见问题 -->		
+<div class="widget-box widget-color-green2" style="margin-top:20px;">
+	<div class="widget-header clearfix">
+		<h5 class="widget-title">产品常见问题</h5>
+		<div class="widget-toolbar">
+			<a href="#" data-action="fullscreen" class="orange2"> <i
+				class="ace-icon fa fa-expand"></i> </a>
+		</div>
+	</div>
+		<div class="widget-body">
+		<div class="widget-main padding-8">
+			<div class="row">
+		<div class="widget-toolbar  width-100" style="padding-top: 2px;border:0px solid red;float:left">
+			<form method="post" class="form-search" id="search-form2"
+				target="list-page2" action="${ctxPath}/productFaq/listBySpuNo">
+				<div class="pull-left width-20">
+					<label>问题：</label>
+					<input type="text"  name="name" style="height:35px"/>
+				</div>
+				<div class="pull-left width-20">
+				<label>类型：</label>
+						@var allType = faqType.getAllFaqType();
+					<#select name="typeId" width="70%">
+					<option value="">全部</option>
+					@for(type in allType){
+							<option value="${type.id!}">
+							${type.name!}
+							</option>
+						@}
+					</#select>
+				</div> 
+				<div class="pull-left width-35">
+					<label>本地关联：</label>
+					@var ftypes = dict.getDictListByType("faq_type");
+					<#select name="goodsType" id="goodsType1" width="20%">
+						<option value="2">spu</option>
+						</#select>
+						<input type="text" name="goodsNo"  style="height:35px" width="100px" readonly="readonly" value="${commoditySpu.spuNo}"/>
+						
+				</div>
+				<div class="pull-left width-20">
+					<span
+						class="btn  btn-success btn-sm" id="search-btn2"> 搜索 <i
+							class="ace-icon fa fa-search icon-on-right bigger-110"></i> </span>
+				
+						<a class="green" href="javascript:void(0);" 
+							data-mode="page" data-title="添加产品常见问题" 
+							data-url="${ctxPath}/productFaq/addBySpuNo/layer" 
+							data-data="{goodsNo:'${commoditySpu.spuNo!}'}" 
+							data-width="50%"
+						><span class="btn  btn-error btn-sm" id="add_btn"> 
+							添加
+							<i class="ace-icon fa fa-save icon-on-right bigger-110"></i> 
+						  </span>
+						</a> 
+					
+				</div>
+				
+				
+				<input type="hidden" name="goodsNo" value="${commoditySpu.spuNo!}"/>
+				<input type="hidden" name="isEdit" value="1"/>
+			</form>
+			<div class="" id="list-page2" style="width:100%;border:0px solid blue">
+			</div>
+		</div>
+		</div>
+		</div>
+	</div>
+</div>
+
+
+
+

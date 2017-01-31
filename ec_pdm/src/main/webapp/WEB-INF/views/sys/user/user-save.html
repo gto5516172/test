@@ -1,0 +1,209 @@
+
+<style>
+
+.myplatform{
+	margin: 0px auto 50px;
+	width: 51%;
+}
+.mylable{
+	float:left;	
+	width:10%;
+}
+.mycontent{
+	float:left;
+	width:90%;
+}
+.webuploader-pick {
+    background:none!important;
+}
+</style>
+@var userOffice = office.getUserOfficeList(); //用户持有的机构
+<div class="layer">
+	<form name="FormPost" id="sysuser-save" class="FormGrid"  method="post"
+		action="${ctxPath}/sysuser/save">
+		
+		<input type="hidden" value="${user.id!}" name="id"/>
+		<table class="EditTable" width="100%">
+			<tbody>
+			<!-- <tr class="FormData">
+				<td class="CaptionTD">头像</td>
+				<td class="DataTD width-100">
+						@layout("/common/upload.html"){};
+					<div id="filePicker">
+						<img alt="110x110" 
+						@if(user.headPath!=null&&""!=user.headPath){
+						src="${ctxPath!}/${user.headPath}"
+						@}else{
+						 src="${ctxPath!}/static/img/big-male-pic.jpg" 
+						 @}
+						 height="110" width="110"  id="showImg">
+					</div>
+					<div id="inputImg" inputName="headPath"></div>
+				</td>
+			</tr> -->
+				<tr class="FormData">
+					<td class="CaptionTD">真实姓名</td>
+					<td class="DataTD width-100"><input type="text"
+						name="name" datatype="*"  nullmsg="请输入角色名！"
+						value="${user.name!}">
+						<input type="hidden" name="headPath" value="${user.headPath}">
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">登录名</td>
+					<td class="DataTD">
+					<input type="text" value="${user.username!}" name="username" id="usernameId" 
+					datatype="*"  nullmsg="请输入登录名！"  ajaxurl="${ctxPath!}/sysuser/validateNameByAjax?id=${user.id}"
+					@if(user.username=="admin"){
+					readOnly
+					@}
+					/>
+					<script type="text/javascript">
+					$(document).ready(function(){
+						$('#usernameId').focus();
+					});
+					</script>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">密码</td>
+					<td class="DataTD">
+					<input type="password" value="" name="password" class="width-70"/>
+					<span class="red">*不填写则不修改</span>
+					<!-- datatype="*6-16" errormsg="密码范围在6~16位之间！" -->
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">归属机构</td>
+					<td class="DataTD width-100">
+					<#pullDownTree order="three" treeData="${userOffice}" name="officeId" 
+						value="${user.officeId}" class="width-100" isRoot="false" 
+						rootNodeName="请选择归属机构" />
+					</td>
+				</tr>
+				@if(user.username!="admin"){
+				<tr class="FormData">
+					<td class="CaptionTD">所属角色</td>
+					<td class="DataTD width-100">
+					<select name="roleIds" multiple class="chosen-select tag-input-style" id="user-role-update" data-placeholder="选择角色">
+						@for(entry in rolesMap){
+							@var key = entry.key,role=entry.value;
+							<option value="${role.id!}" 
+								@if(!isEmpty(findUserRoleMap[key])){
+									selected
+								@}
+							>
+							${role.name!}
+							@var sostr = office.getOfficeStrByOfficeId(role.officeId);
+							@if(!isEmpty(sostr)){
+								&nbsp;(${sostr})
+							@}
+							</option>
+						@}
+					</select>
+					</td>
+				</tr>
+				@}
+				<tr class="FormData">
+					<td class="CaptionTD">性别</td>
+					<td class="DataTD width-100">
+						<input type="radio" name="sex" value="男" style="width:3%" 
+							@if(user.sex=="男"){
+							checked
+							@}
+						> 男
+						<input type="radio" name="sex" value="女" style="width:3%" 
+						@if(user.sex=="女"){
+						checked
+						@}
+						> 女
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">QQ</td>
+					<td class="DataTD">
+					<input type="text" value="${user.qq!}" name="qq"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">电话</td>
+					<td class="DataTD">
+					<input type="text" value="${user.mobile!}" name="moblie"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">手机</td>
+					<td class="DataTD">
+					<input type="text" value="${user.phone!}" name="phone"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">邮箱</td>
+					<td class="DataTD">
+					<input type="text" value="${user.email!}" name="email"/>
+					</td>
+				</tr>
+				<!-- <tr class="FormData">
+					<td class="CaptionTD">工号</td>
+					<td class="DataTD">
+					<input type="text" value="${user.no!}" name="no"/>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD">描述</td>
+					<td class="DataTD">
+						<textarea name="remarks" class="autosize-transition form-control "
+						style="resize: none;">${user.remarks!}</textarea>	
+					</td>
+				</tr> -->
+				<tr class="FormData">
+					<td class="CaptionTD">数据权限</td>
+					<td class="DataTD width-100">
+						<input type="checkbox" name="dp" value="0" style="width:3%"> 采购价
+						<input type="checkbox" name="dp" value="1" style="width:3%"> 成本价
+						<input type="checkbox" name="dp" value="2" style="width:3%">供应商（商品列表）
+						<input type="hidden" name="dp" value="" style="width:3%">
+						<!-- <input type="checkbox" name="dp" value="3" style="width:3%"> QA改权限 -->
+						<script type="text/javascript">
+					var dps = document.getElementsByName("dp");
+					for(var i=0;i<dps.length;i++){
+						var udp="${user.dataPermission}";
+						var dp = udp.split(',');
+						for(var j=0;j<dp.length;j++){
+							if(dps[i].value==dp[j]){
+							dps[i].checked=true;
+							}
+						}
+						
+					}
+				</script>
+					</td>
+				</tr>
+				<tr class="FormData">
+					<td class="CaptionTD"></td>
+					<td class="DataTD">
+					
+					<font size="2px" color="red">权限说明：</font><br>
+
+    				<font size="2px" color="red"> 采购价权限： 能够查看产品相关的采购价格信息</font><br>
+
+     				<font size="2px" color="red">成本价权限： 能够看到产品相关的成本价格信息</font><br>
+
+    				<font size="2px" color="red">供应商信息：  能够看到供应商的地址、联系人供应产品信息</font><br>
+
+      				<!-- <font size="2px" color="red">QA改权限：   能够修改和增加产品FAQ的资料。</font> -->
+					
+					</td>
+				</tr>
+			</tbody>
+		</table>
+	</form>
+</div>
+<#save formId="sysuser-save" />
+
+<script type="text/javascript">
+
+//描述框自动扩张高度
+$('textarea[class*=autosize]').autosize({append: "\n"});
+$("#user-role-update").chosen({width: "100%",search_contains: true}); 
+</script>

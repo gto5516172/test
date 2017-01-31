@@ -1,0 +1,149 @@
+﻿<div class="tabbable">
+	<ul class="nav nav-tabs" id="myTab">
+		<li class="active"><a data-toggle="tab" href="#home"> <i
+				class="green ace-icon fa fa-users bigger-120"></i>任务统计(柱状) </a>
+		</li>
+	</ul>
+
+	<div class="tab-content">
+		<div id="home" class="tab-pane active clearfix">
+			<#search>
+			<form action="${ctxPath}/gameAcc/list" method="post" id="search-form"
+				target="list-page" class="center clearfix">
+				<div class="row padding-tb-12">
+					<div class="col-sm-4">
+						<label class="inline">类型：</label>
+						<select id="selectType" name="selectType">
+							<option value="">请选择</option>
+							<option value="1">每日新增</option>
+							<option value="2">每日解决</option>
+						</select>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="dtp_input1" class="col-md-2 control-label">开始：</label>
+							<div class="input-group date form_datetime col-md-5"
+								data-link-field="dtp_input1">
+								<input type="text" class="width-80" id="start" datatype="*"
+									name="start"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+							</div>
+						</div>
+					</div>
+					<div class="col-sm-4">
+						<div class="form-group">
+							<label for="dtp_input1" class="col-md-2 control-label">结束：</label>
+							<div class="input-group date form_datetime col-md-5"
+								data-link-field="dtp_input1">
+								<input type="text" class="width-80" id="end" datatype="*"
+									name="end"
+									onFocus="WdatePicker({dateFmt:'yyyy-MM-dd HH:mm:ss'})" />
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="padding-trb-10 col-sm-12">
+					<span class="btn btn-info btn-sm col-sm-6" id="search-btn"
+						onclick="findEcStatistics()">查询</span>
+				</div>
+			</form>
+			</#search>
+			<div class="space-6"></div>
+			<div id="list-page">
+				<div id="container" style="min-width: 700px; height: 400px"></div>
+				﻿
+				<div id="sliders"
+					style="min-width: 310px; max-width: 800px; margin: 0 auto;">
+					<!-- <table>
+						<tr>
+							<td>Alpha Angle</td>
+							<td><input id="R0" type="range" min="0" max="45" value="15" />
+								<span id="R0-value" class="value"></span>
+							</td>
+						</tr>
+						<tr>
+							<td>Beta Angle</td>
+							<td><input id="R1" type="range" min="0" max="45" value="15" />
+								<span id="R1-value" class="value"></span>
+							</td>
+						</tr>
+					</table> -->
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<style>
+#profile .center>label {
+	width: 100px;
+	text-align: right;
+}
+</style>
+<script>
+	function findEcStatistics() { 
+		// Set up the chart 
+		var start = $("#start").val();
+		var end = $("#end").val();
+		var selectType = $("#selectType").val();
+		if(selectType !='' && start != '' && end != '') {
+			$.ajax({
+				 type:'post',      
+		         url:'${ctxPath!}/ecStatistics/findEcStatistics',  
+		         data:{start:start, end:end, selectType:selectType},  
+		         dataType:'json',  
+		         success:function(data){ 
+		        	 var chart = new Highcharts.Chart({
+		     			chart : {
+		     				renderTo : 'container',
+		     				type : 'column',
+		     				margin : 75,
+		     				options3d : {
+		     					enabled : true,
+		     					alpha : 0,
+		     					beta : 0,
+		     					depth : 50,
+		     					viewDistance : 25
+		     				}
+		     			},
+		     			title : {
+		     				text : data.text
+		     			},
+		     			subtitle : {
+		     				text : ''
+		     			},
+		     			plotOptions : {
+		     				column : {
+		     					depth : 25
+		     				}
+		     			},
+		     			xAxis: { 
+		     				categories: data.dateTimeAry
+		     			},
+		     			series : [ {
+		     				name:"数量",
+		     				data : data.numAry
+		     			} ]
+		     		});
+		     		// Activate the sliders 
+		     		$('#R0').on('change', function() {
+		     			chart.options.chart.options3d.alpha = this.value;
+		     			showValues();
+		     			chart.redraw(false);
+		     		});
+		     		$('#R1').on('change', function() {
+		     			chart.options.chart.options3d.beta = this.value;
+		     			showValues();
+		     			chart.redraw(false);
+		     		});
+		     		function showValues() {
+		     			$('#R0-value').html(chart.options.chart.options3d.alpha);
+		     			$('#R1-value').html(chart.options.chart.options3d.beta);
+		     		}
+		     		showValues();
+		         }
+			});
+		} else {
+			layer.alert("请选择类型和时间",1);
+		}
+	}
+</script>
