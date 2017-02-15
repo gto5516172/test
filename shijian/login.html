@@ -27,6 +27,7 @@ $("input").focus(function(){
   });
 });
 </script>
+
 </head>
 
 <body>
@@ -37,19 +38,19 @@ $("input").focus(function(){
    
    <div class="login-top">
    <h1>管理员登录</h1>
-   <form  id="login-form" class="myform">
+   <form name="form1" id="login-form" class="myform" method="post" action="login.asp" onSubmit="sub()">
    <fieldset>
      <label class="clearfix">
-        <span class="input-icon"><input name="username"  id="wo" type="text" placeholder="用户名" class="form-control" autocomplete="on" datatype="*" nullmsg="请输入用户名！" data-error="用户名或密码错误"/></span>
+        <span class="input-icon"><input name="username"  id="username" type="text"  placeholder="用户名" class="form-control" autocomplete="on" datatype="*" nullmsg="请输入用户名！" data-error="用户名或密码错误"/></span>
         <i class="icon fa fa-user"></i>     </label>
      <label class="clearfix">
-        <span class="input-icon"><input name="password" type="password" class="form-control" placeholder="密码" /></span>
+        <span class="input-icon"><input name="password"  id="password" type="password" class="form-control" placeholder="密码" /></span>
         <i class="icon fa fa-lock"></i>   </label>
      <label class="clearfix">
         <span class="input-icon"><input type="text" placeholder="验证码" class="form-control2" /></span>     </label>
    <div class="space"></div> 
-   <div class="forgot">
-        <span type="button" id="login-btn">
+   <div class="forgot" onClick="return sub()">
+       <span type="button"   id="login-btn">
               <i class="iconkey fa fa-key"></i>
               <span>登&nbsp;录</span>        </span>    </div>
    </fieldset>
@@ -62,6 +63,32 @@ $("input").focus(function(){
 </div>
 
 <script type="text/javascript" src="validate/Validform_v5.3.2_min.js"></script>
+
+<!--原生js表单验证方法-->
+<script type="text/javascript">
+ function sub(){
+     var name=document.getElementById("username");
+	   var pass=document.getElementById("password");
+<!--首先测试账号密码不能为空-->
+      if (name.value==null||name.value==""){
+	   alert("请输入用户名");
+	   username.focus()
+	   return false;
+	  }
+	  else if (pass.value==null||pass.value==""){
+	    alert("请输入密码");
+		password.focus()
+		return false;
+	  }
+	  alert("true");//函数返回了ture，但是为什么action没反应？？
+	  return true; 
+	  
+  }
+</script>
+
+
+
+<!--vaildform表单验证方法
 <script type="text/javascript">
     jQuery(function($){
 	   $("#login-form").Validform({
@@ -94,8 +121,7 @@ $("input").focus(function(){
 	   
 	   })
 	})
-
-</script>
+</script>-->
 </body>
 
 </html>
