@@ -1,0 +1,159 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
+<title>管理后台登录</title>
+
+<link rel="stylesheet" type="text/css" href="style.css" />
+<link href="icon/css/font-awesome.min.css" rel="stylesheet" type="text/css" />
+<!--[if IE]>
+<link href="icon/css//font-awesome-ie7.min.css" rel="stylesheet" />
+<![endif]-->
+ <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){
+/*登录按钮背景色更改*/
+$(".forgot").hover(function(){
+$(".forgot").css("background-color","#bbbbbb");
+},function(){
+ $(".forgot").css("background-color","#2790b0");
+ });
+ 
+/*输入框获取焦点时给边框添加样式*/
+$("input").focus(function(){
+  $(this).addClass("focus");
+  }).blur(function(){  
+     $(this).removeClass("focus"); 
+  });
+});
+</script>
+
+</head>
+
+<body>
+
+   <div class="login">
+   <h2>EC-Product Data Management</h2>
+   <h3>跨境电商管理平台</h3>
+   
+   <div class="login-top">
+   <h1>管理员登录</h1>
+   <form name="form1" id="login-form" class="myform" method="post" action="login.asp" >
+   <fieldset>
+     <label class="clearfix">
+        <span class="input-icon"><input name="username"  id="username" type="text"  placeholder="用户名" class="form-control" autocomplete="on" datatype="*" nullmsg="请输入用户名！" data-error="用户名或密码错误"/></span>
+        <i class="icon fa fa-user"></i>     </label>
+     <label class="clearfix">
+        <span class="input-icon"><input name="password"  id="password" type="password" class="form-control" placeholder="密码" /></span>
+        <i class="icon fa fa-lock"></i>   </label>
+     <label class="clearfix">
+        <span class="input-icon"><input type="text" placeholder="验证码" class="form-control2" /></span>     </label>
+   <div class="space"></div> 
+   <div class="forgot" onClick="return sub()">
+       <span type="button"   id="login-btn">
+              <i class="iconkey fa fa-key"></i>
+              <span>登&nbsp;录</span>        </span>    </div>
+   </fieldset>
+   </form>
+  </div>
+  <div class="login-bottom"></div>
+  </div>
+  <div class="copyright">
+   <p>Copyright©2015.跨境电商管理平台 All rights reserved.</p>
+</div>
+
+
+
+<!--原生js表单验证方法-->
+<script type="text/javascript">
+ function sub(){
+     var result=true;  //返回状态， 提交数据时用到
+     var name=document.getElementById("username");
+	   var pass=document.getElementById("password");
+<!--首先测试账号密码不能为空-->
+      if (trim(name.value)==null||trim(name.value)==""){
+	   alert("请输入用户名");
+	   name.focus()
+	   result = false;
+	  }
+	  else if (trim(pass.value)==null||trim(pass.value)==""){
+	    alert("请输入密码");
+		pass.focus()
+		result = false;
+	  }
+
+<!--再限制输入框长度--> 
+     else if (name.value.length>20||name.value.length<3){
+	    alert("用户名需在3-20字符之间");
+		name.focus();
+	   result = false;
+		}
+	 else if (pass.value.length<4){
+	    alert("密码长度必须4位数以上");
+		pass.focus();
+	   result = false;
+		}
+<!--账户名不能包含非法字符，仅限字母，数字，下划线-->
+      var charname1=name.value.toLowerCase();
+	  for(i=0;i<name.value.length;i++){
+	  var charname=charname1.charAt(i);     //如何跳转：假如字符里有多个非法字符，如何只显示一个弹框？ 解决：下面加个break，跳出循环就好了！
+        if(!(charname>=0 && charname<=9)&&(!(charname>='a'&& charname<='z'))&&(charname!='_')){
+	    alert("用户名不能包含非法字符，仅限字母、数字和下划线");
+		name.focus;
+		result = false;
+		break;
+	    }
+      }
+	  //函数返回了ture，但是为什么action没跳转？？    PS:这里要提交表单的id，而不是按钮id，按钮只是起到一个点击的效果，来提交表单！！
+	  if (result){
+	    $("#login-form").submit();
+		alert("登录成功");
+	  }
+	  //删除字符前后的空白
+	  function trim(str){
+	   return str.replace(/(^\s*)|(\s*$)/g, "");
+	  }
+  }
+  
+   
+</script>
+
+<script type="text/javascript" src="validate/Validform_v5.3.2_min.js"></script>
+
+<!--vaildform表单验证方法
+<script type="text/javascript">
+    jQuery(function($){
+	   $("#login-form").Validform({
+	    btnSubmit:"#login-btn",
+	    ajaxPost:true,
+		beforeSubmit:function(curform){
+		//在验证成功后，表单提交前执行的函数，curform参数是当前表单对象。
+		//这里明确return false的话表单将不会提交;	
+		$("#login-btn").attr("disabled","disabled").find("span").text("登录中...");     //这里说的防止重复提交用的
+		        },
+				callback:function(data){
+				    if(undefined!=data.error){
+					//如果参数返回的错误不为不存在，那login-btn移除disabled属性， 并且span文字改为登录。      
+				     $("#login-btn").removeAttr("disabled").find("span").text("登录");  
+					      
+						  var obj=$("#login-form input[data-error='"+data.error+"']");   //根据返回的data.error找到对应的输入框
+				          layer.tips(data.error,obj,{      //这里应该指的是弹窗的样式??
+						    guide:0,  //弹窗为上下模式
+							time:4,  //自动关闭等待秒数，整数值。
+							style:['background-color:#f26c4f; color:#fff','#f26c4f']
+						  });
+					}else {
+					   window.location.href="/ec_pdm";  //如果输入没有错误，页面将跳向链接地址/ec_pdm
+					}
+				},
+				
+				tiptype:function(msg,o,cssctl){
+				
+				}
+	   
+	   })
+	})
+</script>-->
+</body>
+
+</html>
