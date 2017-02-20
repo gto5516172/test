@@ -41,11 +41,15 @@ $("input").focus(function(){
    <form name="form1" id="login-form" class="myform" method="post" action="login.asp" >
    <fieldset>
      <label class="clearfix">
-        <span class="input-icon"><input name="username"  id="username" type="text"  placeholder="用户名" class="form-control" autocomplete="on" datatype="*" nullmsg="请输入用户名！" data-error="用户名或密码错误" /></span>
+        <span class="input-icon"><input name="username"  id="username" type="text"  placeholder="用户名" class="form-control" autocomplete="on" datatype="*3-20" nullmsg="请输入用户名！" data-error="用户名或密码错误" errormsg="用户名最少3个字符,最多20个字符！" ajaxurl="valid.php"/></span>
         <i class="icon fa fa-user"></i>     </label>
+     <div class="Validform_checktip Validform_wrong">请填写信息！</div>
+     
      <label class="clearfix">
-        <span class="input-icon"><input name="password"  id="password" type="password" class="form-control" placeholder="密码" datatype="*" nullmsg="请输入密码！" autocomplete="off" /></span>
+        <span class="input-icon"><input name="password"  id="password" type="password" class="form-control" placeholder="密码" datatype="*6-16" nullmsg="请输入密码！" autocomplete="off" errormsg="密码范围在6-16位之间！"/></span>
         <i class="icon fa fa-lock"></i>   </label>
+     <div class="Validform_checktip Validform_wrong">请设置密码！</div>
+     
      <label class="clearfix">
         <span class="input-icon"><input type="text" placeholder="验证码" class="form-control2" /></span>     </label>
    <div class="space"></div> 
@@ -137,7 +141,7 @@ $("input").focus(function(){
 		//这里明确return false的话表单将不会提交;	
 		$("#login-btn").attr("disabled","disabled").find("span").text("登录中...");     //这里说的防止重复提交用的
 		        },
-				callback:function(data){
+		callback:function(data){
 				    if(undefined!=data.error){
 					//如果参数返回的错误不为不存在，那login-btn移除disabled属性， 并且span文字改为登录。      
 				     $("#login-btn").removeAttr("disabled").find("span").text("登录");  
@@ -151,9 +155,9 @@ $("input").focus(function(){
 					}else {
 					   window.location.href="/ec_pdm";  //如果输入没有错误，页面将跳向链接地址/ec_pdm
 					}
-				},
+		},
 				
-				tiptype:function(msg,o,cssctl){
+		tiptype:function(msg,o,cssctl){     //给tiptype传入自定义函数。通过自定义函数，可以实现你想要的任何提示效果：
 				  //msg：提示信息;
    //o:{obj:*,type:*,curform:*}, 
    // obj指向的是当前验证的表单元素（或表单对象），
@@ -167,14 +171,14 @@ $("input").focus(function(){
                 if(!o.obj.is("form")){
 				    if(o.type!=2){
 				    layer.tips(msg,o.obj,{
-					guide:3,
+					guide:3,  //弹窗指引方向为左 ； guide: 指引方向（0：上，1：右，2：下，3：左）。
 					time:4,
 					style:['background-color:#f26c4f;color:#fff','#f26c4f']
 					});
 					}
 				 }
-				},
-	            tipSweep:true
+		},
+	    tipSweep:true  //检测;当true时提示信息将只会在表单提交时触发显示，各表单元素blur时(失去焦点时)不会被立即触发显示。
 	   });
 	   
 				$("#login-form").keydown(function(e){

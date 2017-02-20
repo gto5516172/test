@@ -1,0 +1,79 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>表单验证练习</title>
+<link href="formstyle.css" rel="stylesheet" />
+<link rel="stylesheet"  type="text/css" />
+<style>
+*{ margin:0 auto;width:800px;}
+.title{line-height:50px;margin-top:50px;}
+h2{ background-color:#CCCCCC; color:#00CC33;}
+.myform{padding-top:20px; width:500px; height:400px;float:left;}
+.line{width:500px;float:left;margin-bottom:20px;}
+input{width:200px; margin-bottom:5px; border:1px solid #999999;}
+.sub{ padding:10px 10px; width:100px; margin-top:10px;}
+
+
+</style>
+</head>
+
+<body>
+ <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js"></script>
+   <div class="title">
+      <h1>validform验证表单练习</h1>
+      <h2>提示效果：右侧提示</h2>
+   </div>
+   <!--头部引入js文件-->
+   <script type="text/javascript" src="http://validform.rjboy.cn/wp-content/themes/validform/js/jquery-1.6.2.min.js"></script>
+<script type="text/javascript" src="http://validform.rjboy.cn/Validform/v5.3.2/Validform_v5.3.2_min.js"></script>
+
+<!--
+   <script type="text/javascript" src="validate/Validform_v5.3.2_min.js"></script>
+   <script type="text/javascript" src="http://validform.rjboy.cn/wp-content/themes/validform/js/jquery-1.6.2.min.js"></script>  -->
+   
+   <div class="main">  
+     <form class="myform" action="valid.php" >
+       <div class="line">
+          <span>用户名：</span><input type="text" class="inputxt Validform_error" name="username" datatype="s6-18" nullmsg="请填写用户名！" errormsg="用户名至少6个字符，最多18个字符！" ajaxurl="valid.php" />
+          <div class="Validform_checktip Validform_wrong"  >请填写信息！</div>
+       </div>
+       <div class="line"> 
+          <span>密码：</span><input type="password" class="inputxt Validform_error" name="password" datatype="s6-18" nullmsg="请输入密码！" errormsg="密码范围在6~18位之间！"/>
+          <div class="Validform_checktip Validform_wrong">请输入密码！</div>
+       </div> 
+          <input type="submit" value="提&nbsp;交" class="sub" />
+          <span id="msgdemo" style="margin-left:30px;"></span>
+     </form>
+   </div>
+   <script type="text/javascript">
+    
+	   
+$(function(){
+	//$(".registerform").Validform();  //就这一行代码！;
+		
+	$(".myform").Validform({
+		tiptype:function(msg,o,cssctl){
+			//msg：提示信息;
+			//o:{obj:*,type:*,curform:*}, obj指向的是当前验证的表单元素（或表单对象），type指示提示的状态，值为1、2、3、4， 1：正在检测/提交数据，2：通过验证，3：验证失败，4：提示ignore状态, curform为当前form对象;
+			//cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象 和 当前提示的状态（既形参o中的type）;
+			if(!o.obj.is("form")){//验证表单元素时o.obj为该表单元素，全部验证通过提交表单时o.obj为该表单对象;
+				var objtip=o.obj.siblings(".Validform_checktip");
+				cssctl(objtip,o.type);
+				objtip.text(msg);
+			}else{
+				var objtip=o.obj.find("#msgdemo");
+				cssctl(objtip,o.type);
+				objtip.text(msg);
+			}
+		},
+		ajaxPost:true
+	});
+})
+
+	  
+</script>
+ 
+</body>
+
+</html>
