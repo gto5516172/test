@@ -41,15 +41,15 @@ $("input").focus(function(){
    <form name="form1" id="login-form" class="myform" method="post" action="login.asp" >
    <fieldset>
      <label class="clearfix">
-        <span class="input-icon"><input name="username"  id="username" type="text"  placeholder="用户名" class="form-control" autocomplete="on" datatype="*" nullmsg="请输入用户名！" data-error="用户名或密码错误"/></span>
+        <span class="input-icon"><input name="username"  id="username" type="text"  placeholder="用户名" class="form-control" autocomplete="on" datatype="*" nullmsg="请输入用户名！" data-error="用户名或密码错误" /></span>
         <i class="icon fa fa-user"></i>     </label>
      <label class="clearfix">
-        <span class="input-icon"><input name="password"  id="password" type="password" class="form-control" placeholder="密码" /></span>
+        <span class="input-icon"><input name="password"  id="password" type="password" class="form-control" placeholder="密码" datatype="*" nullmsg="请输入密码！" autocomplete="off" /></span>
         <i class="icon fa fa-lock"></i>   </label>
      <label class="clearfix">
         <span class="input-icon"><input type="text" placeholder="验证码" class="form-control2" /></span>     </label>
    <div class="space"></div> 
-   <div class="forgot" onClick="return sub()">
+   <div class="forgot" >
        <span type="button"   id="login-btn">
               <i class="iconkey fa fa-key"></i>
               <span>登&nbsp;录</span>        </span>    </div>
@@ -65,8 +65,8 @@ $("input").focus(function(){
 
 
 <!--原生js表单验证方法-->
-<script type="text/javascript">
- function sub(){
+<script type="text/javascript">     // 要加上这个<div class="forgot" onClick="return sub()">
+/* function sub(){
      var result=true;  //返回状态， 提交数据时用到
      var name=document.getElementById("username");
 	   var pass=document.getElementById("password");
@@ -115,13 +115,19 @@ $("input").focus(function(){
 	  }
   }
   
-   
+   */
 </script>
-
-<script type="text/javascript" src="validate/Validform_v5.3.2_min.js"></script>
-
-<!--vaildform表单验证方法
+<!--使用前先要引入validform文件及layer.js-->
 <script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='/ec_pdm/static/jquery/jquery.mobile.custom.min.js'>"+"<"+"/script>");
+		</script>
+<script type="text/javascript" src="validate/Validform_v5.3.2_min.js"></script>
+<script type="text/javascript" src="layer/layer.min.js"></script>
+<!--vaildform表单验证方法-->
+<script type="text/javascript">
+
+
+			
     jQuery(function($){
 	   $("#login-form").Validform({
 	    btnSubmit:"#login-btn",
@@ -148,12 +154,38 @@ $("input").focus(function(){
 				},
 				
 				tiptype:function(msg,o,cssctl){
-				
-				}
+				  //msg：提示信息;
+   //o:{obj:*,type:*,curform:*}, 
+   // obj指向的是当前验证的表单元素（或表单对象），
+   // type指示提示的状态，值为1、2、3、4，
+   //     1：正在检测/提交数据，
+   //     2：通过验证，
+   //     3：验证失败，
+   //     4：提示ignore状态, 
+   // curform为当前form对象;
+  //cssctl:内置的提示信息样式控制函数，该函数需传入两个参数：显示提示信息的对象和当前提示的状态（既形参o中的type）;
+                if(!o.obj.is("form")){
+				    if(o.type!=2){
+				    layer.tips(msg,o.obj,{
+					guide:3,
+					time:4,
+					style:['background-color:#f26c4f;color:#fff','#f26c4f']
+					});
+					}
+				 }
+				},
+	            tipSweep:true
+	   });
 	   
-	   })
-	})
-</script>-->
+				$("#login-form").keydown(function(e){
+					 var e = e || event,
+					 keycode = e.which || e.keyCode;
+					 if (keycode==13) {
+					  $("#login-btn").trigger("click");
+					 }
+				});
+	});
+</script>
 </body>
 
 </html>
