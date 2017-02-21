@@ -70,7 +70,17 @@ width:220px;
 }
 
 .form-control{
-margin-bottom:10px;
+width:220px;
+line-height:30px;
+margin-bottom:10px;}
+
+.form-control2{
+width:150px;
+line-height:30px;
+margin-bottom:10px;}
+
+/*.form-control{
+margin-bottom:20px;
 height:30px;
 font-size:14px;
 color:#000000;
@@ -79,21 +89,22 @@ width:220px;
 padding-left:5px;
 }
 .form-control2{
-margin-bottom:10px;
+margin-bottom:20px;
 height:30px;
 font-size:14px;
 color:#000000;
 border:1px solid #666666;
 width:150px;
 padding-left:5px;
-}
+}*/
 
+/*没起作用
 label{
 max-width:100%;
 font-weight:400;
 font-size:14px;
 }
-
+*/
 .input-icon{
 float:left;
 clear:both;
@@ -109,11 +120,8 @@ margin-top:10px}
 background-color:#2790b0;
 width:222px;
 height:40px;
-
-margin-top:150px;
-margin-left:0px;
-margin-right:0px;
 cursor:pointer;
+margin-top:10px;
 -webkit-border-radius:5px;
 -moz-border-radius: 5px;
 border-radius:5px;  /*IE下无圆角显示*/
@@ -141,36 +149,26 @@ margin-top:50px;
 .focus{
 border:1px solid red;}
 
-/*==========以下部分是Validform必须的===========*/
-.Validform_checktip{
-    margin-left:8px;
-    line-height:20px;
-    height:20px;
-    overflow:hidden;
-    color:#999;
-    font-size:12px;
+/*==========以下部分是Validdate必须的===========*/
+input.error{
+border:1px solid #E6594E;}  /*错误时，input边框变红色*/
+
+label.error,label.tip{
+  float: left;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  text-align: left;
+  margin-left: 5px;
+  padding-left: 20px;
+  color: red;
+  background: url(validate/images/error.png) no-repeat left center;
 }
-.Validform_right{
-    color:#71b83d;
-    padding-left:20px;
-    background:url(../images/right.png) no-repeat left center;
+label.tip{
+  color: #aaa;
+  background: url(validate/images/tip.gif) no-repeat left center;
 }
-.Validform_wrong{
-    color:red;
-    padding-left:20px;
-    white-space:nowrap;
-    background:url(../images/error.png) no-repeat left center;
+label.valid{
+  background: url(validate/images/right.png) no-repeat left center;
+  width: 32px;
 }
-.Validform_loading{
-    padding-left:20px;
-    background:url(../images/onLoad.gif) no-repeat left center;
-}
-.Validform_error{
-    background-color:#ffe7e7;
-}
-#Validform_msg{color:#7d8289; font: 12px/1.5 tahoma, arial, \5b8b\4f53, sans-serif; width:280px; -webkit-box-shadow:2px 2px 3px #aaa; -moz-box-shadow:2px 2px 3px #aaa; background:#fff; position:absolute; top:0px; right:50px; z-index:99999; display:none;filter: progid:DXImageTransform.Microsoft.Shadow(Strength=3, Direction=135, Color='#999999');}
-#Validform_msg .iframe{position:absolute; left:0px; top:-1px; z-index:-1;}
-#Validform_msg .Validform_title{line-height:25px; height:25px; text-align:left; font-weight:bold; padding:0 8px; color:#fff; position:relative; background-color:#000;}
-#Validform_msg a.Validform_close:link,#Validform_msg a.Validform_close:visited{line-height:22px; position:absolute; right:8px; top:0px; color:#fff; text-decoration:none;}
-#Validform_msg a.Validform_close:hover{color:#cc0;}
-#Validform_msg .Validform_info{padding:8px;border:1px solid #000; border-top:none; text-align:left;}
