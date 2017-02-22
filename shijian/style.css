@@ -170,5 +170,12 @@ label.tip{
 }
 label.valid{
   background: url(validate/images/right.png) no-repeat left center;
-  width: 32px;
+  float: left;
+  height: 20px;
+  line-height: 20px;
+  font-size: 12px;
+  text-align: left;
+  margin-left: 5px;
+  padding-left: 20px;
+  color: #afea0e;
 }
