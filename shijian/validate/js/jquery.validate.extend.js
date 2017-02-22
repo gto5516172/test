@@ -5,7 +5,7 @@ $.validator.setDefaults({
   /*添加校验成功后的执行函数--修改提示内容，并为正确提示信息添加新的样式(默认是valid)*/
   success: function(label){
     /*label的默认正确样式为valid，需要通过validClass来重置，否则这里添加的其他样式不能被清除*/
-    label.text('').addClass('valid');
+    label.text('').addClass('valid').text("验证通过！");
   },
   /*重写校验元素获得焦点后的执行函数--增加[1.光标移入元素时的帮助提示,2.校验元素的高亮显示]两个功能点*/
   onfocusin: function( element ) {
