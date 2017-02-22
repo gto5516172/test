@@ -9,7 +9,8 @@
 <!--[if IE]>
 <link href="icon/css//font-awesome-ie7.min.css" rel="stylesheet" />
 <![endif]-->
- <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js"></script>
+
+<script src="http://apps.bdimg.com/libs/jquery/2.1.1/jquery.js" ></script>
 <script type="text/javascript">
 $(document).ready(function(){
 /*登录按钮背景色更改*/
@@ -65,18 +66,22 @@ $("input").focus(function(){
 </div>
 <!--jQuery表单验证方法-->
 <!--首先引入js库-->
-<script src="validate/js/jquery.js"></script>
 <script src="validate/js/jquery.validate.min.js"></script>
-<script  src="validate/js/jquery.validate.extend.js"></script>
+<script src="validate/js/jquery.validate.extend.js"></script>
 <script type="text/javascript">
       $(function(){
-         var result=true;
-		   $("#login-form").validate({
-			   rules:{
+ 
+		 	$.validator.addMethod("stringCheck", function(value, element){
+             return this.optional(element) ||/^[u0391-uFFE5w]+$/.test("value");
+               }, "用户名必须！英文字母和数字");
+
+		   $("#login-form").validate({			  
+			  rules:{
 			      username:{
 				    required:true,
 				    minlength:6,
-					maxlength:16
+					maxlength:16,
+					stringCheck:true
 				  },
 				  password:{
 				    required:true,
@@ -87,7 +92,8 @@ $("input").focus(function(){
 			       username:{
 				       required:"请输入用户名！",
 					   minlength:"用户名至少6个字符",
-					   maxlength:"用户名长度不能超过16个字符"
+					   maxlength:"用户名长度不能超过16个字符",
+					   stringCheck:"用户名仅限英文字母和数字"
 				   },
 				   password:{
 				       required:"请输入密码！",
@@ -97,12 +103,12 @@ $("input").focus(function(){
 			});
 		 	//提交按钮验证    有问题！！！ 好像验证通过后可以跳转login.asp，但是验证没通过，一样会出现alert，但是没有跳转！why？
 			$(".forgot").click(function(){
-			   if(result){
+			  // if(result){
                  $("#login-form").submit();
-			     alert("登录成功");
-				 }else{
-				 return false;
-				 }
+			//     alert("登录成功");
+				// }else{
+				// return false;
+				// }
 			});
 
         });
