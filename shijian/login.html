@@ -72,8 +72,8 @@ $("input").focus(function(){
       $(function(){
  
 		 	$.validator.addMethod("stringCheck", function(value, element){
-             return this.optional(element) ||/^[u0391-uFFE5w]+$/.test("value");
-               }, "用户名必须！英文字母和数字");
+             return this.optional(element) ||/^[a-zA-Z0-9_]*$/.test(value);  //包含中文，英文字母、数字和下划线的正则表达式：/^[\u0391-\uFFE5\w]+$/
+               }, "用户名仅限字母、数字和下划线");
 
 		   $("#login-form").validate({			  
 			  rules:{
@@ -92,8 +92,7 @@ $("input").focus(function(){
 			       username:{
 				       required:"请输入用户名！",
 					   minlength:"用户名至少6个字符",
-					   maxlength:"用户名长度不能超过16个字符",
-					   stringCheck:"用户名仅限英文字母和数字"
+					   maxlength:"用户名长度不能超过16个字符"
 				   },
 				   password:{
 				       required:"请输入密码！",
@@ -103,12 +102,9 @@ $("input").focus(function(){
 			});
 		 	//提交按钮验证    有问题！！！ 好像验证通过后可以跳转login.asp，但是验证没通过，一样会出现alert，但是没有跳转！why？
 			$(".forgot").click(function(){
-			  // if(result){
+			
                  $("#login-form").submit();
-			//     alert("登录成功");
-				// }else{
-				// return false;
-				// }
+		
 			});
 
         });
