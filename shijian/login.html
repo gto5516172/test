@@ -39,7 +39,7 @@ $("input").focus(function(){
    
    <div class="login-top">
    <h1>管理员登录</h1>
-   <form name="form1" id="login-form" class="myform" method="post" action="login.asp" >
+   <form name="form1" id="login-form" class="myform" method="post" action="login.html" >
    <fieldset>
      <label class="clearfix">
         <span class="input-icon"><input name="username"  id="username" type="text"  placeholder="用户名" class="form-control" autocomplete="on" datatype="*6-20" tip="用户名不能为空！" /></span>
@@ -100,16 +100,14 @@ $("input").focus(function(){
 				   }
 			   }
 			});
-		 	//提交按钮验证    有问题！！！ 好像验证通过后可以跳转login.asp，但是验证没通过，一样会出现alert，但是没有跳转！why？
+		 	
 			$(".forgot").click(function(){
 			
                  $("#login-form").submit();
-		
+		          window.location.href="BootstrapACE/index.html";
 			});
 
         });
-
-
 
 <!--原生js表单验证方法-->
      // 要加上这个<div class="forgot" onClick="return sub()">
