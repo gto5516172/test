@@ -11,6 +11,7 @@ import javax.servlet.http.HttpSession;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -139,20 +140,22 @@ public class LoginController {
 	 * @return
 	 */
 	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public @ResponseBody Map<String, Object> checkLogin(String username,
-			String password, String code, HttpServletRequest request) {
+	public @ResponseBody Map<String, Object> checkLogin(@ModelAttribute String username,
+			@ModelAttribute String password, @ModelAttribute String code, HttpServletRequest request) {
 
 		Map<String, Object> msg = new HashMap<String, Object>();
 		HttpSession session = request.getSession();
-		code = StringUtils.trim(code);
-		username = StringUtils.trim(username);
-		password = StringUtils.trim(password);
+		
+		code = StringUtils.trim(request.getParameter("code"));
+		username = StringUtils.trim(request.getParameter("username"));
+		password = StringUtils.trim(request.getParameter("password"));
 		Object scode = session.getAttribute("code");
 		String sessionCode = null;
 		if (scode != null)
 			sessionCode = scode.toString();
 		if (!StringUtils.equalsIgnoreCase(code, sessionCode)) {
 			msg.put("error", "验证码错误");
+			msg.put("code", "FAIL");
 			return msg;
 		}
 		SysUser user = sysUserService.checkUser(username, password);
@@ -173,8 +176,10 @@ public class LoginController {
 			newUser.setLoginIp(IPUtils.getClientAddress(request));
 			newUser.setId(user.getId());
 			sysUserService.updateByPrimaryKeySelective(newUser);
+			msg.put("code", "SUCCESS");
 		} else {
 			msg.put("error", "用户名或密码错误");
+			msg.put("code", "FAIL");
 		}
 		return msg;
 	}

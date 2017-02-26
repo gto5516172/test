@@ -108,6 +108,59 @@ $("input").focus(function(){
 			});
 
         });
+
+<!--原生js表单验证方法-->
+     // 要加上这个<div class="forgot" onClick="return sub()">
+/* function sub(){
+     var result=true;  //返回状态， 提交数据时用到
+     var name=document.getElementById("username");
+	   var pass=document.getElementById("password");
+<!--首先测试账号密码不能为空-->
+      if (trim(name.value)==null||trim(name.value)==""){
+	   alert("请输入用户名");
+	   name.focus()
+	   result = false;
+	  }
+	  else if (trim(pass.value)==null||trim(pass.value)==""){
+	    alert("请输入密码");
+		pass.focus()
+		result = false;
+	  }
+
+<!--再限制输入框长度--> 
+     else if (name.value.length>20||name.value.length<3){
+	    alert("用户名需在3-20字符之间");
+		name.focus();
+	   result = false;
+		}
+	 else if (pass.value.length<4){
+	    alert("密码长度必须4位数以上");
+		pass.focus();
+	   result = false;
+		}
+<!--账户名不能包含非法字符，仅限字母，数字，下划线-->
+      var charname1=name.value.toLowerCase();
+	  for(i=0;i<name.value.length;i++){
+	  var charname=charname1.charAt(i);     //如何跳转：假如字符里有多个非法字符，如何只显示一个弹框？ 解决：下面加个break，跳出循环就好了！
+        if(!(charname>=0 && charname<=9)&&(!(charname>='a'&& charname<='z'))&&(charname!='_')){
+	    alert("用户名不能包含非法字符，仅限字母、数字和下划线");
+		name.focus;
+		result = false;
+		break;
+	    }
+      }
+	  //函数返回了ture，但是为什么action没跳转？？    PS:这里要提交表单的id，而不是按钮id，按钮只是起到一个点击的效果，来提交表单！！
+	  if (result){
+	    $("#login-form").submit();
+		alert("登录成功");
+	  }
+	  //删除字符前后的空白
+	  function trim(str){
+	   return str.replace(/(^\s*)|(\s*$)/g, "");
+	  }
+  }
+  
+   */
 </script>
 
 
