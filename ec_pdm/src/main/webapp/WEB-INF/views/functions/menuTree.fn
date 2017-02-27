@@ -18,7 +18,7 @@
 			@}
 			> ${menu.name!} </span>
 			@if(menu.hasChild){
-			<b class="arrow fa fa-angle-down"></b>
+				<b class="arrow fa fa-angle-down"></b>
 			@}
 		</a>
 		<b class="arrow"></b>
