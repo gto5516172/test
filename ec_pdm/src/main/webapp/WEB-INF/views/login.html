@@ -71,6 +71,7 @@ $("input").focus(function(){
 </div>
 <!--jQuery表单验证方法-->
 <!--首先引入js库-->
+<script src="${ctxPath!}/static/layer/layer.js"></script>
 <script src="${ctxPath!}/static/validate/js/jquery.validate.min.js"></script>
 <script src="${ctxPath!}/static/validate/js/jquery.validate.extend.js"></script>
 <script type="text/javascript">
@@ -107,7 +108,16 @@ $("input").focus(function(){
 					   minlength:"密码长度必须4个字符以上"
 				   }
 			   },
-			   submitHandler: function(form) {
+			   showErrors: function (errorMap, errorList) {
+                    var msg = "";
+                    $.each(errorList, function (i, v) {
+                        //msg += (v.message + "\r\n");
+                        //在此处用了layer的方法,显示效果更美观
+                        layer.tips(v.message, v.element, { time: 2000 });
+                        return false;
+                    });  
+                },
+			   submitHandler: function(form) {    //ajax提交
 			   		$.ajax({
 						type		: "post",
 				        url			: "${ctxPath}/login",
