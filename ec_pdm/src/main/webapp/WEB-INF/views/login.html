@@ -4,6 +4,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />	
 <title>管理后台登录</title>
 
+
 <link rel="stylesheet" type="text/css" href="${ctxPath!}/static/style.css" />
 <link rel="stylesheet" href="${ctxPath!}/static/css/font-awesome.min.css" />
 <!--[if IE]>
@@ -18,7 +19,7 @@ $(document).ready(function(){
        $(".forgot").css("background-color","#bbbbbb");
    },function(){
    $(".forgot").css("background-color","#2790b0");
- });
+   });
  
 /*输入框获取焦点时给边框添加样式
 $("input").focus(function(){
@@ -73,7 +74,7 @@ $("input").focus(function(){
 <!--首先引入js库-->
 <script src="${ctxPath!}/static/layer/layer.js"></script>
 <script src="${ctxPath!}/static/validate/js/jquery.validate.min.js"></script>
-<script src="${ctxPath!}/static/validate/js/jquery.validate.extend.js"></script>
+<!--<script src="${ctxPath!}/static/validate/js/jquery.validate.extend.js"></script>-->
 <script type="text/javascript">
 	  function refresh(obj) {
   			obj.src = "${ctxPath!}/captcha?width=90&height=32&"+Math.random();
@@ -113,7 +114,7 @@ $("input").focus(function(){
                     $.each(errorList, function (i, v) {
                         //msg += (v.message + "\r\n");
                         //在此处用了layer的方法,显示效果更美观
-                        layer.tips(v.message, v.element, { time: 2000 });
+                        layer.tips(v.message, v.element, { time: 2 ,guide:1});
                         return false;
                     });  
                 },
@@ -128,7 +129,7 @@ $("input").focus(function(){
 				        	if(data.code == "SUCCESS") {
 				        		window.location.href = "${ctxPath!}";
 				        	} else if(data.code == "FAIL") {
-				        		alert(data.error);
+				        		layer.msg(data.error,2,5);
 				      		}
 				        },
 				        error : function (XMLHttpRequest, textStatus, errorThrown) {
