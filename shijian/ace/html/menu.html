@@ -7,7 +7,9 @@
 
 		<meta name="description" content="overview &amp; stats" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-
+        <!-- tab标签的样式 -->
+		<link rel="stylesheet" href="../custom.css" />
+        
 		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="../assets/css/bootstrap.css" />
 		<link rel="stylesheet" href="../components/font-awesome/css/font-awesome.css" />
@@ -249,9 +251,16 @@
 
 								
 							</li>
-
+                      <script type="text/javascript">
+                          function tabshow(){
+						    $(".tab").append(function(){
+							   return "<li>用户管理</li>"
+							
+							});
+						  }
+                      </script>
 							<li class="hover">
-								<a href="typography.html">
+								<a href="javascript:void(0);" onclick="tabshow()">
 									<i class="menu-icon fa fa-user"></i>
 									用户管理
 								</a>
@@ -701,16 +710,30 @@
 				<div class="main-content-inner">
 					<!-- #section:basics/content.breadcrumbs -->
 					<div class="breadcrumbs" id="breadcrumbs">
-						<ul class="tab" id="breadcrumb">
-							<li class="active">
+                        <script type="text/javascript">
+                           try{
+						   ace.settings.check('breadcrumbs','fixed')     //检查这个div层是不是相对窗口固定？？
+						   }catch(e){
+						   }
+                        </script>
+                        <script src="../bootstrap-tab.js"></script>  <!--这里引入了一个tab.js文件-->
+			                      
+                    
+                    	<ul class="tab" id="breadcrumb" role="tablist">
+							<li class="active" data-toggle="page-content" data-target="#tab-menu">
                                 菜单配置
-								<i class="fa fa-times close"></i>
+							<i class="fa fa-times close"></i>
 							</li>
-						</ul><!-- /.breadcrumb -->
+						</ul><!-- /.breadcrumb --> 
+                        
+                 
 					</div>
 
 					<!-- /section:basics/content.breadcrumbs -->
 					<div class="page-content">
+       
+                    
+                    
 						<!-- #section:settings.box -->
 						<div class="ace-settings-container" id="ace-settings-container">
 							<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
@@ -801,10 +824,11 @@
 						</div><!-- /.ace-settings-container -->
 
 						<!-- /section:settings.box -->
-
+                        <div class="page-header"></div>
 						<div class="row">
-							<div class="col-sm-12">
-										<div class="widget-box widget-color-green2">
+							<div class="col-sm-12">       
+                                      
+                                        <div class="widget-box widget-color-green2">
 											<div class="widget-header">
 												<h4 class="widget-title lighter smaller">
 													Browse Files
