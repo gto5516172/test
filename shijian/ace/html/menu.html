@@ -253,14 +253,18 @@
 							</li>
                       <script type="text/javascript">
                           function tabshow(){
-						    $(".tab").append(function(){
-							   return "<li>用户管理</li>"
-							
+						    $(".tab li").removeClass("active");
+							$(".tab").append(function(){
+							   return "<li class='active'>用户管理<i class='fa fa-times close'></i></li>"
 							});
+							//$(this).addclass("active");
+							$("page-content").hide();
 						  }
+
+						  
                       </script>
 							<li class="hover">
-								<a href="javascript:void(0);" onclick="tabshow()">
+								<a href="javascript:void(0);" onClick="tabshow()" >  
 									<i class="menu-icon fa fa-user"></i>
 									用户管理
 								</a>
