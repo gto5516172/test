@@ -17,6 +17,10 @@
                          //$(newTab.attr("href")).addClass("active");
 
                          refreshTabHistory(false/*isDelete*/,$(this).attr('id').substring(4));
+						 
+						 var tab_content_id = "tab-content-" + $(this).attr('id').substring(4);
+						 $("#"+tab_content_id).siblings().hide();
+						 $("#"+tab_content_id).show();
                          })
                          //手动调用切换到要显示的tab页,当前的action只支持show
                          //eg:$("#tab-0 a[data-toggle='tab']").tab("show");
@@ -41,6 +45,7 @@
 						  innerTab: 是否是内部弹出页（打开的tab页触发添加新的tab页），默认为undefined/false
 						  */
 						  function addTab(id,text,url,innerTab) {
+							 $("#tab-content-main").hide();
 						     //如果某个页面已经打开，则切换到该页显示即可，不会新添加tab页
 						    if($('#breadcrumb #tab-'+id).length > 0){
 						      $('#breadcrumb  #tab-' + id + ' a').tab('show');
@@ -56,10 +61,12 @@
 						        + ("<i class='fa fa-times' onclick='deleteTab(\"" + id + "\")'></i>") + "</li>");
     
 						      //添加新的内容显示
-						      $(".tab-content > div").removeClass("active");
+						      //$(".tab-content > div").removeClass("active");
+							  $(".tab-content > div").hide();
 						      $(".tab-content").append("<div id='"+ tab_content_id +"' class='active'>"
 						        + "<iframe id='iframepage" + (pageCounter++) + "' name='iframepage" + (pageCounter++) 
 						        + "' width='100%' frameborder='0' scrolling='no'  src='" + url + "'></iframe></div>");
+								
 						    }
 						      //刷新切换tab的历史记录
 						      refreshTabHistory(false/*isDelete*/,id);
@@ -81,6 +88,13 @@
 						      tabContentJQ.remove();
 						      refreshTabHistory(true/*isDelete*/,id);
 						      $('#tab-' + currentTabId + ' > a').tab('show').click();
+							  if(currentTabId == undefined) {
+								$("#tab-content-main").show();
+							  } else if($("#tab-content-main").attr("id") == undefined) {
+								location.href = "index.html";
+							  } else {
+								$('#tab-content-' + currentTabId).show();
+							  }
 						    }
 						    refreshWidth();
 						  }

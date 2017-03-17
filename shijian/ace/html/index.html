@@ -243,7 +243,7 @@
                         
                         <ul class="submenu">
 							<li class="hover" >
-								<a href="javascript:void(0)" onClick="addTab()">
+								<a href="javascript:void(0)" onClick="addTab(1,'菜单配置','pricing.html','false')">
 									<i class="menu-icon fa fa-list"></i>
                                     <span class="menu-text">菜单配置</span>
 								</a>
@@ -254,7 +254,7 @@
 							</li>
 
 							<li class="hover">
-								<a href="javascript:void(0)" onClick="addTab()">
+								<a href="javascript:void(0)" onClick="addTab(2,'用户管理','tables.html','false')">
 									<i class="menu-icon fa fa-user"></i>
 									<span class="menu-text">用户管理</span>
 								</a>
@@ -724,11 +724,23 @@
 							<i class="fa fa-times close" onClick="deleteTab(id)"></i>
 							</li>-->
 						</ul><!-- /.breadcrumb --> 
+
+						<div id="tab-menu">
+							<ul class="dropdown-menu dropdown-caret" style="min-width: 0px;">
+								<li><a href="javascript:void(0);" data-right-menu="all_close">全部关闭</a>
+								</li>
+								<li><a href="javascript:void(0);"
+									data-right-menu="other_close">关闭其他</a>
+								</li>
+							</ul>
+						</div><!-- /.tab-menu --> 
+
                     </div>
 					<!-- /section:basics/content.breadcrumbs -->
                     
                     
-					<div class="page-content">
+					<div class="tab-content">
+						<div id="tab-content-main">
 						<!-- #section:settings.box -->
 						<div class="ace-settings-container" id="ace-settings-container">
 							<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
@@ -1267,6 +1279,7 @@
 								<!-- PAGE CONTENT ENDS -->
 							</div><!-- /.col -->
 						</div><!-- /.row -->
+						</div><!-- /.tab-content-main -->
 					</div><!-- /.page-content -->
 				</div>
 			</div><!-- /.main-content -->
@@ -1332,6 +1345,7 @@
 		<script src="../assets/js/src/ace.settings-skin.js"></script>
 		<script src="../assets/js/src/ace.widget-on-reload.js"></script>
 		<script src="../assets/js/src/ace.searchbox-autocomplete.js"></script>
+		<script src="../bootstrap-contextmenu.js"></script>
 
 		<!-- inline scripts related to this page -->
 		<script type="text/javascript">
@@ -1350,7 +1364,23 @@
 						animate: ace.vars['old_ie'] ? false : 1000,
 						size: size
 					});
-				})
+				});
+
+				$('#breadcrumb').contextmenu(
+					{'target':'#tab-menu','scopes':'li',
+					  onItem: function(context,e) {
+						 var t = $(e.target).data("right-menu");
+						if(t == "all_close"){
+							location.href = "index.html";
+						}else if(t == "other_close"){
+							var tab_id = "tab-" +$(context).attr('id').substring(4);
+							var tab_content_id = "tab-content-" + $(context).attr('id').substring(4);
+							$("#"+tab_id).addClass("active").siblings().remove();
+							$("#"+tab_content_id).show().siblings().remove();
+							//$(context).addClass("active").siblings().remove();
+							//webHistory.go($(context).attr("h"));
+						}
+					}});
 			
 				$('.sparkline').each(function(){
 					var $box = $(this).closest('.infobox');
