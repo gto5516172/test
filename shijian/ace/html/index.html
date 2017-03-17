@@ -11,7 +11,10 @@
 		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="../assets/css/bootstrap.css" />
 		<link rel="stylesheet" href="../components/font-awesome/css/font-awesome.css" />
-
+        
+        <!-- tab标签的样式 -->
+		<link rel="stylesheet" href="../custom.css" />
+        
 		<!-- page specific plugin styles -->
 
 		<!-- text fonts -->
@@ -35,7 +38,7 @@
 
 		<!-- ace settings handler -->
 		<script src="../assets/js/ace-extra.js"></script>
-
+        
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
 		<!--[if lte IE 8]>
@@ -240,9 +243,9 @@
                         
                         <ul class="submenu">
 							<li class="hover" >
-								<a href="menu.html">
+								<a href="javascript:void(0)" onClick="addTab()">
 									<i class="menu-icon fa fa-list"></i>
-                                         菜单配置
+                                    <span class="menu-text">菜单配置</span>
 								</a>
 
 								<b class="arrow"></b>
@@ -251,9 +254,9 @@
 							</li>
 
 							<li class="hover">
-								<a href="typography.html">
+								<a href="javascript:void(0)" onClick="addTab()">
 									<i class="menu-icon fa fa-user"></i>
-									用户管理
+									<span class="menu-text">用户管理</span>
 								</a>
 
 								<b class="arrow"></b>
@@ -262,7 +265,7 @@
 							<li class="hover">
 								<a href="elements.html">
 									<i class="menu-icon fa fa-graduation-cap"></i>
-									角色管理
+									<span class="menu-text">角色管理</span>
 								</a>
 
 								<b class="arrow"></b>
@@ -700,9 +703,31 @@
 			<div class="main-content">
 				<div class="main-content-inner">
 					<!-- #section:basics/content.breadcrumbs -->
-					
-
+                    <div class="breadcrumbs" id="breadcrumbs">
+                        <script type="text/javascript">
+                           try{
+						   ace.settings.check('breadcrumbs','fixed')     //检查这个div层是不是相对窗口固定？？
+						   }catch(e){
+						   }
+                        </script>
+                                <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js">
+          // 难道这个页面没有引用JS库吗？一不引用这个，就会出现$ is undefined~？？
+        </script> 
+                        <script src="../tabkj.js"></script>
+                        
+                        
+                        
+                        
+					    <ul class="tab" id="breadcrumb" role="tablist">
+							<!--<li class="active" id="tab-0">
+                                菜单配置
+							<i class="fa fa-times close" onClick="deleteTab(id)"></i>
+							</li>-->
+						</ul><!-- /.breadcrumb --> 
+                    </div>
 					<!-- /section:basics/content.breadcrumbs -->
+                    
+                    
 					<div class="page-content">
 						<!-- #section:settings.box -->
 						<div class="ace-settings-container" id="ace-settings-container">
@@ -798,7 +823,7 @@
 						<div class="row">
 							<div class="col-xs-12">
 								<!-- PAGE CONTENT BEGINS -->
-								
+							    <!--<iframe id="iframepage0" name="iframepage1" width="100%" frameborder="0" scrolling="no" src="menu.html" height="311"></iframe>-->
 
 								<div class="row">
 									<div class="space-6"></div>
