@@ -227,6 +227,8 @@
 			<div id="sidebar" class="sidebar responsive compact"> <!--class="sidebar responsive ace-save-state"-->
 				<script type="text/javascript">
 					try{ace.settings.check('sidebar','fixed')}catch(e){}
+					
+					
 				</script>
 
 				<ul class="nav nav-list">
@@ -243,7 +245,7 @@
                         
                         <ul class="submenu">
 							<li class="hover" >
-								<a href="javascript:void(0)" onClick="addTab(1,'菜单配置','pricing.html','false')">
+								<a href="javascript:void(0)" onClick="addTab(1,'菜单配置','menu.html','false')">
 									<i class="menu-icon fa fa-list"></i>
                                     <span class="menu-text">菜单配置</span>
 								</a>
@@ -710,7 +712,7 @@
 						   }catch(e){
 						   }
                         </script>
-                                <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js">
+         <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js">
           // 难道这个页面没有引用JS库吗？一不引用这个，就会出现$ is undefined~？？
         </script> 
                         <script src="../tabkj.js"></script>
@@ -737,10 +739,10 @@
 
                     </div>
 					<!-- /section:basics/content.breadcrumbs -->
+
                     
-                    
-					<div class="tab-content">
-						<div id="tab-content-main">
+					<div class="page-content">
+						<div id="page-content-main">
 						<!-- #section:settings.box -->
 						<div class="ace-settings-container" id="ace-settings-container">
 							<div class="btn btn-app btn-xs btn-warning ace-settings-btn" id="ace-settings-btn">
@@ -1279,7 +1281,7 @@
 								<!-- PAGE CONTENT ENDS -->
 							</div><!-- /.col -->
 						</div><!-- /.row -->
-						</div><!-- /.tab-content-main -->
+						</div><!-- /.page-content-main -->
 					</div><!-- /.page-content -->
 				</div>
 			</div><!-- /.main-content -->
@@ -1303,6 +1305,7 @@
 		<!--[if IE]>
 <script src="../components/jquery.1x/dist/jquery.js"></script>
 <![endif]-->
+                   
 		<script type="text/javascript">
 			if('ontouchstart' in document.documentElement) document.write("<script src='../components/_mod/jquery.mobile.custom/jquery.mobile.custom.js'>"+"<"+"/script>");
 		</script>
@@ -1366,21 +1369,24 @@
 					});
 				});
 
-				$('#breadcrumb').contextmenu(
-					{'target':'#tab-menu','scopes':'li',
-					  onItem: function(context,e) {
-						 var t = $(e.target).data("right-menu");
-						if(t == "all_close"){
-							location.href = "index.html";
-						}else if(t == "other_close"){
-							var tab_id = "tab-" +$(context).attr('id').substring(4);
-							var tab_content_id = "tab-content-" + $(context).attr('id').substring(4);
-							$("#"+tab_id).addClass("active").siblings().remove();
-							$("#"+tab_content_id).show().siblings().remove();
-							//$(context).addClass("active").siblings().remove();
-							//webHistory.go($(context).attr("h"));
-						}
-					}});
+					$('#breadcrumb').contextmenu({
+		
+		'target':'#tab-menu','scopes':'li',
+		
+	    onItem: function(context, e) {
+	    	var t = $(e.target).data("right-menu");
+	    	if(t == "all_close"){
+	    		location.href = "index.html";
+	    	}else if(t == "other_close"){
+			    var tab_id=  'tab-' + $(context).attr('id').substring(4);
+				var tab_content_id=  'page-content-' + $(context).attr('id').substring(4);
+	    		$(context).addClass("active").siblings().remove();
+				$("#"+tab_content_id).show().siblings().remove();
+	    		//webHistory.go($(context).attr("h"));
+	    	}
+	    }
+	});
+
 			
 				$('.sparkline').each(function(){
 					var $box = $(this).closest('.infobox');
@@ -1524,7 +1530,7 @@
 				$('#recent-box [data-rel="tooltip"]').tooltip({placement: tooltip_placement});
 				function tooltip_placement(context, source) {
 					var $source = $(source);
-					var $parent = $source.closest('.tab-content')
+					var $parent = $source.closest('.page-content')
 					var off1 = $parent.offset();
 					var w1 = $parent.width();
 			
