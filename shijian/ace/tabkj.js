@@ -61,12 +61,14 @@ function addTab(id,text,url,innerTab) {
     //添加新的内容显示
 //    $(".page-content > div").removeClass("active");
     $(".page-content > div").hide();
-    $(".page-content").append("<div id='"+ tab_content_id +"' class='active' style='height:1056px;'>"
-      + "<iframe id='iframepage" + (pageCounter++) + "' name='iframepage" + (pageCounter++) 
-      + "' width='100%' height='100%'   frameborder='0' scrolling='no'  src='" + url + "'></iframe></div>");
+	
+	var pageA=pageCounter++;
+	iframeID="iframepage"+pageA;
+	
+    $(".page-content").append("<div id='"+ tab_content_id +"' class='active'>"
+      + "<iframe id='iframepage" + pageA + "' name='iframepage" + pageA 
+      + "' width='100%' height='100%' frameborder='0' scrolling='no' onload='changeFrameHeight()' src='" + url + "'></iframe></div>");
   }
-  
-  
   
     //刷新切换tab的历史记录
     refreshTabHistory(false/*isDelete*/,id);
@@ -74,7 +76,19 @@ function addTab(id,text,url,innerTab) {
     //重新设置tab页签的宽度
     refreshWidth();
 }
-
+   var iframeID;
+   function changeFrameHeight(){
+	   alert(iframeID);
+	       var iframe= document.getElementById(iframeID); 
+		   alert(iframe.id);
+             if (iframe){
+				 var iframeWin=iframe.contentWindow||iframe.contentDocument.parentWindow;
+	<!--			  alert(iframeWin);-->
+				 if (iframeWin.document.body) {
+					 iframe.height=iframeWin.document.documentElement.scrollHeight||iframeWin.document.body.scrollHeight;
+					 }
+		     }
+	   }
 
 
 //参数id为tab的标志，但是并不是tab页的id属性，真正的id属性值是"tab-"+id
