@@ -77,9 +77,35 @@ function addTab(id,text,url,innerTab) {
     refreshWidth();
 }
    var iframeID;
-   function changeFrameHeight(){
-	   alert(iframeID);
+function changeFrameHeight(){
 	       var iframe= document.getElementById(iframeID); 
+             if (iframe){
+				 var userAgent = navigator.userAgent;
+				 if (userAgent.indexOf("Chrome") > -1){
+					 var iframeWin=iframe.ownerDocument.body;
+					 if (iframeWin) {
+						 iframe.height=iframeWin.scrollHeight;
+					 }
+				 } else {
+					 var iframeWin=iframe.contentWindow||iframe.contentDocument.parentWindow;
+					 if (iframeWin.document.body) {
+						 iframe.height=iframeWin.document.documentElement.scrollHeight||iframeWin.document.body.scrollHeight;
+					 }
+				 }
+		     }
+	   }
+	   
+
+
+	/*
+	   function changeFrameHeight(){
+	   var iframe= document.getElementById(iframeID);
+	   alert(iframe.height);
+	   iframe.height=this.document.body.scrollHeight;
+
+	   }
+	
+	var iframe= document.getElementById(iframeID); 
 		   alert(iframe.id);
              if (iframe){
 				 var iframeWin=iframe.contentWindow||iframe.contentDocument.parentWindow;
@@ -87,10 +113,8 @@ function addTab(id,text,url,innerTab) {
 				 if (iframeWin.document.body) {
 					 iframe.height=iframeWin.document.documentElement.scrollHeight||iframeWin.document.body.scrollHeight;
 					 }
-		     }
-	   }
-
-
+		     }*/
+			 
 //参数id为tab的标志，但是并不是tab页的id属性，真正的id属性值是"tab-"+id
 function deleteTab(id){
   var tabJQ = $("#tab-"+id),
