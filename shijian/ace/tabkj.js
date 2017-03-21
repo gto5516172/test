@@ -61,9 +61,11 @@ function addTab(id,text,url,innerTab) {
     //添加新的内容显示
 //    $(".page-content > div").removeClass("active");
     $(".page-content > div").hide();
-    $(".page-content").append("<div id='"+ tab_content_id +"' class='active' style='height:1056px;'>"
-      + "<iframe id='iframepage" + (pageCounter++) + "' name='iframepage" + (pageCounter++) 
-      + "' width='100%' height='100%'   frameborder='0' scrolling='no'  src='" + url + "'></iframe></div>");
+	var pageC = pageCounter++;
+	iframeID = "iframepage" + pageC;
+    $(".page-content").append("<div id='"+ tab_content_id +"' class='active'>"
+      + "<iframe id='iframepage" + pageC + "' name='iframepage" + pageC 
+      + "' width='100%' height='100%'   frameborder='0' scrolling='no' onload='changeFrameHeight()'  src='" + url + "'></iframe></div>");
   }
   
   
@@ -74,7 +76,27 @@ function addTab(id,text,url,innerTab) {
     //重新设置tab页签的宽度
     refreshWidth();
 }
+	var iframeID;
 
+
+    function changeFrameHeight(){
+        var iframe= document.getElementById(iframeID); 
+        //iframe.height=document.documentElement.clientHeight;
+		if (iframe) {
+			// contentWindow属性是指指定的frame或者iframe所在的window对象   在IE中iframe或者frame的contentWindow属性可以省略，但在Firefox中如果要对iframe对象进行编辑则必须指定contentWindow属性。
+			// 这里是兼容性写法都是为了获得iframe所在的window对象
+			var iframeWin = iframe.contentWindow || iframe.contentDocument.parentWindow; 
+			if (iframeWin.document.body) {
+				// scrollHeight返回元素的完整的高度，以像素为单位
+				// 下面也是一种兼容性写法
+				iframe.height = iframeWin.document.documentElement.scrollHeight || iframeWin.document.body.scrollHeight;
+			}
+		}
+	}
+
+    /*window.onresize=function(){  
+         changeFrameHeight();  
+    }*/
 
 
 //参数id为tab的标志，但是并不是tab页的id属性，真正的id属性值是"tab-"+id
