@@ -42,7 +42,12 @@ url:      打开的iframe的url
 innerTab: 是否是内部弹出页（打开的tab页触发添加新的tab页），默认为undefined/false
 */
 function addTab(id,text,url,innerTab) {
-	$("#page-content-main").hide();
+	$.ajax({
+		 type:"GET",
+		 url:url,
+		 dataType:"html",
+		 success:function(data){
+			 	$("#page-content-main").hide();
   //如果某个页面已经打开，则切换到该页显示即可，不会新添加tab页
   if($('#breadcrumb #tab-'+id).length > 0){
 	  $('#breadcrumb #tab-' + id).click();
@@ -62,12 +67,7 @@ function addTab(id,text,url,innerTab) {
 //    $(".page-content > div").removeClass("active");
     $(".page-content > div").hide();
 	
-	var pageA=pageCounter++;
-	iframeID="iframepage"+pageA;
-	
-    $(".page-content").append("<div id='"+ tab_content_id +"' class='active'>"
-      + "<iframe id='iframepage" + pageA + "' name='iframepage" + pageA 
-      + "' width='100%' height='100%' frameborder='0' scrolling='no' onload='changeFrameHeight()' src='" + url + "'></iframe></div>");
+    $(".page-content").append("<div id='"+ tab_content_id +"' class='active'>"+data+"</div>");
   }
   
     //刷新切换tab的历史记录
@@ -75,45 +75,18 @@ function addTab(id,text,url,innerTab) {
 	
     //重新设置tab页签的宽度
     refreshWidth();
-}
-   var iframeID;
-function changeFrameHeight(){
-	       var iframe= document.getElementById(iframeID); 
-             if (iframe){
-				 var userAgent = navigator.userAgent;
-				 if (userAgent.indexOf("Chrome") > -1){
-					 var iframeWin=iframe.ownerDocument.body;
-					 if (iframeWin) {
-						 iframe.height=iframeWin.scrollHeight;
-					 }
-				 } else {
-					 var iframeWin=iframe.contentWindow||iframe.contentDocument.parentWindow;
-					 if (iframeWin.document.body) {
-						 iframe.height=iframeWin.document.documentElement.scrollHeight||iframeWin.document.body.scrollHeight;
-					 }
-				 }
-		     }
-	   }
-	   
-
-
-	/*
-	   function changeFrameHeight(){
-	   var iframe= document.getElementById(iframeID);
-	   alert(iframe.height);
-	   iframe.height=this.document.body.scrollHeight;
-
-	   }
+			 
+			 
+			 }
+		 
+		   
+		   });
 	
-	var iframe= document.getElementById(iframeID); 
-		   alert(iframe.id);
-             if (iframe){
-				 var iframeWin=iframe.contentWindow||iframe.contentDocument.parentWindow;
-	<!--			  alert(iframeWin);-->
-				 if (iframeWin.document.body) {
-					 iframe.height=iframeWin.document.documentElement.scrollHeight||iframeWin.document.body.scrollHeight;
-					 }
-		     }*/
+	
+
+}
+  
+
 			 
 //参数id为tab的标志，但是并不是tab页的id属性，真正的id属性值是"tab-"+id
 function deleteTab(id){

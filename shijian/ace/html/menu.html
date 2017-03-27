@@ -3,13 +3,11 @@
 	<head>
 		<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
 		<meta charset="utf-8" />
-		<title>YAN - Ace Admin</title>
+		<title>Treeview - Ace Admin</title>
 
-		<meta name="description" content="overview &amp; stats" />
+		<meta name="description" content="with selectable elements and custom icons" />
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-        <!-- tab标签的样式 -->
-		<link rel="stylesheet" href="../custom.css" />
-        
+
 		<!-- bootstrap & fontawesome -->
 		<link rel="stylesheet" href="../assets/css/bootstrap.css" />
 		<link rel="stylesheet" href="../components/font-awesome/css/font-awesome.css" />
@@ -27,7 +25,6 @@
 		<![endif]-->
 		<link rel="stylesheet" href="../assets/css/ace-skins.css" />
 		<link rel="stylesheet" href="../assets/css/ace-rtl.css" />
-       
 
 		<!--[if lte IE 9]>
 		  <link rel="stylesheet" href="../assets/css/ace-ie.css" />
@@ -37,13 +34,7 @@
 
 		<!-- ace settings handler -->
 		<script src="../assets/js/ace-extra.js"></script>
-        
-        
-        <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js">
-          // 难道这个页面没有引用JS库吗？一不引用这个，就会出现$ is undefined~？？
-        </script> 
-        
-        
+
 		<!-- HTML5shiv and Respond.js for IE8 to support HTML5 elements and media queries -->
 
 		<!--[if lte IE 8]>
@@ -51,39 +42,15 @@
 		<script src="../components/respond/dest/respond.min.js"></script>
 		<![endif]-->
 	</head>
+    
+            <script src="http://libs.baidu.com/jquery/1.9.1/jquery.js">
+          // 难道这个页面没有引用JS库吗？一不引用这个，就会出现$ is undefined~？？
+        </script> 
+<script src="../components/_mod/fuelux/tree.js"></script>
+<script src="../components/_mod/fuelux/tree.min.js"></script>
+<script src="../assets/js/src/elements.treeview.js"></script>
 
-	<body class="no-skin">
-		<!-- #section:basics/navbar.layout -->
-		
 
-		<!-- /section:basics/navbar.layout -->
-		<div class="main-container ace-save-state" id="main-container">
-			<script type="text/javascript">
-				try{ace.settings.loadState('main-container')}catch(e){}
-				
-				<!--启动全屏js代码-->
-				     function launchFullscreen(element) { 
-           if(element.requestFullscreen) { 
-                 element.requestFullscreen(); 
-           } 
-		   else if(element.mozRequestFullScreen) { 
-                 element.mozRequestFullScreen(); 
-           } 
-		   else if(element.webkitRequestFullscreen) { 
-                 element.webkitRequestFullscreen(); 
-           } 
-		   else if(element.msRequestFullscreen) { 
-                 element.msRequestFullscreen(); 
-           } 
-       }
-			</script>
-
-			<!-- #section:basics/sidebar -->
- 
-			<!-- /section:basics/sidebar -->
-			<div class="main-content">
-                    
-					<div class="page-content">
                         <div class="page-header"></div>
 						<div class="row">
 							<div class="col-sm-12">
@@ -111,7 +78,12 @@
 												<div class="widget-main padding-8">
                                                    <div class="row">
                                                       <div class="col-sm-3">
-													     <ul id="treeMenu" class="ztree">
+													     <ul id="tree2">
+                                                         
+                                                         
+                                                         
+                                                         
+                                                         
                                                          </ul>                                                      
                                                       </div>
                                                       <div class="col-sm-9">
@@ -1318,10 +1290,6 @@
                                         
 									</div><!-- /.col -->
 						</div><!-- /.row -->
-					</div><!-- /.page-content -->
-			</div><!-- /.main-content -->
-</div><!-- /.main-container -->
-
 		<!-- basic scripts -->
 
 		<!--[if !IE]> -->
@@ -1332,21 +1300,13 @@
 		<!--[if IE]>
 <script src="../components/jquery.1x/dist/jquery.js"></script>
 <![endif]-->
-		
+		<script type="text/javascript">
+			if('ontouchstart' in document.documentElement) document.write("<script src='../components/_mod/jquery.mobile.custom/jquery.mobile.custom.js'>"+"<"+"/script>");
+		</script>
 		<script src="../components/bootstrap/dist/js/bootstrap.js"></script>
 
 		<!-- page specific plugin scripts -->
-
-		<!--[if lte IE 8]>
-		  <script src="../components/ExplorerCanvas/excanvas.js"></script>
-		<![endif]-->
-		<script src="../components/_mod/jquery-ui.custom/jquery-ui.custom.js"></script>
-		<script src="../components/jqueryui-touch-punch/jquery.ui.touch-punch.js"></script>
-		<script src="../components/_mod/easypiechart/jquery.easypiechart.js"></script>
-		<script src="../components/jquery.sparkline/index.js"></script>
-		<script src="../components/Flot/jquery.flot.js"></script>
-		<script src="../components/Flot/jquery.flot.pie.js"></script>
-		<script src="../components/Flot/jquery.flot.resize.js"></script>
+		<script src="../components/_mod/fuelux/tree.js"></script>
 
 		<!-- ace scripts -->
 		<script src="../assets/js/src/elements.scroller.js"></script>
@@ -1372,21 +1332,184 @@
 		<script src="../assets/js/src/ace.settings-skin.js"></script>
 		<script src="../assets/js/src/ace.widget-on-reload.js"></script>
 		<script src="../assets/js/src/ace.searchbox-autocomplete.js"></script>
-		<script src="../bootstrap-contextmenu.js"></script>
+
 		<!-- inline scripts related to this page -->
+		<script type="text/javascript">
+			jQuery(function($){
+	var sampleData = initiateDemoData();//see below
+
 	
+	$('#tree2').ace_tree({
+		dataSource: sampleData['dataSource2'] ,
+		loadingHTML:'<div class="tree-loading"><i class="ace-icon fa fa-refresh fa-spin blue"></i></div>',
+		'open-icon' : 'ace-icon fa fa-folder-open',
+		'close-icon' : 'ace-icon fa fa-folder',
+		'itemSelect' : true,
+		'folderSelect': true,
+		'multiSelect': true,
+		'selected-icon' : null,
+		'unselected-icon' : null,
+		'folder-open-icon' : 'ace-icon tree-plus',
+		'folder-close-icon' : 'ace-icon tree-minus'
+	});
+	
+	
+	/**
+	//Use something like this to reload data	
+	$('#tree1').find("li:not([data-template])").remove();
+	$('#tree1').tree('render');
+	*/
+	
+	
+	/**
+	//please refer to docs for more info
+	$('#tree1')
+	.on('loaded.fu.tree', function(e) {
+	})
+	.on('updated.fu.tree', function(e, result) {
+	})
+	.on('selected.fu.tree', function(e) {
+	})
+	.on('deselected.fu.tree', function(e) {
+	})
+	.on('opened.fu.tree', function(e) {
+	})
+	.on('closed.fu.tree', function(e) {
+	});
+	*/
+	
+	
+	function initiateDemoData(){
 
-		<!-- the following scripts are used in demo only for onpage help and you don't need them -->
-		<link rel="stylesheet" href="../assets/css/ace.onpage-help.css" />
-		<link rel="stylesheet" href="../docs/assets/js/themes/sunburst.css" />
+		var tree_data_2 = {
+			'pictures' : {text: 'Pictures', type: 'folder', 'icon-class':'red'}	,
+			'music' : {text: 'Music', type: 'folder', 'icon-class':'orange'}	,
+			'video' : {text: 'Video', type: 'folder', 'icon-class':'blue'}	,
+			'documents' : {text: 'Documents', type: 'folder', 'icon-class':'green'}	,
+			'backup' : {text: 'Backup', type: 'folder'}	,
+			'readme' : {text: '<i class="ace-icon fa fa-file-text grey"></i> ReadMe.txt', type: 'item'},
+			'manual' : {text: '<i class="ace-icon fa fa-book blue"></i> Manual.html', type: 'item'}
+		}
+		tree_data_2['music']['additionalParameters'] = {
+			'children' : [
+				{text: '<i class="ace-icon fa fa-music blue"></i> song1.ogg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-music blue"></i> song2.ogg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-music blue"></i> song3.ogg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-music blue"></i> song4.ogg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-music blue"></i> song5.ogg', type: 'item'}
+			]
+		}
+		tree_data_2['video']['additionalParameters'] = {
+			'children' : [
+				{text: '<i class="ace-icon fa fa-film blue"></i> movie1.avi', type: 'item'},
+				{text: '<i class="ace-icon fa fa-film blue"></i> movie2.avi', type: 'item'},
+				{text: '<i class="ace-icon fa fa-film blue"></i> movie3.avi', type: 'item'},
+				{text: '<i class="ace-icon fa fa-film blue"></i> movie4.avi', type: 'item'},
+				{text: '<i class="ace-icon fa fa-film blue"></i> movie5.avi', type: 'item'}
+			]
+		}
+		tree_data_2['pictures']['additionalParameters'] = {
+			'children' : {
+				'wallpapers' : {text: 'Wallpapers', type: 'folder', 'icon-class':'pink'},
+				'camera' : {text: 'Camera', type: 'folder', 'icon-class':'pink'}
+			}
+		}
+		tree_data_2['pictures']['additionalParameters']['children']['wallpapers']['additionalParameters'] = {
+			'children' : [
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> wallpaper1.jpg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> wallpaper2.jpg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> wallpaper3.jpg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> wallpaper4.jpg', type: 'item'}
+			]
+		}
+		tree_data_2['pictures']['additionalParameters']['children']['camera']['additionalParameters'] = {
+			'children' : [
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> photo1.jpg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> photo2.jpg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> photo3.jpg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> photo4.jpg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> photo5.jpg', type: 'item'},
+				{text: '<i class="ace-icon fa fa-picture-o green"></i> photo6.jpg', type: 'item'}
+			]
+		}
 
-		<script type="text/javascript"> ace.vars['base'] = '..'; </script>
-		<script src="../assets/js/src/elements.onpage-help.js"></script>
-		<script src="../assets/js/src/ace.onpage-help.js"></script>
-		<script src="../docs/assets/js/rainbow.js"></script>
-		<script src="../docs/assets/js/language/generic.js"></script>
-		<script src="../docs/assets/js/language/html.js"></script>
-		<script src="../docs/assets/js/language/css.js"></script>
-		<script src="../docs/assets/js/language/javascript.js"></script>
-	</body>
-</html>
+
+		tree_data_2['documents']['additionalParameters'] = {
+			'children' : [
+				{text: '<i class="ace-icon fa fa-file-text red"></i> document1.pdf', type: 'item'},
+				{text: '<i class="ace-icon fa fa-file-text grey"></i> document2.doc', type: 'item'},
+				{text: '<i class="ace-icon fa fa-file-text grey"></i> document3.doc', type: 'item'},
+				{text: '<i class="ace-icon fa fa-file-text red"></i> document4.pdf', type: 'item'},
+				{text: '<i class="ace-icon fa fa-file-text grey"></i> document5.doc', type: 'item'}
+			]
+		}
+
+		tree_data_2['backup']['additionalParameters'] = {
+			'children' : [
+				{text: '<i class="ace-icon fa fa-archive brown"></i> backup1.zip', type: 'item'},
+				{text: '<i class="ace-icon fa fa-archive brown"></i> backup2.zip', type: 'item'},
+				{text: '<i class="ace-icon fa fa-archive brown"></i> backup3.zip', type: 'item'},
+				{text: '<i class="ace-icon fa fa-archive brown"></i> backup4.zip', type: 'item'}
+			]
+		}
+		
+		     var data = {
+
+               "菜单标识":{
+
+                      name:"要显示的菜单名",
+
+                      type:"item/folder",//item表示端节点，folder表示还有其他儿子节点
+
+                   //   。。。..这里可以放置其他节点内容，这里挺重要，下面说道如何控制其事件处理时会提到
+
+                      additionalParameters:{//如果有子节点，则需要即type为folder时需要
+
+                                children:{//固定和additionalParameters配套的
+
+                                          "子菜单标识":{
+
+                                                     name:"子菜单显示的名称",
+
+                                                     type:"还是子菜单的类型item/folder",
+
+                                                     //....其他属性名
+
+                                          }
+
+                                }
+
+                      }
+
+              }
+
+       }
+	   
+		var dataSource2 = function(options, callback){
+			var $data = null
+			if(!("text" in options) && !("type" in options)){
+				$data = tree_data_2;//the root tree
+				callback({ data: $data });
+				return;
+			}
+			else if("type" in options && options.type == "folder") {
+				if("additionalParameters" in options && "children" in options.additionalParameters)
+					$data = options.additionalParameters.children || {};
+				else $data = {}//no data
+			}
+			
+			if($data != null)//this setTimeout is only for mimicking some random delay
+				setTimeout(function(){callback({ data: $data });} , parseInt(Math.random() * 500) + 200);
+
+			//we have used static data here
+			//but you can retrieve your data dynamically from a server using ajax call
+			//checkout examples/treeview.html and examples/treeview.js for more info
+		}
+
+		
+		return {'dataSource2' : dataSource2}
+	}
+
+});
+		</script>
+        </html>
