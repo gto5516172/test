@@ -65,7 +65,7 @@
                                                    <form>
                                                      <div class="input-group" style="line-height:0px;">
                                                         <span class="input-group-btn" >
-                                                           <span class="btn  btn-success btn-sm"  id="search-all-btn" style="margin-right:5px;">显示全部</span>                                                        </span>
+                                                           <span class="btn  btn-success btn-sm" id="search-all-btn" style="margin-right:5px;">显示全部</span>                                                        </span>
                                                         <input type="text" placeholder="菜单名称" class="form-control search-query">
                                                         <span class="input-group-btn">
                                                            <span class="btn  btn-success btn-sm" id="search-btn" style="margin-left:5px;">搜索</span>
@@ -91,9 +91,7 @@
 												<thead>
 													<tr>
 														<th class="center">
-															<label class="pos-rel">
-																<input type="checkbox" class="ace" />
-																<span class="lbl"></span>															</label>														</th>
+															ID</th>
 														<th>Domain</th>
 														<th>Price</th>
 														<th class="hidden-480">Clicks</th>
@@ -1382,45 +1380,35 @@
 	function initiateDemoData(){
 
 		var tree_data_2 = {
-			'pictures' : {text: 'Pictures', type: 'folder', 'icon-class':'red'}	,
-			'music' : {text: 'Music', type: 'folder', 'icon-class':'orange'}	,
-			'video' : {text: 'Video', type: 'folder', 'icon-class':'blue'}	,
-			'documents' : {text: 'Documents', type: 'folder', 'icon-class':'green'}	,
-			'backup' : {text: 'Backup', type: 'folder'}	,
-			'readme' : {text: '<i class="ace-icon fa fa-file-text grey"></i> ReadMe.txt', type: 'item'},
-			'manual' : {text: '<i class="ace-icon fa fa-book blue"></i> Manual.html', type: 'item'}
+			'pictures' : {text: '菜单列表', type: 'folder', 'icon-class':'red'}
+			
 		}
-		tree_data_2['music']['additionalParameters'] = {
-			'children' : [
-				{text: '<i class="ace-icon fa fa-music blue"></i> song1.ogg', type: 'item'},
-				{text: '<i class="ace-icon fa fa-music blue"></i> song2.ogg', type: 'item'},
-				{text: '<i class="ace-icon fa fa-music blue"></i> song3.ogg', type: 'item'},
-				{text: '<i class="ace-icon fa fa-music blue"></i> song4.ogg', type: 'item'},
-				{text: '<i class="ace-icon fa fa-music blue"></i> song5.ogg', type: 'item'}
-			]
-		}
-		tree_data_2['video']['additionalParameters'] = {
-			'children' : [
-				{text: '<i class="ace-icon fa fa-film blue"></i> movie1.avi', type: 'item'},
-				{text: '<i class="ace-icon fa fa-film blue"></i> movie2.avi', type: 'item'},
-				{text: '<i class="ace-icon fa fa-film blue"></i> movie3.avi', type: 'item'},
-				{text: '<i class="ace-icon fa fa-film blue"></i> movie4.avi', type: 'item'},
-				{text: '<i class="ace-icon fa fa-film blue"></i> movie5.avi', type: 'item'}
-			]
-		}
+	
 		tree_data_2['pictures']['additionalParameters'] = {
 			'children' : {
-				'wallpapers' : {text: 'Wallpapers', type: 'folder', 'icon-class':'pink'},
-				'camera' : {text: 'Camera', type: 'folder', 'icon-class':'pink'}
+				'wallpapers' : {text: '系统管理', type: 'folder', 'icon-class':'pink'},
+				'camera' : {text: '供应商列表', type: 'folder', 'icon-class':'pink'},
+				'camera1' : {text: '商品管理', type: 'folder', 'icon-class':'pink'},
+				'camera2' : {text: 'FAQ管理', type: 'folder', 'icon-class':'pink'},
+				'camera3' : {text: '文件共享', type: 'folder', 'icon-class':'pink'},
+				'camera4' : {text: '任务管理', type: 'folder', 'icon-class':'pink'},
+				'camera5' : {text: '报表管理', type: 'folder', 'icon-class':'pink'},
+				
 			}
 		}
 		tree_data_2['pictures']['additionalParameters']['children']['wallpapers']['additionalParameters'] = {
-			'children' : [
-				{text: '<i class="ace-icon fa fa-picture-o green"></i> wallpaper1.jpg', type: 'item'},
-				{text: '<i class="ace-icon fa fa-picture-o green"></i> wallpaper2.jpg', type: 'item'},
-				{text: '<i class="ace-icon fa fa-picture-o green"></i> wallpaper3.jpg', type: 'item'},
-				{text: '<i class="ace-icon fa fa-picture-o green"></i> wallpaper4.jpg', type: 'item'}
-			]
+			'children' : {
+				'wallpapers1' : {text: '<i class="ace-icon ico fa fa-list"></i> 菜单配置', type: 'item'},
+				'wallpapers2' : {text: '用户管理', type: 'folder', 'icon-class':'ace-icon ico fa fa-user'},
+				'wallpapers3' : {text: '角色管理', type: 'folder', 'icon-class':'pink'},
+				'wallpapers4' : {text: '字典管理', type: 'folder', 'icon-class':'pink'},
+				'wallpapers5' : {text: '部门管理', type: 'folder', 'icon-class':'pink'},
+				'wallpapers6' : {text: '系统监控', type: 'folder', 'icon-class':'pink'},
+				'wallpapers7' : {text: '平台管理', type: 'folder', 'icon-class':'pink'},
+				'wallpapers8' : {text: '店铺管理', type: 'folder', 'icon-class':'pink'},
+				'wallpapers9' : {text: '日志管理', type: 'folder', 'icon-class':'pink'},
+				'wallpapers10' : {text: 'ImportExcel', type: 'item', 'icon-class':'pink'}
+			}
 		}
 		tree_data_2['pictures']['additionalParameters']['children']['camera']['additionalParameters'] = {
 			'children' : [
@@ -1433,25 +1421,6 @@
 			]
 		}
 
-
-		tree_data_2['documents']['additionalParameters'] = {
-			'children' : [
-				{text: '<i class="ace-icon fa fa-file-text red"></i> document1.pdf', type: 'item'},
-				{text: '<i class="ace-icon fa fa-file-text grey"></i> document2.doc', type: 'item'},
-				{text: '<i class="ace-icon fa fa-file-text grey"></i> document3.doc', type: 'item'},
-				{text: '<i class="ace-icon fa fa-file-text red"></i> document4.pdf', type: 'item'},
-				{text: '<i class="ace-icon fa fa-file-text grey"></i> document5.doc', type: 'item'}
-			]
-		}
-
-		tree_data_2['backup']['additionalParameters'] = {
-			'children' : [
-				{text: '<i class="ace-icon fa fa-archive brown"></i> backup1.zip', type: 'item'},
-				{text: '<i class="ace-icon fa fa-archive brown"></i> backup2.zip', type: 'item'},
-				{text: '<i class="ace-icon fa fa-archive brown"></i> backup3.zip', type: 'item'},
-				{text: '<i class="ace-icon fa fa-archive brown"></i> backup4.zip', type: 'item'}
-			]
-		}
 		
 		     var data = {
 

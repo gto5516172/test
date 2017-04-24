@@ -68,6 +68,12 @@ function addTab(id,text,url,innerTab) {
     $(".page-content > div").hide();
 	
     $(".page-content").append("<div id='"+ tab_content_id +"' class='active'>"+data+"</div>");
+	
+	//判断是menu页面就调用生成树的方法
+	if(id==1){
+		ztree();
+		}
+	
   }
   
     //刷新切换tab的历史记录
