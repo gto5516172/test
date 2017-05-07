@@ -1,0 +1,229 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>南澳大学官方中文网站</title>
+<link href="style.css" rel="stylesheet" type="text/css" />
+
+
+<script type="text/javascript">
+   window.onload=function(){
+      var banner=document.getElementById("banner");
+      var slidebox=document.getElementById("slidebox");  
+      var buttons=document.getElementById("buttons").getElementsByTagName("li");
+      var index=1;
+	  
+	  function showButton(){
+	  
+	     for (var i=0;i<buttons.length;i++){
+		    if (buttons[i].className=="on"){
+			    buttons[i].className="";
+				break;
+			}
+		 }
+	   buttons[index-1].className="on";
+	  }
+	  
+	  
+      function animate(offset){
+	  	  
+	  var newLeft= parseInt(slidebox.style.left)+ offset;
+
+	     slidebox.style.left=newLeft + "px";
+		
+		  if (newLeft > -1000){
+		    slidebox.style.left=-3000 + "px";
+		  }
+		  if (newLeft < -3000){
+		    slidebox.style.left=-1000 + "px";
+		  }
+		  
+
+	  }
+	  
+/*	  buttons.hover=function(){
+	    showButton();
+		animate(-1000);
+	  
+	  
+	  }*/
+	  for (var i=0;i<buttons.length;i++){
+	     buttons[i].onclick=function(){
+		   alert("aa");
+		   var myindex=parseInt(this.getAttribute("index"));
+		   var offset=-1000*(myindex-index);
+		   
+		   animate(offset);
+		   index= myindex;
+		   showButton();
+		 }
+	  }
+	  debugger;
+	  
+   }
+
+
+</script>
+</head>
+
+<body>
+<div id="header">
+<div id="container">
+<div id="logo"><a href="http://www.unisachina.com/"><img src="images/logo.png" border="0"  class="logo" /></a></div>
+<div id="social"><img src="images/wechat.png" class="wechat" /><img src="images/weibo.png" />
+<a href="#">English</a>
+<span>|</span>
+<a href="#">UniSA Chinese official website</a>
+</div>
+<ul>
+<li><a href="#">我可以学习</a></li>
+<li><a href="#">我们的校园</a></li>
+<li><a href="#">体验阿德莱德</a></li>
+<li><a href="#">新闻事件</a></li>
+<li><a href="#">在线咨询</a></li>
+<li style="border:none;"><a href="#">申请与受理</a></li>
+</ul>
+</div>
+</div>
+
+<div id="content">
+  <div id="container">
+     <div id="banner">
+       <div id="slidebox" style="left:-1000px;">
+         <ul>
+           <li><a href="#"><img src="images/25th.jpg" border="0"  /></a></li>
+           <li><a href="#"><img src="images/featured.jpg" border="0"/></a></li>
+           <li><a href="#"><img src="images/nursing1.jpg" border="0"/></a></li>
+           <li><a href="#"><img src="images/25th.jpg" border="0"  /></a></li>
+           <li><a href="#"><img src="images/featured.jpg" border="0"/></a></li>
+         </ul>
+       </div>
+
+       <div id="buttons">
+         <ul>
+            <li class="on" index="1"></li>
+            <li index="2"></li>
+            <li index="3"></li>
+        </ul>
+       </div>
+       </div>
+  <div class="aboutus">
+       <p>南澳大学(University of South Australia，简称UniSA) 是澳大利亚五所主要的理工大学之一，建立于1991年，位于阿德莱德市。南澳大学提供广泛的课程，颁发博士、硕士、硕士文凭及毕业证书、学士学位及文凭、专科文凭及证书。其工商管理硕士（MBA）课程，被评为5星级，护理专业世界闻名，商科、建筑、工程、药学也是深受好评专业。在2016年QS世界大学专业排名中，南澳大学护理专业排名第50. 而南澳大学护理专业的学生可以在毕业后申请成为南澳大利亚的注册护士，该项职业资格在澳大利亚，英联邦国家，乃至美国的某些州均被认可。<a href="#" style="float:right">查看更多>></a></p>
+       </div>
+       <div id="search">
+          <div class="main">
+             <h2>课程搜索</h2>
+             <form action="" method="get">
+               <input class="kuang" name="course" type="text"/>
+             </form>
+          </div>
+       </div>
+       <div id="custom">
+           <h2>院系及专业</h2>
+           <div class="research">
+             <ul>
+             <li><a href="#">会计专业</a></li>
+             <li><a href="#">金融、经济和房地产专业</a></li>
+             <li><a href="#">法律专业</a></li>
+             <li><a href="#">管理、物流和商务专业</a></li>
+             <li><a href="#">市场营销专业</a></li>
+             <li><a href="#">旅游、体育和会展专业</a></li>
+             <li><a href="#">护理与助产专业</a></li>
+             <li><a href="#">康复、健康与体育科学专业</a></li>
+             <li><a href="#">药剂学和医学科学专业</a></li>
+             <li><a href="#">医学放射科学专业</a></li>
+             <li><a href="#">人口健康专业</a></li>
+             <li><a href="#">艺术、建筑和设计专业</a></li>
+             <li><a href="#">教育学专业</a></li>
+             <li><a href="#">城市与区域规划专业</a></li>
+             <li><a href="#">民用航空专业</a></li>
+             <li><a href="#">施工管理专业</a></li>
+             <li><a href="#">工程专业</a></li>
+             <li><a href="#">环境学和地理空间科学专业</a></li>
+             <li><a href="#">信息技术专业</a></li>
+             <li><a href="#">传媒专业</a></li>
+             </ul>
+           </div>
+       </div>
+       <div id="news">
+       <div class="newshead">
+       <h2>新闻与活动</h2>
+        <div class="menu">
+          <ul>
+          <li><a href="#">更多新闻事件</a></li>
+          <li><a href="#">视频</a></li>
+          <li><a href="#">相册</a></li>
+          </ul>
+        </div>
+        </div>
+        <div class="eventsall">
+           <ul>
+           <li><a class="newsimglink" href="#"><img src="images/newsimg1.jpg" border="0" /></a>
+               <h3><a href="#">南澳大学工程技术专业排名69</a></h3>
+               <p>南澳大学(UniSA)工程技术专业荣登2014—2015年《泰晤士世界大学教育排行榜》前100。</p>
+               <a class="newsmore" href="#">了解详情</a></li>
+           <li  class="news2"><a class="newsimglink" href="#"><img src="images/newsimg2.jpg" border="0" /></a>
+           <h3><a href="#">南澳大学商学院开两门商科课程</a></h3>
+           <p>2016年南澳大学商学院将有两门新的商科课程：商学学士课程（国际商务）和商学学士课程（信息策略与管理），为学生学习重要商业学科奠定坚实的基础。</p>
+           <a class="newsmore" href="#">了解详情</a>           </li>
+           <li>
+           <a class="newsimglink" href="#"><img src="images/newsimg3.jpg" border="0" /></a>
+           <h3><a href="#">2016上海首届澳洲海归招聘专场</a></h3>
+           <p>上海澳大利亚商会携手Lockin China—国内领先海归招聘平台，共同举办2016首届上海澳大利亚商会澳洲海归招聘专场，并获得CPA Australia的大力支持。</p>
+           <a class="newsmore" href="#">了解详情</a>           </li>
+           </ul>  
+        </div>  
+       </div>
+   </div>
+</div>
+
+<div id="footer" >
+      <div class="wrapper">
+       <dl>
+       <dt><span>关注我们</span></dt>
+         <dd>
+           <ul class="social">
+            <li><img src="images/weibo(foot).png" border="0" /><a href="#">新浪微博</a></li>
+            <li><img src="images/youku.png" border="0" /><a href="#">优酷</a></li>
+            <li><img src="images/facebook.png" border="0" /><a href="#">Facebook</a></li>
+            <li><img src="images/youTube.png" border="0" /><a href="#">Youtube</a></li>
+           </ul>
+         </dd>
+       </dl>
+       <dl class="contact" >
+          <dt><span>联系我们</span></dt>
+           <dd>
+            <p><strong>南澳大学国际办公室电话</strong></p>
+            <p>电话：+61 3 9627 4854</p>
+            <p><a href="#">咨询我们</a></p>
+           </dd>
+       </dl>
+       <dl class="contact">
+       <dt> </dt>
+         <dd>
+           <p><strong>南澳大学中国办公室</strong></p>
+           <p>电话: +86 10 6708 2967</p>
+           <p>电邮: chinaoffice@unisa.edu.au</p>
+           <p>地址：北京崇文门外大街新世界中心写字楼B座706室</p>
+         </dd>
+       </dl>
+       <div class="unisa-icon"><img src="images/unisaicon_03.png" border="0"/></div>
+       <div class="footer-base" style="clear:both" >
+         <ul>
+          <li><a href="#">Disclaimers</a></li>
+          <li><a href="#">Copyright</a></li>
+          <li><a href="#">Privacy</a></li>
+          <li><a href="#">Australian Technology Network</a></li>
+          <li><a href="#">Web accessibility</a></li>
+          <li><a href="#">CRICOS Provider No 00121B</a></li>
+         </ul>
+         <p><a target="_blank" href="http://www.beian.gov.cn/portal/registerSystemInfo?recordcode=11010102001949" style="display:inline-block;text-decoration:none;height:20px;line-height:20px;"><img src="images/beian.png" border="0" style="float:left;">京公网安备 11010102001949号</a>
+         <a href="http://www.jsj.edu.cn/index.php/default/index/sort/12031" style="color:#fff; display:inline; margin:0 0 0 20px" target="_blank">教育涉外监管信息网澳大利亚学校名单</a></p>
+       </div>
+      </div>
+
+</div>
+</body>
+
+
+</html>

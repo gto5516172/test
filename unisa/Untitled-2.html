@@ -1,0 +1,108 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=gb2312" />
+<title>无标题文档</title>
+<script type="text/javascript">
+
+
+function rec(){
+ var mychar="i love javascript";
+ alert(mychar)
+}
+
+</script>
+</head>
+
+<body>
+<input name="button" type="button" onclick="rec()" value="点击我，弹出对话框！" />
+
+<h1>来验证输入数值</h1>
+<p>请在以下框里输入文本，如果输入不是数字，浏览器会弹出提示框。</p>
+<input id="demo" type="text"/>
+<script>
+
+function myja()
+{
+var x=document.getElementById("demo").value;
+
+if(x==""||isNaN(x))
+   {
+    alert("Not Numeric");
+	}
+}
+</script>
+<button type="button" onclick="myja()">验证文本内容</button>
+<br /><br /><br />
+<script>
+person=new Object();
+person.firstname="Bill";
+person.lastname="Gates";
+person.age=56;
+person.eyecolor="blue";
+
+document.write(person.firstname + " is " + person.age + " years old。");</script>
+
+
+<p>点击以下按钮，获得当地时间的问候！</p>
+<button onclick="mytime()" >点击这里</button>
+<p id="demo"></p>
+
+<script>
+function mytime()
+{
+var x="";
+var time=new Date().getHours();
+
+if (time<10)
+   {
+     x="早上好！";
+    }
+   
+   else if(time<20)
+    {
+	  x="Have a nice day！";
+	  }
+   else {
+     x="晚上好！我的小公举";
+	 } 
+	 document.getElementById("demo").innerHTML=x;
+}
+</script>
+
+<script>
+function validate_required(field,alerttxt)
+{
+with (field)
+   {
+   if (value=null||value="")
+     {alert(alerttxt);return false;}
+    else (return true)
+    }
+}
+
+function validate_form(thisform)
+{
+with(thisform)
+   {
+   if validate_required(email,"Email must be filled out!"==false)
+   {email.focus();return false}
+   }
+}
+
+
+</script>
+
+
+<form action="submitpage.htm" onsubmit="" method="post">
+Email：
+<input type="text" name="Email" size="20"/>
+<input type="submit" value="Submit" />
+</form>
+
+
+
+
+
+</body>
+</html>
