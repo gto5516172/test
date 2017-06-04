@@ -9,10 +9,25 @@
 <script type="text/javascript">
    window.onload=function(){
       var banner=document.getElementById("banner");
-      var slidebox=document.getElementById("slidebox");  
+      var slidebox=document.getElementById("slidebox"); 
       var buttons=document.getElementById("buttons").getElementsByTagName("li");
       var index=1;
-	  
+	  var interval=3000;
+
+	  var num=0;
+setInterval(function(){
+
+    buttons[num].click();
+     
+	   if(num==2){
+	       num=0;
+		   }
+		else{
+       num=num+1;
+	   }
+},3000)
+
+
 	  function showButton(){
 	  
 	     for (var i=0;i<buttons.length;i++){
@@ -25,8 +40,8 @@
 	  }
 	  
 	  
-      function animate(offset){
-	  	  
+/*      function animate(offset){
+	  	 
 	  var newLeft= parseInt(slidebox.style.left)+ offset;
 
 	     slidebox.style.left=newLeft + "px";
@@ -39,7 +54,9 @@
 		  }
 		  
 
-	  }
+	  }*/
+	  
+
 	  
 /*	  buttons.hover=function(){
 	    showButton();
@@ -49,16 +66,21 @@
 	  }*/
 	  for (var i=0;i<buttons.length;i++){
 	     buttons[i].onclick=function(){
-		   alert("aa");
+
+		 //  alert("aa");
 		   var myindex=parseInt(this.getAttribute("index"));
-		   var offset=-1000*(myindex-index);
+		   num=myindex-1;   
 		   
-		   animate(offset);
+		   document.getElementById("myimg").src=this.getAttribute("txt");
+		  // var offset=-1000*(myindex-index);
+
+		  // animate(offset);
 		   index= myindex;
 		   showButton();
+		   
 		 }
 	  }
-	  debugger;
+	 
 	  
    }
 
@@ -89,21 +111,19 @@
 <div id="content">
   <div id="container">
      <div id="banner">
-       <div id="slidebox" style="left:-1000px;">
-         <ul>
-           <li><a href="#"><img src="images/25th.jpg" border="0"  /></a></li>
-           <li><a href="#"><img src="images/featured.jpg" border="0"/></a></li>
-           <li><a href="#"><img src="images/nursing1.jpg" border="0"/></a></li>
-           <li><a href="#"><img src="images/25th.jpg" border="0"  /></a></li>
-           <li><a href="#"><img src="images/featured.jpg" border="0"/></a></li>
-         </ul>
+       <div id="slidebox" style="left:0px;">   <!--要是换成原来形式，需要改为left:-1000px。。-->
+<a href="#"><img id="myimg" src="images/25th.jpg" border="0"  /></a>
+<!--<a href="#"><img src="images/featured.jpg" border="0"/></a>
+<a href="#"><img src="images/nursing1.jpg" border="0"/></a>
+<a href="#"><img src="images/25th.jpg" border="0"  /></a>
+<a href="#"><img src="images/featured.jpg" border="0"/></a>-->
        </div>
 
        <div id="buttons">
          <ul>
-            <li class="on" index="1"></li>
-            <li index="2"></li>
-            <li index="3"></li>
+            <li class="on" index="1" txt="images/25th.jpg"></li>      <!--利用添加属性，来更换src地址，实现图片切换效果-->
+            <li index="2" txt="images/featured.jpg"></li>
+            <li index="3" txt="images/nursing1.jpg"></li>
         </ul>
        </div>
        </div>

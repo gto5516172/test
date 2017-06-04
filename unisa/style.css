@@ -86,20 +86,20 @@ height:410px;
 overflow:hidden;
 }
 
-#slidebox ul{
+#slidebox{
 
 width:5000px;
 height:410px;
 position:absolute;
-z-index:1;
+
 }
 
-#slidebox ul img{
+#slidebox img{
 float:left;}
 
 
 #buttons{
-margin-top:20px;
+margin-top:430px;
 position:absolute;
 /*z-index:2;*/
 }
