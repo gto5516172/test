@@ -114,10 +114,15 @@
 .web{padding-top:30px;}
 .web img{margin:0 12px;}
 .hr_25{height:25px;}
+.hr_7{height:7px;overflow:hidden;}
+.hr_15{height:15px;overflow:hidden;}
 
 /*产品分类*/
 .products .leftArea{width:185px;}
 .products .rightArea{width:810px;}
+.products .banner_Bar{float:none;}
+.products .item{width:25%; margin-bottom:10px;*width:24.9%;/*IE下宽度为24.9%,避免溢出换行*/}
+
 /*产品分类导航*/
 .leftNav{background-color:#f3f3f3;border:#d7d7d7 solid 1px;}
 .nav_title{height:34px;line-height:34px;font-size:14px; border-bottom:#d7d7d7 solid 1px; text-align:center;}
@@ -125,3 +130,30 @@
 .nav_cont h3{ font-size:12px;height:30px;line-height:30px;}
 .navCont_list{line-height:25px;}
 .navCont_list li{float:left;width:50%;}
+.vertical li{width:auto; float:none; padding-left:8px;}
+.vertical nav_title,
+.vertical .nav_cont h3{ font-size:14px;font-family:"微软雅黑","Microsoft YaHei";}
+/*标题*/
+.products_title{height:34px; border-bottom:#cccccc solid 2px;}
+.products_title h3{width:180px; border-bottom:#096dba solid 2px;height:34px;line-height:34px; text-indent:9px; font-size:16px;}
+/*商品*/
+.item{width:25%;float:left;}
+.item_cont{padding:0 15px;}
+.img_item{height:170px;text-align:center;}
+.img_item img{height:170px;}
+.item p{line-height:20px;}
+.item a{color:#000;}
+.item a:hover{ text-decoration:underline;}
+.price{color:#D4105A; font-weight:bold; padding-top:10px;}
+.star{width:13px;height:12px; overflow:hidden; background:url(../images/icon/xing.jpg) left top no-repeat; display:inline-block; margin-right:1px;}
+
+/*筛选*/
+.screening{ border-bottom:#ccc solid 1px; font-family:Verdana;}
+.screening dt{line-height:32px; width:74px; text-align:right; margin-right:42px; float:left;}
+.limit{width:55px; float:left; line-height:32px;}
+.screening .active{background-color:#1d7ad9; color:#fff;}
+.screening a{ padding:2px;}
+.screening_list{line-height:32px; width:626px;float:left;}
+.screening_list li{ width:20%; float:left;}
+.screen_more{ border:#ccc solid 1px; height:23px; line-height:23px; margin-top:4px; float:left; padding-right:11px; padding-left:11px; margin-right:10px;}
+.screen_more a{background:url(../images/icon/down2.jpg) right center no-repeat; padding-right:14px;}
